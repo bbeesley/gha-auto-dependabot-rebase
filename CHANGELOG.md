@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.0.0...v1.0.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* include actions modules in bundle ([550e84b](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/550e84bb59cbad391b1295484119fa2c4f16a103))
+
 # 1.0.0 (2021-08-10)
 
 
