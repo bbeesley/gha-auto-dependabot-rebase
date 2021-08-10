@@ -18,7 +18,13 @@ async function getPullRequests(ok: Octokit): Promise<PullRequestEdges> {
     owner,
     repo,
   });
-  console.log(res);
+  console.info(
+    `Found pull requests: ${JSON.stringify(
+      res.repository.pullRequests.edges,
+      null,
+      2
+    )}`
+  );
   return res.repository.pullRequests.edges ?? [];
 }
 
@@ -32,11 +38,13 @@ async function addCommentToPullRequest(
 ): Promise<void> {
   const query = AddCommentToPr.loc!.source!.body;
   if (pr?.node?.id && isDependabotPullRequest(pr)) {
-    const res = await ok.graphql({
+    console.info(
+      `Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`
+    );
+    await ok.graphql({
       query,
       pullRequestId: pr.node.id,
     });
-    console.log(res);
   }
 }
 
