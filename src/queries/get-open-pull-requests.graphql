@@ -1,0 +1,17 @@
+query GetPullRequests($owner: String!, $repo: String!) {
+  repository(owner: $owner, name: $repo) {
+    id
+    pullRequests(last: 10, states: [OPEN]) {
+      edges {
+        node {
+          id
+          title
+          number
+          author {
+            login
+          }
+        }
+      }
+    }
+  }
+}

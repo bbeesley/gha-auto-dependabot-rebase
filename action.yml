@@ -1,0 +1,9 @@
+name: gha-auto-dependabot-rebase
+author: Bill Beesley <bill@beesley.dev>
+description: Github Action to automatically request dependabot rebases
+branding:
+  icon: box
+  color: blue
+runs:
+  using: 'node12'
+  main: 'dist/main.cjs'
