@@ -5,7 +5,6 @@ module.exports = {
   entry: {
     main: './src/main.ts',
   },
-  externals: [/^@actions\/.*/],
   externalsPresets: {
     node: true, // don't try to include node buildins
   },
