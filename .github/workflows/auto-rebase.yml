@@ -7,7 +7,7 @@ jobs:
   auto-rebase:
     name: rebase dependabot PRs
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event == 'release'
     timeout-minutes: 5
     steps:
       - name: request rebase
