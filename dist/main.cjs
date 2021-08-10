@@ -23123,7 +23123,7 @@ async function getPullRequests(ok) {
     owner,
     repo
   });
-  console.log(res);
+  console.info(`Found pull requests: ${JSON.stringify(res.repository.pullRequests.edges, null, 2)}`);
   return (_res$repository$pullR = res.repository.pullRequests.edges) !== null && _res$repository$pullR !== void 0 ? _res$repository$pullR : [];
 }
 
@@ -23139,11 +23139,11 @@ async function addCommentToPullRequest(ok, pr) {
   const query = _graphql.AddCommentToPr.loc.source.body;
 
   if (pr !== null && pr !== void 0 && (_pr$node2 = pr.node) !== null && _pr$node2 !== void 0 && _pr$node2.id && isDependabotPullRequest(pr)) {
-    const res = await ok.graphql({
+    console.info(`Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`);
+    await ok.graphql({
       query,
       pullRequestId: pr.node.id
     });
-    console.log(res);
   }
 }
 

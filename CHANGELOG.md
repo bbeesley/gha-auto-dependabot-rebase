@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.0.2...v1.1.0) (2021-08-10)
+
+
+### Features
+
+* improve logging ([4a78b17](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/4a78b176b85f2ea31ad43c62b5b224691222dfc2))
+
 ## [1.0.2](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.0.1...v1.0.2) (2021-08-10)
 
 ## [1.0.1](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.0.0...v1.0.1) (2021-08-10)
