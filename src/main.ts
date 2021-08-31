@@ -54,15 +54,21 @@ async function main(): Promise<void> {
       process.env.GITHUB_TOKEN ?? (process.env.GH_TOKEN as string)
     );
     const oneAtATime = !!JSON.parse(getInput('one-at-a-time') ?? null);
+    console.info(
+      `Parsed input: oneAtATime = ${oneAtATime}`
+    )
+
     let prs = await getPullRequests(ok);
     prs = prs.sorted(pr => pr.number)
     prs = await Promise.all(prs.filter((pr) => isDependabotPullRequest(pr)));
-    if (prs) {
-      if (oneAtATime) {
-        prs = prs.slice(0, 1)
-      }
-      await Promise.all(prs.map((pr) => addCommentToPullRequest(ok, pr)));
+    if (!prs) {
+      return
     }
+
+    if (oneAtATime) {
+      prs = prs.slice(0, 1)
+    }
+    await Promise.all(prs.map((pr) => addCommentToPullRequest(ok, pr)));
   } catch (error) {
     console.error(error);
     setFailed(error.message);
