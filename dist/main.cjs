@@ -23128,17 +23128,17 @@ async function getPullRequests(ok) {
 }
 
 function isDependabotPullRequest(pr) {
-  var _pr$node, _pr$node$author;
+  var _pr$node, _pr$node2, _pr$node2$author;
 
-  return (pr === null || pr === void 0 ? void 0 : (_pr$node = pr.node) === null || _pr$node === void 0 ? void 0 : (_pr$node$author = _pr$node.author) === null || _pr$node$author === void 0 ? void 0 : _pr$node$author.login) === 'dependabot';
+  return !!(pr !== null && pr !== void 0 && (_pr$node = pr.node) !== null && _pr$node !== void 0 && _pr$node.id) && (pr === null || pr === void 0 ? void 0 : (_pr$node2 = pr.node) === null || _pr$node2 === void 0 ? void 0 : (_pr$node2$author = _pr$node2.author) === null || _pr$node2$author === void 0 ? void 0 : _pr$node2$author.login) === 'dependabot';
 }
 
 async function addCommentToPullRequest(ok, pr) {
-  var _pr$node2;
+  var _pr$node3;
 
   const query = _graphql.AddCommentToPr.loc.source.body;
 
-  if (pr !== null && pr !== void 0 && (_pr$node2 = pr.node) !== null && _pr$node2 !== void 0 && _pr$node2.id && isDependabotPullRequest(pr)) {
+  if (pr !== null && pr !== void 0 && (_pr$node3 = pr.node) !== null && _pr$node3 !== void 0 && _pr$node3.id && isDependabotPullRequest(pr)) {
     console.info(`Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`);
     await ok.graphql({
       query,
@@ -23149,14 +23149,29 @@ async function addCommentToPullRequest(ok, pr) {
 
 async function main() {
   try {
-    var _process$env$GITHUB_T;
+    var _process$env$GITHUB_T, _getInput;
 
     const ok = github.getOctokit((_process$env$GITHUB_T = process.env.GITHUB_TOKEN) !== null && _process$env$GITHUB_T !== void 0 ? _process$env$GITHUB_T : process.env.GH_TOKEN);
-    const prs = await getPullRequests(ok);
+    const oneAtATime = !!JSON.parse((_getInput = (0, _core.getInput)('one-at-a-time')) !== null && _getInput !== void 0 ? _getInput : null);
+    console.info(`Parsed input: oneAtATime = ${oneAtATime}`);
+    let prs = await getPullRequests(ok);
 
-    if (prs) {
-      await Promise.all(prs.map(pr => addCommentToPullRequest(ok, pr)));
+    if (!prs) {
+      return;
     }
+
+    prs = prs.sort(pr => {
+      var _pr$node$number, _pr$node4;
+
+      return (_pr$node$number = pr === null || pr === void 0 ? void 0 : (_pr$node4 = pr.node) === null || _pr$node4 === void 0 ? void 0 : _pr$node4.number) !== null && _pr$node$number !== void 0 ? _pr$node$number : 0;
+    });
+    prs = await Promise.all(prs.filter(pr => isDependabotPullRequest(pr)));
+
+    if (oneAtATime) {
+      prs = prs.slice(0, 1);
+    }
+
+    await Promise.all(prs.map(pr => addCommentToPullRequest(ok, pr)));
   } catch (error) {
     console.error(error);
     (0, _core.setFailed)(error.message);

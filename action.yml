@@ -4,6 +4,10 @@ description: Github Action to automatically request dependabot rebases
 branding:
   icon: box
   color: blue
+inputs:
+  one-at-a-time:
+    description: "Boolean indicating whether only one PR should be requested for rebase instead of all PRs"
+    required: false
 runs:
   using: 'node12'
   main: 'dist/main.cjs'
