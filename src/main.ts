@@ -1,4 +1,4 @@
-import { getInput, setFailed } from '@actions/core';
+import { setFailed } from '@actions/core';
 import * as github from '@actions/github';
 import { Octokit } from '@octokit/core';
 import { Maybe, PullRequestEdge } from '@octokit/graphql-schema';
@@ -29,7 +29,7 @@ async function getPullRequests(ok: Octokit): Promise<PullRequestEdges> {
 }
 
 function isDependabotPullRequest(pr: Maybe<PullRequestEdge>): boolean {
-  return !!pr?.node?.id && pr?.node?.author?.login === 'dependabot';
+  return pr?.node?.author?.login === 'dependabot';
 }
 
 async function addCommentToPullRequest(
@@ -53,20 +53,10 @@ async function main(): Promise<void> {
     const ok = github.getOctokit(
       process.env.GITHUB_TOKEN ?? (process.env.GH_TOKEN as string)
     );
-    const oneAtATime = !!JSON.parse(getInput('one-at-a-time') ?? null);
-    console.info(`Parsed input: oneAtATime = ${oneAtATime}`);
-
-    let prs = await getPullRequests(ok);
-    if (!prs) {
-      return;
+    const prs = await getPullRequests(ok);
+    if (prs) {
+      await Promise.all(prs.map((pr) => addCommentToPullRequest(ok, pr)));
     }
-    prs = prs.sort((pr) => pr?.node?.number ?? 0);
-    prs = await Promise.all(prs.filter((pr) => isDependabotPullRequest(pr)));
-
-    if (oneAtATime) {
-      prs = prs.slice(0, 1);
-    }
-    await Promise.all(prs.map((pr) => addCommentToPullRequest(ok, pr)));
   } catch (error) {
     console.error(error);
     setFailed(error.message);
