@@ -4304,7 +4304,7 @@ exports.resetCaches = resetCaches;
 exports.disableFragmentWarnings = disableFragmentWarnings;
 exports.enableExperimentalFragmentVariables = enableExperimentalFragmentVariables;
 exports.disableExperimentalFragmentVariables = disableExperimentalFragmentVariables;
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _tslib = __webpack_require__(/*! tslib */ "./node_modules/graphql-tag/node_modules/tslib/tslib.es6.js");
 
@@ -4450,7 +4450,7 @@ var extras = {
 
 gql["default"] = gql;
 var _default = gql;
-exports.default = _default;
+exports["default"] = _default;
 
 /***/ }),
 

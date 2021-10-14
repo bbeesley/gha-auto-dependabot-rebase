@@ -32280,19 +32280,7 @@ export type AddCommentToPrMutationVariables = Exact<{
 }>;
 
 
-export type AddCommentToPrMutation = (
-  { __typename?: 'Mutation' }
-  & { addComment?: Maybe<(
-    { __typename?: 'AddCommentPayload' }
-    & { commentEdge?: Maybe<(
-      { __typename?: 'IssueCommentEdge' }
-      & { node?: Maybe<(
-        { __typename?: 'IssueComment' }
-        & Pick<IssueComment, 'id'>
-      )> }
-    )> }
-  )> }
-);
+export type AddCommentToPrMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string } | null | undefined } | null | undefined } | null | undefined };
 
 export type GetPullRequestsQueryVariables = Exact<{
   owner: Scalars['String'];
@@ -32300,36 +32288,4 @@ export type GetPullRequestsQueryVariables = Exact<{
 }>;
 
 
-export type GetPullRequestsQuery = (
-  { __typename?: 'Query' }
-  & { repository?: Maybe<(
-    { __typename?: 'Repository' }
-    & Pick<Repository, 'id'>
-    & { pullRequests: (
-      { __typename?: 'PullRequestConnection' }
-      & { edges?: Maybe<Array<Maybe<(
-        { __typename?: 'PullRequestEdge' }
-        & { node?: Maybe<(
-          { __typename?: 'PullRequest' }
-          & Pick<PullRequest, 'id' | 'title' | 'number'>
-          & { author?: Maybe<(
-            { __typename?: 'Bot' }
-            & Pick<Bot, 'login'>
-          ) | (
-            { __typename?: 'EnterpriseUserAccount' }
-            & Pick<EnterpriseUserAccount, 'login'>
-          ) | (
-            { __typename?: 'Mannequin' }
-            & Pick<Mannequin, 'login'>
-          ) | (
-            { __typename?: 'Organization' }
-            & Pick<Organization, 'login'>
-          ) | (
-            { __typename?: 'User' }
-            & Pick<User, 'login'>
-          )> }
-        )> }
-      )>>> }
-    ) }
-  )> }
-);
+export type GetPullRequestsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, pullRequests: { __typename?: 'PullRequestConnection', edges?: Array<{ __typename?: 'PullRequestEdge', node?: { __typename?: 'PullRequest', id: string, title: string, number: number, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null | undefined } | null | undefined } | null | undefined> | null | undefined } } | null | undefined };
