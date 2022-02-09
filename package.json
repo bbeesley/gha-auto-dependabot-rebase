@@ -50,7 +50,7 @@
     "@graphql-codegen/cli": "2.0.1",
     "@graphql-codegen/typescript": "2.0.0",
     "@graphql-codegen/typescript-document-nodes": "2.0.0",
-    "@graphql-codegen/typescript-operations": "^2.1.7",
+    "@graphql-codegen/typescript-operations": "^2.3.0",
     "@graphql-codegen/typescript-resolvers": "2.0.0",
     "@octokit/graphql-schema": "^10.59.0",
     "@octokit/webhooks-definitions": "^3.67.3",
