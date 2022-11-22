@@ -1,28 +1,12 @@
 {
+  "extends": "@beesley/tsconfig/webpack.json",
   "compilerOptions": {
-    "allowJs": false, // its ok to import js files as well as ts files
-    "checkJs": false, // use type inference to make an attempt at type checking js files
-    "declaration": false, // emit .d.ts files when compiling
-    "declarationMap": false, // emit maps for the declaration files so your editor works properly with them
-    "isolatedModules": true, // tsc examines the whole project when compiling, babel does not. Setting this to true ensures that each file can be transformed without introspection into it's imports and exports (basically stops you doing stuff that will make babel error)
-    "lib": ["ESNext"], // feature set to allow in the project, choosing ESNext means everything is supported
-    "module": "CommonJS", // tells tsc to transform es imports/exports to requires and module.exports. Use "ESNext" to leave your import/export statements intact in the output
-    "target": "ES2019", // feature set of the runtime environment - node 12 supports all of ES2019 (except the es modules.....)
-    "moduleResolution": "Node", // this just tells ts that we're using node rather than the old legacy typescript module resolution (looks kinda like xml, you might see it in old documentation)
-    "outDir": "dist", // directory we're compiling out to
-    "sourceMap": false, // create source maps
-    "strict": true, // equivalent to "use strict"
-    "noImplicitAny": true, // don't allow untyped stuff if ts cant accurately infer the type
-    "strictFunctionTypes": true, // look at the actual functions' types rather than relying on any aliases (eg, you might have a set of functions in an object whose type is Record<string, (config: Record<string, string | Language>) => MappedConfig>, but some functions in that map may require that config is Record<string, Language>, this ensures tsc actually looks at the functions in the object rather than relying on the type from the object containing the functions)
-    "strictNullChecks": true, // don't allow possibly null/undefined values to be used in contexts where a value is expected
-    "allowSyntheticDefaultImports": true, // lets you use `import uuid from 'uuid'` instead of needing to do `import * as uuid from 'uuid'` for modules which don't have a default export
-    "baseUrl": "./src", // where the file hierarchy starts. Eg, if I have a file `src/main/index.ts`, with this setting it will compile out to `dist/main/index.js`, if I set baseUrl to "." then it will compile out to `dist/src/main/index.js`, if I set baseUrl to "./src/main" my file just compiles out to `dist/index.js`.
-    "esModuleInterop": true, // forces compatibility with es imports/exports (typescript's import/export spec has some features the ES spec doesn't allow)
-    "allowUnreachableCode": false, // essentially linting, forces an error for unreachable code (ie stuff after the return statement in a function)
-    "allowUnusedLabels": false, // labels are an old js feature that nobody uses, they look like object syntax within a function, and are used for adding metadata to an object. The only time you're likely to see them in our code is if you made a typo and incorrectly closed or opened an object. Banning them means we can't accidentally make something a label instead of an object.
-    "forceConsistentCasingInFileNames": true, // by default ts imports are case insensitive, so with a file `monkey-banana-waffle.ts` ts will allow you to import it as `import stuff from './Monkey-Banana-Waffle';`, this is stupid and is only there because ts is microsoft and microsoft don't have case sensitive filesystems. This disables that stupid behaviour and makes you use the actual case.
-    "noEmit": true, // don't output anything, we're only using this for type checking
-    "resolveJsonModule": true
+    "outDir": "dist",
+    "checkJs": false,
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "useUnknownInCatchVariables": false,
+    "skipLibCheck": true
   },
   "typeAcquisition": {
     "enable": false // if you're using vscode, this option tells it to automatically download types for any modules you install that don't have types built in
@@ -38,12 +22,6 @@
     ".*.js",
     ".*.mjs",
     ".*.cjs",
-    "**/*.js",
-    "**/*.mjs",
-    "**/*.cjs",
-    "**/.*.js",
-    "**/.*.mjs",
-    "**/.*.cjs",
 ],
 "exclude": ["node_modules/**", "dist/**"]
 }
