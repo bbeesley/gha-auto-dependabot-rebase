@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 
 module.exports = {
   mode: 'development', // "production" | "development" - Chosen mode tells webpack to use its built-in optimizations accordingly. Production will result in less readable output
@@ -39,12 +39,11 @@ module.exports = {
         test: /\.(ts|js)$/,
         use: [
           {
-            loader: 'cache-loader', // first check the cache to see if we already processed this file
+            loader: 'ts-loader',
             options: {
-              cacheDirectory: path.resolve('.webpackCache'), // where to keep the cache
+              transpileOnly: true,
             },
           },
-          'babel-loader', // if not cached, use babel to process the file
         ],
       },
     ],
