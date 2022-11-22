@@ -15874,19 +15874,16 @@ const GetPullRequests = lib `
 
 
 
-
-
-
 async function getPullRequests(ok) {
     const { owner, repo } = github.context.repo;
     const query = GetPullRequests.loc.source.body;
-    const res = await ok.graphql({
+    const response = await ok.graphql({
         query,
         owner,
         repo,
     });
-    console.info(`Found pull requests: ${JSON.stringify(res.repository.pullRequests.edges, null, 2)}`);
-    return res.repository.pullRequests.edges ?? [];
+    console.info(`Found pull requests: ${JSON.stringify(response.repository.pullRequests.edges, null, 2)}`);
+    return response.repository.pullRequests.edges ?? [];
 }
 function isDependabotPullRequest(pr) {
     return pr?.node?.author?.login === 'dependabot';
@@ -15903,10 +15900,12 @@ async function addCommentToPullRequest(ok, pr) {
 }
 async function main() {
     try {
-        const ok = github.getOctokit(process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN);
+        const ok = github.getOctokit(
+        // eslint-disable-next-line n/prefer-global/process
+        process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN);
         const prs = await getPullRequests(ok);
         if (prs) {
-            await Promise.all(prs.map((pr) => addCommentToPullRequest(ok, pr)));
+            await Promise.all(prs.map(async (pr) => addCommentToPullRequest(ok, pr)));
         }
     }
     catch (error) {
@@ -15914,7 +15913,8 @@ async function main() {
         (0,core.setFailed)(error.message);
     }
 }
-main();
+// eslint-disable-next-line unicorn/prefer-top-level-await
+void main();
 
 })();
 

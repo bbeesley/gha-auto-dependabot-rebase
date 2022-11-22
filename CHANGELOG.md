@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.1.2...v1.2.0) (2022-11-22)
+
+
+### Features
+
+* update to node 16 ([9fef85f](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/9fef85f052948f116cf064acbe065c61555700d2))
+
 ## [1.1.2](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.1.1...v1.1.2) (2021-10-14)
 
 ## [1.1.1](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.1.0...v1.1.1) (2021-09-21)
