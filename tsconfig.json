@@ -6,6 +6,7 @@
     "lib": ["ESNext"],
     "types": ["node"],
     "useUnknownInCatchVariables": false,
+    "skipLibCheck": true
   },
   "typeAcquisition": {
     "enable": false // if you're using vscode, this option tells it to automatically download types for any modules you install that don't have types built in

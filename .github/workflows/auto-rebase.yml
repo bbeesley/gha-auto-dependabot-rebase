@@ -1,4 +1,4 @@
-name: rebase pull requests
+name: Request Dependabot Rebase
 on:
   push:
   release:
@@ -7,8 +7,8 @@ jobs:
   auto-rebase:
     name: rebase dependabot PRs
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.event == 'release'
     timeout-minutes: 5
+    if: github.event_name == 'release' || github.ref_name == github.event.repository.default_branch
     steps:
       - name: request rebase
         uses: "bbeesley/gha-auto-dependabot-rebase@main"
