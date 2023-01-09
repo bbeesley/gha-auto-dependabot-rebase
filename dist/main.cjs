@@ -13501,7 +13501,6 @@ gql["default"] = gql;
 
 ;// CONCATENATED MODULE: ./src/generated/graphql.ts
 
-
 /** The actor's type. */
 var ActorType;
 (function (ActorType) {
