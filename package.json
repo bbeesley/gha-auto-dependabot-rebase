@@ -44,7 +44,7 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-stage-0": "^7.8.3",
     "@babel/preset-typescript": "^7.18.6",
-    "@beesley/tsconfig": "^1.1.0",
+    "@beesley/tsconfig": "^1.1.4",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@graphql-codegen/cli": "^2.16.3",
