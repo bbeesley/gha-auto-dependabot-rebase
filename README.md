@@ -4,7 +4,7 @@
 Github Action to automatically request dependabot rebases
 ## Details
 
-This is a single workflow step to request a rebase from dependabot. Add the workflow to run when commits are pushed to your main branch, and it will request dependabot to rebase any PRs it currently has open. No options are required.
+This is a single workflow step to request a rebase from dependabot. Add the workflow to run when commits are pushed to your main branch, and it will request dependabot to rebase any PRs it currently has open. No options are required, but if you would rather dependabot recreate the PR rather than rebase it, you may pass in the `task` input with the value set to `recreate`.
 
 ## Required Environment Variables
 
@@ -29,4 +29,6 @@ jobs:
         uses: "bbeesley/gha-auto-dependabot-rebase@main"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
+        with:
+          task: rebase
 ```

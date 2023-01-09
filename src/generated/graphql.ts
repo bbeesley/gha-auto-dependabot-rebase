@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -39556,17 +39556,6 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 
 
-export const AddCommentToPr = gql`
-    mutation AddCommentToPr($pullRequestId: ID!) {
-  addComment(input: {subjectId: $pullRequestId, body: "@dependabot rebase"}) {
-    commentEdge {
-      node {
-        id
-      }
-    }
-  }
-}
-    `;
 export const GetPullRequests = gql`
     query GetPullRequests($owner: String!, $repo: String!) {
   repository(owner: $owner, name: $repo) {
@@ -39586,13 +39575,28 @@ export const GetPullRequests = gql`
   }
 }
     `;
-export type AddCommentToPrMutationVariables = Exact<{
-  pullRequestId: Scalars['ID'];
-}>;
-
-
-export type AddCommentToPrMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string } | null } | null } | null };
-
+export const RequestRebase = gql`
+    mutation RequestRebase($pullRequestId: ID!) {
+  addComment(input: {subjectId: $pullRequestId, body: "@dependabot rebase"}) {
+    commentEdge {
+      node {
+        id
+      }
+    }
+  }
+}
+    `;
+export const RequestRecreate = gql`
+    mutation RequestRecreate($pullRequestId: ID!) {
+  addComment(input: {subjectId: $pullRequestId, body: "@dependabot recreate"}) {
+    commentEdge {
+      node {
+        id
+      }
+    }
+  }
+}
+    `;
 export type GetPullRequestsQueryVariables = Exact<{
   owner: Scalars['String'];
   repo: Scalars['String'];
@@ -39600,3 +39604,17 @@ export type GetPullRequestsQueryVariables = Exact<{
 
 
 export type GetPullRequestsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, pullRequests: { __typename?: 'PullRequestConnection', edges?: Array<{ __typename?: 'PullRequestEdge', node?: { __typename?: 'PullRequest', id: string, title: string, number: number, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null } | null } | null> | null } } | null };
+
+export type RequestRebaseMutationVariables = Exact<{
+  pullRequestId: Scalars['ID'];
+}>;
+
+
+export type RequestRebaseMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string } | null } | null } | null };
+
+export type RequestRecreateMutationVariables = Exact<{
+  pullRequestId: Scalars['ID'];
+}>;
+
+
+export type RequestRecreateMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string } | null } | null } | null };

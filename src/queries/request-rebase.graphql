@@ -1,4 +1,4 @@
-mutation AddCommentToPr($pullRequestId: ID!) {
+mutation RequestRebase($pullRequestId: ID!) {
   addComment(input: {
     subjectId: $pullRequestId,
     body: "@dependabot rebase",

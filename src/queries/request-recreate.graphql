@@ -1,0 +1,12 @@
+mutation RequestRecreate($pullRequestId: ID!) {
+  addComment(input: {
+    subjectId: $pullRequestId,
+    body: "@dependabot recreate",
+  }) {
+    commentEdge {
+      node {
+        id
+      }
+    }
+  }
+}

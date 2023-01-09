@@ -1,11 +1,12 @@
-import { setFailed } from '@actions/core';
+import { getInput, setFailed } from '@actions/core';
 import * as github from '@actions/github';
 import type { Octokit } from '@octokit/core';
 import type { Maybe, PullRequestEdge } from '@octokit/graphql-schema';
 
 import type { PullRequestEdges } from './@types/index.js';
 import {
-  AddCommentToPr,
+  RequestRebase,
+  RequestRecreate,
   GetPullRequests,
   type Repository,
 } from './generated/graphql';
@@ -36,7 +37,11 @@ async function addCommentToPullRequest(
   ok: Octokit,
   pr: Maybe<PullRequestEdge>
 ): Promise<void> {
-  const query = AddCommentToPr.loc!.source.body;
+  const task = getInput('task');
+  const query =
+    task === 'rebase'
+      ? RequestRebase.loc!.source.body
+      : RequestRecreate.loc!.source.body;
   if (pr?.node?.id && isDependabotPullRequest(pr)) {
     console.info(
       `Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`

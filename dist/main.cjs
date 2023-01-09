@@ -15839,17 +15839,6 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField || (WorkflowRunOrderField = {}));
-const AddCommentToPr = lib `
-    mutation AddCommentToPr($pullRequestId: ID!) {
-  addComment(input: {subjectId: $pullRequestId, body: "@dependabot rebase"}) {
-    commentEdge {
-      node {
-        id
-      }
-    }
-  }
-}
-    `;
 const GetPullRequests = lib `
     query GetPullRequests($owner: String!, $repo: String!) {
   repository(owner: $owner, name: $repo) {
@@ -15864,6 +15853,28 @@ const GetPullRequests = lib `
             login
           }
         }
+      }
+    }
+  }
+}
+    `;
+const RequestRebase = lib `
+    mutation RequestRebase($pullRequestId: ID!) {
+  addComment(input: {subjectId: $pullRequestId, body: "@dependabot rebase"}) {
+    commentEdge {
+      node {
+        id
+      }
+    }
+  }
+}
+    `;
+const RequestRecreate = lib `
+    mutation RequestRecreate($pullRequestId: ID!) {
+  addComment(input: {subjectId: $pullRequestId, body: "@dependabot recreate"}) {
+    commentEdge {
+      node {
+        id
       }
     }
   }
@@ -15889,7 +15900,10 @@ function isDependabotPullRequest(pr) {
     return pr?.node?.author?.login === 'dependabot';
 }
 async function addCommentToPullRequest(ok, pr) {
-    const query = AddCommentToPr.loc.source.body;
+    const task = (0,core.getInput)('task');
+    const query = task === 'rebase'
+        ? RequestRebase.loc.source.body
+        : RequestRecreate.loc.source.body;
     if (pr?.node?.id && isDependabotPullRequest(pr)) {
         console.info(`Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`);
         await ok.graphql({
