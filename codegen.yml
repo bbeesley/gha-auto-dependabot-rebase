@@ -1,11 +1,13 @@
+schema: node_modules/@octokit/graphql-schema/schema.graphql
 overwrite: true
-schema: 'node_modules/@octokit/graphql-schema/schema.graphql'
 documents:
   - src/queries/*.graphql
 generates:
-  src/generated/graphql.ts:
+  ./src/generated/graphql.ts:
     plugins:
-      - 'typescript'
-      - 'typescript-resolvers'
-      - 'typescript-document-nodes'
-      - 'typescript-operations'
+      - typescript
+      - typescript-resolvers
+      - typescript-document-nodes
+      - typescript-operations
+    config:
+      useTypeImports: true

@@ -8,7 +8,7 @@
     "lint": "tsc --noEmit",
     "pretest": "npm run lint",
     "test": "xo && echo 'No tests yet'",
-    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "graphql-codegen-esm --config codegen.yml",
     "precompile": "rm -rf dist && npm run codegen",
     "compile": "webpack-cli --config=webpack.config.cjs",
     "dependabump": "ncu -u && rm -rf package-lock.json node_modules | true && npm i",
@@ -47,12 +47,12 @@
     "@beesley/tsconfig": "^1.1.0",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
-    "@graphql-codegen/cli": "2.13.12",
-    "@graphql-codegen/introspection": "2.2.1",
-    "@graphql-codegen/typescript": "2.8.2",
-    "@graphql-codegen/typescript-document-nodes": "2.3.7",
-    "@graphql-codegen/typescript-operations": "^2.5.7",
-    "@graphql-codegen/typescript-resolvers": "2.7.7",
+    "@graphql-codegen/cli": "^2.16.3",
+    "@graphql-codegen/introspection": "2.2.3",
+    "@graphql-codegen/typescript": "2.8.7",
+    "@graphql-codegen/typescript-document-nodes": "2.3.12",
+    "@graphql-codegen/typescript-operations": "^2.5.12",
+    "@graphql-codegen/typescript-resolvers": "2.7.12",
     "@octokit/graphql-schema": "^12.30.1",
     "@octokit/webhooks-definitions": "^3.67.3",
     "@semantic-release/changelog": "^6.0.1",
@@ -126,14 +126,20 @@
     ]
   },
   "xo": {
-		"ignores": ["dist", "src/generated"],
+    "ignores": [
+      "dist",
+      "src/generated"
+    ],
     "space": true,
     "prettier": true,
     "rules": {
-			"capitalized-comments": "off",
-			"import/extensions": "off",
-			"func-names": ["error", "always"],
+      "capitalized-comments": "off",
+      "import/extensions": "off",
+      "func-names": [
+        "error",
+        "always"
+      ],
       "@typescript-eslint/no-implicit-any-catch": "off"
-		}
-	}
+    }
+  }
 }
