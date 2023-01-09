@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.2.0...v1.3.0) (2023-01-09)
+
+
+### Features
+
+* allow requesting of recreate instead of rebase ([54672e9](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/54672e9e4dd082bd727a8eb99e1902c45a0ceafe))
+
 # [1.2.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.1.2...v1.2.0) (2022-11-22)
 
 
