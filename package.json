@@ -40,7 +40,7 @@
     "@actions/github": "^5.1.1",
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.12",
-    "@babel/node": "^7.20.2",
+    "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-stage-0": "^7.8.3",
     "@babel/preset-typescript": "^7.18.6",
