@@ -1,4 +1,4 @@
-[![test-and-publish](https://github.com/bbeesley/gha-auto-dependabot-rebase/actions/workflows/test-and-publish.yml/badge.svg)](https://github.com/bbeesley/gha-auto-dependabot-rebase/actions/workflows/test-and-publish.yml)
+[![Build, Test & Publish Main](https://github.com/bbeesley/gha-auto-dependabot-rebase/actions/workflows/build-test-on-push.yml/badge.svg)](https://github.com/bbeesley/gha-auto-dependabot-rebase/actions/workflows/build-test-on-push.yml) 
 # gha-auto-dependabot-rebase
 
 Github Action to automatically request dependabot rebases
