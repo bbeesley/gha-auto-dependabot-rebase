@@ -3,6 +3,8 @@ version: 2
 updates:
 - package-ecosystem: npm
   directory: "/"
+  assignees:
+    - "bbeesley-bot"
   schedule:
     interval: daily
     timezone: Europe/London
@@ -12,6 +14,8 @@ updates:
     include: scope
 - package-ecosystem: "github-actions"
   directory: "/"
+  assignees:
+    - "bbeesley-bot"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
