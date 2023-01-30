@@ -14559,6 +14559,26 @@ var OrganizationMembersCanCreateRepositoriesSettingValue;
     /** Members will be able to create only private repositories. */
     OrganizationMembersCanCreateRepositoriesSettingValue["Private"] = "PRIVATE";
 })(OrganizationMembersCanCreateRepositoriesSettingValue || (OrganizationMembersCanCreateRepositoriesSettingValue = {}));
+/** The Octoshift Organization migration state. */
+var OrganizationMigrationState;
+(function (OrganizationMigrationState) {
+    /** The Octoshift migration has failed. */
+    OrganizationMigrationState["Failed"] = "FAILED";
+    /** The Octoshift migration is in progress. */
+    OrganizationMigrationState["InProgress"] = "IN_PROGRESS";
+    /** The Octoshift migration has not started. */
+    OrganizationMigrationState["NotStarted"] = "NOT_STARTED";
+    /** The Octoshift migration is performing post repository migrations. */
+    OrganizationMigrationState["PostRepoMigration"] = "POST_REPO_MIGRATION";
+    /** The Octoshift migration is performing pre repository migrations. */
+    OrganizationMigrationState["PreRepoMigration"] = "PRE_REPO_MIGRATION";
+    /** The Octoshift migration has been queued. */
+    OrganizationMigrationState["Queued"] = "QUEUED";
+    /** The Octoshift org migration is performing repository migrations. */
+    OrganizationMigrationState["RepoMigration"] = "REPO_MIGRATION";
+    /** The Octoshift migration has succeeded. */
+    OrganizationMigrationState["Succeeded"] = "SUCCEEDED";
+})(OrganizationMigrationState || (OrganizationMigrationState = {}));
 /** Properties by which organization connections can be ordered. */
 var OrganizationOrderField;
 (function (OrganizationOrderField) {
@@ -14712,116 +14732,6 @@ var ProjectColumnPurpose;
     /** The column contains cards still to be worked on */
     ProjectColumnPurpose["Todo"] = "TODO";
 })(ProjectColumnPurpose || (ProjectColumnPurpose = {}));
-/** The type of a project item. */
-var ProjectItemType;
-(function (ProjectItemType) {
-    /** Draft Issue */
-    ProjectItemType["DraftIssue"] = "DRAFT_ISSUE";
-    /** Issue */
-    ProjectItemType["Issue"] = "ISSUE";
-    /** Pull Request */
-    ProjectItemType["PullRequest"] = "PULL_REQUEST";
-    /** Redacted Item */
-    ProjectItemType["Redacted"] = "REDACTED";
-})(ProjectItemType || (ProjectItemType = {}));
-/** The type of a project next field. */
-var ProjectNextFieldType;
-(function (ProjectNextFieldType) {
-    /**
-     * Assignees
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Assignees"] = "ASSIGNEES";
-    /**
-     * Date
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Date"] = "DATE";
-    /**
-     * Iteration
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Iteration"] = "ITERATION";
-    /**
-     * Labels
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Labels"] = "LABELS";
-    /**
-     * Linked Pull Requests
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["LinkedPullRequests"] = "LINKED_PULL_REQUESTS";
-    /**
-     * Milestone
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Milestone"] = "MILESTONE";
-    /**
-     * Number
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Number"] = "NUMBER";
-    /**
-     * Repository
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Repository"] = "REPOSITORY";
-    /**
-     * Reviewers
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Reviewers"] = "REVIEWERS";
-    /**
-     * Single Select
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["SingleSelect"] = "SINGLE_SELECT";
-    /**
-     * Text
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Text"] = "TEXT";
-    /**
-     * Title
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Title"] = "TITLE";
-    /**
-     * Tracked by
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["TrackedBy"] = "TRACKED_BY";
-    /**
-     * Tracks
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextFieldType["Tracks"] = "TRACKS";
-})(ProjectNextFieldType || (ProjectNextFieldType = {}));
-/** Properties by which the return project can be ordered. */
-var ProjectNextOrderField;
-(function (ProjectNextOrderField) {
-    /**
-     * The project's date and time of creation
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextOrderField["CreatedAt"] = "CREATED_AT";
-    /**
-     * The project's number
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextOrderField["Number"] = "NUMBER";
-    /**
-     * The project's title
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextOrderField["Title"] = "TITLE";
-    /**
-     * The project's date and time of update
-     * @deprecated The `ProjectNext` API is deprecated in favour of the more capable `ProjectV2` API. Follow the ProjectV2 guide at https://github.blog/changelog/2022-06-23-the-new-github-issues-june-23rd-update/, to find a suitable replacement. Removal on 2023-01-01 UTC.
-     */
-    ProjectNextOrderField["UpdatedAt"] = "UPDATED_AT";
-})(ProjectNextOrderField || (ProjectNextOrderField = {}));
 /** Properties by which project connections can be ordered. */
 var ProjectOrderField;
 (function (ProjectOrderField) {
@@ -14956,14 +14866,6 @@ var ProjectV2ViewOrderField;
     /** Order project v2 views by position */
     ProjectV2ViewOrderField["Position"] = "POSITION";
 })(ProjectV2ViewOrderField || (ProjectV2ViewOrderField = {}));
-/** The layout of a project view. */
-var ProjectViewLayout;
-(function (ProjectViewLayout) {
-    /** Board layout */
-    ProjectViewLayout["BoardLayout"] = "BOARD_LAYOUT";
-    /** Table layout */
-    ProjectViewLayout["TableLayout"] = "TABLE_LAYOUT";
-})(ProjectViewLayout || (ProjectViewLayout = {}));
 /** Represents available types of methods to use when merging a pull request. */
 var PullRequestMergeMethod;
 (function (PullRequestMergeMethod) {
