@@ -53,7 +53,7 @@
     "@graphql-codegen/typescript-document-nodes": "2.3.13",
     "@graphql-codegen/typescript-operations": "^2.5.13",
     "@graphql-codegen/typescript-resolvers": "2.7.13",
-    "@octokit/graphql-schema": "^12.41.1",
+    "@octokit/graphql-schema": "^13.0.1",
     "@octokit/webhooks-definitions": "^3.67.3",
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/commit-analyzer": "^9.0.2",
