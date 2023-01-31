@@ -14531,6 +14531,16 @@ var OrganizationInvitationRole;
     /** The user's previous role will be reinstated. */
     OrganizationInvitationRole["Reinstate"] = "REINSTATE";
 })(OrganizationInvitationRole || (OrganizationInvitationRole = {}));
+/** The possible organization invitation sources. */
+var OrganizationInvitationSource;
+(function (OrganizationInvitationSource) {
+    /** The invitation was created from the web interface or from API */
+    OrganizationInvitationSource["Member"] = "MEMBER";
+    /** The invitation was created from SCIM */
+    OrganizationInvitationSource["Scim"] = "SCIM";
+    /** The invitation was sent before this feature was added */
+    OrganizationInvitationSource["Unknown"] = "UNKNOWN";
+})(OrganizationInvitationSource || (OrganizationInvitationSource = {}));
 /** The possible organization invitation types. */
 var OrganizationInvitationType;
 (function (OrganizationInvitationType) {
