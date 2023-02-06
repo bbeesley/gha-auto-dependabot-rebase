@@ -1935,7 +1935,7 @@ export type CloneTemplateRepositoryPayload = {
 
 /** An object that can be closed */
 export type Closable = {
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -4900,7 +4900,7 @@ export type DisconnectedEvent = Node & {
 };
 
 /** A discussion in a repository. */
-export type Discussion = Comment & Deletable & Labelable & Lockable & Node & Reactable & RepositoryNode & Subscribable & Updatable & Votable & {
+export type Discussion = Closable & Comment & Deletable & Labelable & Lockable & Node & Reactable & RepositoryNode & Subscribable & Updatable & Votable & {
   __typename?: 'Discussion';
   /** Reason that the conversation was locked. */
   activeLockReason?: Maybe<LockReason>;
@@ -4922,6 +4922,10 @@ export type Discussion = Comment & Deletable & Labelable & Lockable & Node & Rea
   bodyText: Scalars['String'];
   /** The category for this discussion. */
   category: DiscussionCategory;
+  /** Indicates if the object is closed (definition of closed may depend on type) */
+  closed: Scalars['Boolean'];
+  /** Identifies the date and time when the object was closed. */
+  closedAt?: Maybe<Scalars['DateTime']>;
   /** The replies to the discussion. */
   comments: DiscussionCommentConnection;
   /** Identifies the date and time when the object was created. */
@@ -7711,7 +7715,7 @@ export type Issue = Assignable & Closable & Comment & Labelable & Lockable & Nod
   bodyText: Scalars['String'];
   /** The http URL for this issue body */
   bodyUrl: Scalars['URI'];
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -9387,7 +9391,7 @@ export enum MigrationState {
 /** Represents a Milestone object on a given repository. */
 export type Milestone = Closable & Node & UniformResourceLocatable & {
   __typename?: 'Milestone';
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -14314,7 +14318,7 @@ export type Project = Closable & Node & Updatable & {
   body?: Maybe<Scalars['String']>;
   /** The projects description body rendered to HTML. */
   bodyHTML: Scalars['HTML'];
-  /** `true` if the object is closed (definition of closed may depend on type) */
+  /** Indicates if the object is closed (definition of closed may depend on type) */
   closed: Scalars['Boolean'];
   /** Identifies the date and time when the object was closed. */
   closedAt?: Maybe<Scalars['DateTime']>;
@@ -27069,7 +27073,7 @@ export type ResolversTypes = {
   CloneProjectPayload: ResolverTypeWrapper<CloneProjectPayload>;
   CloneTemplateRepositoryInput: CloneTemplateRepositoryInput;
   CloneTemplateRepositoryPayload: ResolverTypeWrapper<CloneTemplateRepositoryPayload>;
-  Closable: ResolversTypes['Issue'] | ResolversTypes['Milestone'] | ResolversTypes['Project'] | ResolversTypes['ProjectV2'] | ResolversTypes['PullRequest'];
+  Closable: ResolversTypes['Discussion'] | ResolversTypes['Issue'] | ResolversTypes['Milestone'] | ResolversTypes['Project'] | ResolversTypes['ProjectV2'] | ResolversTypes['PullRequest'];
   CloseIssueInput: CloseIssueInput;
   CloseIssuePayload: ResolverTypeWrapper<CloseIssuePayload>;
   ClosePullRequestInput: ClosePullRequestInput;
@@ -28412,7 +28416,7 @@ export type ResolversParentTypes = {
   CloneProjectPayload: CloneProjectPayload;
   CloneTemplateRepositoryInput: CloneTemplateRepositoryInput;
   CloneTemplateRepositoryPayload: CloneTemplateRepositoryPayload;
-  Closable: ResolversParentTypes['Issue'] | ResolversParentTypes['Milestone'] | ResolversParentTypes['Project'] | ResolversParentTypes['ProjectV2'] | ResolversParentTypes['PullRequest'];
+  Closable: ResolversParentTypes['Discussion'] | ResolversParentTypes['Issue'] | ResolversParentTypes['Milestone'] | ResolversParentTypes['Project'] | ResolversParentTypes['ProjectV2'] | ResolversParentTypes['PullRequest'];
   CloseIssueInput: CloseIssueInput;
   CloseIssuePayload: CloseIssuePayload;
   ClosePullRequestInput: ClosePullRequestInput;
@@ -30169,7 +30173,7 @@ export type CloneTemplateRepositoryPayloadResolvers<ContextType = any, ParentTyp
 };
 
 export type ClosableResolvers<ContextType = any, ParentType extends ResolversParentTypes['Closable'] = ResolversParentTypes['Closable']> = {
-  __resolveType: TypeResolveFn<'Issue' | 'Milestone' | 'Project' | 'ProjectV2' | 'PullRequest', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Discussion' | 'Issue' | 'Milestone' | 'Project' | 'ProjectV2' | 'PullRequest', ParentType, ContextType>;
   closed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   closedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
 };
@@ -31188,6 +31192,8 @@ export type DiscussionResolvers<ContextType = any, ParentType extends ResolversP
   bodyHTML?: Resolver<ResolversTypes['HTML'], ParentType, ContextType>;
   bodyText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   category?: Resolver<ResolversTypes['DiscussionCategory'], ParentType, ContextType>;
+  closed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  closedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   comments?: Resolver<ResolversTypes['DiscussionCommentConnection'], ParentType, ContextType, Partial<DiscussionCommentsArgs>>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   createdViaEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
