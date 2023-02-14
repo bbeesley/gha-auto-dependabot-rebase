@@ -14876,6 +14876,18 @@ var ProjectV2ViewOrderField;
     /** Order project v2 views by position */
     ProjectV2ViewOrderField["Position"] = "POSITION";
 })(ProjectV2ViewOrderField || (ProjectV2ViewOrderField = {}));
+/** Properties by which project workflows can be ordered. */
+var ProjectV2WorkflowsOrderField;
+(function (ProjectV2WorkflowsOrderField) {
+    /** The workflows' date and time of creation */
+    ProjectV2WorkflowsOrderField["CreatedAt"] = "CREATED_AT";
+    /** The workflows' name */
+    ProjectV2WorkflowsOrderField["Name"] = "NAME";
+    /** The workflows' number */
+    ProjectV2WorkflowsOrderField["Number"] = "NUMBER";
+    /** The workflows' date and time of update */
+    ProjectV2WorkflowsOrderField["UpdatedAt"] = "UPDATED_AT";
+})(ProjectV2WorkflowsOrderField || (ProjectV2WorkflowsOrderField = {}));
 /** Represents available types of methods to use when merging a pull request. */
 var PullRequestMergeMethod;
 (function (PullRequestMergeMethod) {
