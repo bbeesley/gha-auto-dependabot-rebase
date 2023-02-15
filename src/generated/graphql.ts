@@ -19545,6 +19545,8 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
   viewerSubscription?: Maybe<SubscriptionState>;
   /** Indicates the repository's visibility level. */
   visibility: RepositoryVisibility;
+  /** Returns a single vulnerability alert from the current repository by number. */
+  vulnerabilityAlert?: Maybe<RepositoryVulnerabilityAlert>;
   /** A list of vulnerability alerts that are on this repository. */
   vulnerabilityAlerts?: Maybe<RepositoryVulnerabilityAlertConnection>;
   /** A list of users watching the repository. */
@@ -19929,6 +19931,12 @@ export type RepositorySubmodulesArgs = {
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+};
+
+
+/** A repository contains the content for a project. */
+export type RepositoryVulnerabilityAlertArgs = {
+  number: Scalars['Int'];
 };
 
 
@@ -36466,6 +36474,7 @@ export type RepositoryResolvers<ContextType = any, ParentType extends ResolversP
   viewerPossibleCommitEmails?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
   viewerSubscription?: Resolver<Maybe<ResolversTypes['SubscriptionState']>, ParentType, ContextType>;
   visibility?: Resolver<ResolversTypes['RepositoryVisibility'], ParentType, ContextType>;
+  vulnerabilityAlert?: Resolver<Maybe<ResolversTypes['RepositoryVulnerabilityAlert']>, ParentType, ContextType, RequireFields<RepositoryVulnerabilityAlertArgs, 'number'>>;
   vulnerabilityAlerts?: Resolver<Maybe<ResolversTypes['RepositoryVulnerabilityAlertConnection']>, ParentType, ContextType, Partial<RepositoryVulnerabilityAlertsArgs>>;
   watchers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, Partial<RepositoryWatchersArgs>>;
   webCommitSignoffRequired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
