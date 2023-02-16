@@ -15709,6 +15709,8 @@ export type ProjectV2ViewEdge = {
 export enum ProjectV2ViewLayout {
   /** Board layout */
   BoardLayout = 'BOARD_LAYOUT',
+  /** Roadmap layout */
+  RoadmapLayout = 'ROADMAP_LAYOUT',
   /** Table layout */
   TableLayout = 'TABLE_LAYOUT'
 }
