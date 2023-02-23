@@ -14772,6 +14772,18 @@ var ProjectTemplate;
     /** Create a board to triage and prioritize bugs with To do, priority, and Done columns. */
     ProjectTemplate["BugTriage"] = "BUG_TRIAGE";
 })(ProjectTemplate || (ProjectTemplate = {}));
+/** The type of a project field. */
+var ProjectV2CustomFieldType;
+(function (ProjectV2CustomFieldType) {
+    /** Date */
+    ProjectV2CustomFieldType["Date"] = "DATE";
+    /** Number */
+    ProjectV2CustomFieldType["Number"] = "NUMBER";
+    /** Single Select */
+    ProjectV2CustomFieldType["SingleSelect"] = "SINGLE_SELECT";
+    /** Text */
+    ProjectV2CustomFieldType["Text"] = "TEXT";
+})(ProjectV2CustomFieldType || (ProjectV2CustomFieldType = {}));
 /** Properties by which project v2 field connections can be ordered. */
 var ProjectV2FieldOrderField;
 (function (ProjectV2FieldOrderField) {
@@ -14850,6 +14862,26 @@ var ProjectV2OrderField;
     /** The project's date and time of update */
     ProjectV2OrderField["UpdatedAt"] = "UPDATED_AT";
 })(ProjectV2OrderField || (ProjectV2OrderField = {}));
+/** The display color of a single-select field option. */
+var ProjectV2SingleSelectFieldOptionColor;
+(function (ProjectV2SingleSelectFieldOptionColor) {
+    /** BLUE */
+    ProjectV2SingleSelectFieldOptionColor["Blue"] = "BLUE";
+    /** GRAY */
+    ProjectV2SingleSelectFieldOptionColor["Gray"] = "GRAY";
+    /** GREEN */
+    ProjectV2SingleSelectFieldOptionColor["Green"] = "GREEN";
+    /** ORANGE */
+    ProjectV2SingleSelectFieldOptionColor["Orange"] = "ORANGE";
+    /** PINK */
+    ProjectV2SingleSelectFieldOptionColor["Pink"] = "PINK";
+    /** PURPLE */
+    ProjectV2SingleSelectFieldOptionColor["Purple"] = "PURPLE";
+    /** RED */
+    ProjectV2SingleSelectFieldOptionColor["Red"] = "RED";
+    /** YELLOW */
+    ProjectV2SingleSelectFieldOptionColor["Yellow"] = "YELLOW";
+})(ProjectV2SingleSelectFieldOptionColor || (ProjectV2SingleSelectFieldOptionColor = {}));
 /** The possible states of a project v2. */
 var ProjectV2State;
 (function (ProjectV2State) {
