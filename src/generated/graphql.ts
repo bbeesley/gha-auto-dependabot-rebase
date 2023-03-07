@@ -14789,6 +14789,8 @@ export type ProjectV2 = Closable & Node & Updatable & {
   shortDescription?: Maybe<Scalars['String']>;
   /** The teams the project is linked to. */
   teams: TeamConnection;
+  /** Returns true if this project is a template. */
+  template: Scalars['Boolean'];
   /** The project's name. */
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -21715,6 +21717,63 @@ export type SmimeSignature = GitSignature & {
   wasSignedByGitHub: Scalars['Boolean'];
 };
 
+/** Social media profile associated with a user. */
+export type SocialAccount = {
+  __typename?: 'SocialAccount';
+  /** Name of the social media account as it appears on the profile. */
+  displayName: Scalars['String'];
+  /** Software or company that hosts the social media account. */
+  provider: SocialAccountProvider;
+  /** URL of the social media account. */
+  url: Scalars['URI'];
+};
+
+/** The connection type for SocialAccount. */
+export type SocialAccountConnection = {
+  __typename?: 'SocialAccountConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<Maybe<SocialAccountEdge>>>;
+  /** A list of nodes. */
+  nodes?: Maybe<Array<Maybe<SocialAccount>>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** An edge in a connection. */
+export type SocialAccountEdge = {
+  __typename?: 'SocialAccountEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node?: Maybe<SocialAccount>;
+};
+
+/** Software or company that hosts social media accounts. */
+export enum SocialAccountProvider {
+  /** Social media and networking website. */
+  Facebook = 'FACEBOOK',
+  /** Catch-all for social media providers that do not yet have specific handling. */
+  Generic = 'GENERIC',
+  /** Fork of Mastodon with a greater focus on local posting. */
+  Hometown = 'HOMETOWN',
+  /** Social media website with a focus on photo and video sharing. */
+  Instagram = 'INSTAGRAM',
+  /** Professional networking website. */
+  Linkedin = 'LINKEDIN',
+  /** Open-source federated microblogging service. */
+  Mastodon = 'MASTODON',
+  /** Social news aggregation and discussion website. */
+  Reddit = 'REDDIT',
+  /** Live-streaming service. */
+  Twitch = 'TWITCH',
+  /** Microblogging website. */
+  Twitter = 'TWITTER',
+  /** Online video platform. */
+  Youtube = 'YOUTUBE'
+}
+
 /** Entities that can sponsor others via GitHub Sponsors */
 export type Sponsor = Organization | User;
 
@@ -26261,6 +26320,8 @@ export type User = Actor & Node & PackageOwner & ProfileOwner & ProjectOwner & P
   resourcePath: Scalars['URI'];
   /** Replies this user has saved */
   savedReplies?: Maybe<SavedReplyConnection>;
+  /** The user's social media accounts, ordered as they appear on the user's profile. */
+  socialAccounts: SocialAccountConnection;
   /** List of users and organizations this entity is sponsoring. */
   sponsoring: SponsorConnection;
   /** List of sponsors for this user or organization. */
@@ -26618,6 +26679,15 @@ export type UserSavedRepliesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<SavedReplyOrder>;
+};
+
+
+/** A user is an individual's account on GitHub that owns repositories and can make new content. */
+export type UserSocialAccountsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -28309,6 +28379,10 @@ export type ResolversTypes = {
   SetUserInteractionLimitInput: SetUserInteractionLimitInput;
   SetUserInteractionLimitPayload: ResolverTypeWrapper<SetUserInteractionLimitPayload>;
   SmimeSignature: ResolverTypeWrapper<SmimeSignature>;
+  SocialAccount: ResolverTypeWrapper<SocialAccount>;
+  SocialAccountConnection: ResolverTypeWrapper<SocialAccountConnection>;
+  SocialAccountEdge: ResolverTypeWrapper<SocialAccountEdge>;
+  SocialAccountProvider: SocialAccountProvider;
   Sponsor: ResolverTypeWrapper<ResolversUnionTypes['Sponsor']>;
   SponsorConnection: ResolverTypeWrapper<Omit<SponsorConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversTypes['Sponsor']>>> }>;
   SponsorEdge: ResolverTypeWrapper<Omit<SponsorEdge, 'node'> & { node?: Maybe<ResolversTypes['Sponsor']> }>;
@@ -29512,6 +29586,9 @@ export type ResolversParentTypes = {
   SetUserInteractionLimitInput: SetUserInteractionLimitInput;
   SetUserInteractionLimitPayload: SetUserInteractionLimitPayload;
   SmimeSignature: SmimeSignature;
+  SocialAccount: SocialAccount;
+  SocialAccountConnection: SocialAccountConnection;
+  SocialAccountEdge: SocialAccountEdge;
   Sponsor: ResolversUnionTypes['Sponsor'];
   SponsorConnection: Omit<SponsorConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['Sponsor']>>> };
   SponsorEdge: Omit<SponsorEdge, 'node'> & { node?: Maybe<ResolversParentTypes['Sponsor']> };
@@ -34769,6 +34846,7 @@ export type ProjectV2Resolvers<ContextType = any, ParentType extends ResolversPa
   resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
   shortDescription?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   teams?: Resolver<ResolversTypes['TeamConnection'], ParentType, ContextType, RequireFields<ProjectV2TeamsArgs, 'orderBy'>>;
+  template?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
@@ -37294,6 +37372,27 @@ export type SmimeSignatureResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type SocialAccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialAccount'] = ResolversParentTypes['SocialAccount']> = {
+  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  provider?: Resolver<ResolversTypes['SocialAccountProvider'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SocialAccountConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialAccountConnection'] = ResolversParentTypes['SocialAccountConnection']> = {
+  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['SocialAccountEdge']>>>, ParentType, ContextType>;
+  nodes?: Resolver<Maybe<Array<Maybe<ResolversTypes['SocialAccount']>>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SocialAccountEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialAccountEdge'] = ResolversParentTypes['SocialAccountEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['SocialAccount']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SponsorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Sponsor'] = ResolversParentTypes['Sponsor']> = {
   __resolveType: TypeResolveFn<'Organization' | 'User', ParentType, ContextType>;
 };
@@ -38713,6 +38812,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   repositoryDiscussions?: Resolver<ResolversTypes['DiscussionConnection'], ParentType, ContextType, RequireFields<UserRepositoryDiscussionsArgs, 'answered' | 'orderBy'>>;
   resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
   savedReplies?: Resolver<Maybe<ResolversTypes['SavedReplyConnection']>, ParentType, ContextType, RequireFields<UserSavedRepliesArgs, 'orderBy'>>;
+  socialAccounts?: Resolver<ResolversTypes['SocialAccountConnection'], ParentType, ContextType, Partial<UserSocialAccountsArgs>>;
   sponsoring?: Resolver<ResolversTypes['SponsorConnection'], ParentType, ContextType, RequireFields<UserSponsoringArgs, 'orderBy'>>;
   sponsors?: Resolver<ResolversTypes['SponsorConnection'], ParentType, ContextType, RequireFields<UserSponsorsArgs, 'orderBy'>>;
   sponsorsActivities?: Resolver<ResolversTypes['SponsorsActivityConnection'], ParentType, ContextType, RequireFields<UserSponsorsActivitiesArgs, 'actions' | 'includeAsSponsor' | 'orderBy' | 'period'>>;
@@ -39631,6 +39731,9 @@ export type Resolvers<ContextType = any> = {
   SetRepositoryInteractionLimitPayload?: SetRepositoryInteractionLimitPayloadResolvers<ContextType>;
   SetUserInteractionLimitPayload?: SetUserInteractionLimitPayloadResolvers<ContextType>;
   SmimeSignature?: SmimeSignatureResolvers<ContextType>;
+  SocialAccount?: SocialAccountResolvers<ContextType>;
+  SocialAccountConnection?: SocialAccountConnectionResolvers<ContextType>;
+  SocialAccountEdge?: SocialAccountEdgeResolvers<ContextType>;
   Sponsor?: SponsorResolvers<ContextType>;
   SponsorConnection?: SponsorConnectionResolvers<ContextType>;
   SponsorEdge?: SponsorEdgeResolvers<ContextType>;

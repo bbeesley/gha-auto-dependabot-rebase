@@ -15548,6 +15548,30 @@ var SecurityVulnerabilityOrderField;
     /** Order vulnerability by update time */
     SecurityVulnerabilityOrderField["UpdatedAt"] = "UPDATED_AT";
 })(SecurityVulnerabilityOrderField || (SecurityVulnerabilityOrderField = {}));
+/** Software or company that hosts social media accounts. */
+var SocialAccountProvider;
+(function (SocialAccountProvider) {
+    /** Social media and networking website. */
+    SocialAccountProvider["Facebook"] = "FACEBOOK";
+    /** Catch-all for social media providers that do not yet have specific handling. */
+    SocialAccountProvider["Generic"] = "GENERIC";
+    /** Fork of Mastodon with a greater focus on local posting. */
+    SocialAccountProvider["Hometown"] = "HOMETOWN";
+    /** Social media website with a focus on photo and video sharing. */
+    SocialAccountProvider["Instagram"] = "INSTAGRAM";
+    /** Professional networking website. */
+    SocialAccountProvider["Linkedin"] = "LINKEDIN";
+    /** Open-source federated microblogging service. */
+    SocialAccountProvider["Mastodon"] = "MASTODON";
+    /** Social news aggregation and discussion website. */
+    SocialAccountProvider["Reddit"] = "REDDIT";
+    /** Live-streaming service. */
+    SocialAccountProvider["Twitch"] = "TWITCH";
+    /** Microblogging website. */
+    SocialAccountProvider["Twitter"] = "TWITTER";
+    /** Online video platform. */
+    SocialAccountProvider["Youtube"] = "YOUTUBE";
+})(SocialAccountProvider || (SocialAccountProvider = {}));
 /** Properties by which sponsor connections can be ordered. */
 var SponsorOrderField;
 (function (SponsorOrderField) {
