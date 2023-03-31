@@ -41,7 +41,7 @@
     "@babel/cli": "^7.21.0",
     "@babel/core": "^7.21.3",
     "@babel/node": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-env": "^7.21.4",
     "@babel/preset-stage-0": "^7.8.3",
     "@babel/preset-typescript": "^7.21.4",
     "@beesley/tsconfig": "^1.1.4",
