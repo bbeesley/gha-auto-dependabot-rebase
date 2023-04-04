@@ -27309,6 +27309,48 @@ export type ResolversUnionTypes = {
   VerifiableDomainOwner: ( Enterprise ) | ( Organization );
 };
 
+/** Mapping of union parent types */
+export type ResolversUnionParentTypes = {
+  Assignee: ( Bot ) | ( Mannequin ) | ( Organization ) | ( User );
+  AuditEntryActor: ( Bot ) | ( Organization ) | ( User );
+  BranchActorAllowanceActor: ( App ) | ( Team ) | ( User );
+  Claimable: ( Mannequin ) | ( User );
+  Closer: ( Commit ) | ( PullRequest );
+  CreatedIssueOrRestrictedContribution: ( CreatedIssueContribution ) | ( RestrictedContribution );
+  CreatedPullRequestOrRestrictedContribution: ( CreatedPullRequestContribution ) | ( RestrictedContribution );
+  CreatedRepositoryOrRestrictedContribution: ( CreatedRepositoryContribution ) | ( RestrictedContribution );
+  DeploymentReviewer: ( Team ) | ( User );
+  EnterpriseMember: ( EnterpriseUserAccount ) | ( User );
+  IpAllowListOwner: ( App ) | ( Enterprise ) | ( Organization );
+  IssueOrPullRequest: ( Issue ) | ( PullRequest );
+  IssueTimelineItem: ( Omit<AssignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( Omit<ClosedEvent, 'closer'> & { closer?: Maybe<ResolversParentTypes['Closer']> } ) | ( Commit ) | ( Omit<CrossReferencedEvent, 'source' | 'target'> & { source: ResolversParentTypes['ReferencedSubject'], target: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<DemilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( IssueComment ) | ( LabeledEvent ) | ( LockedEvent ) | ( Omit<MilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( Omit<ReferencedEvent, 'subject'> & { subject: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<RenamedTitleEvent, 'subject'> & { subject: ResolversParentTypes['RenamedTitleSubject'] } ) | ( ReopenedEvent ) | ( SubscribedEvent ) | ( TransferredEvent ) | ( Omit<UnassignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( UnlabeledEvent ) | ( UnlockedEvent ) | ( UnsubscribedEvent ) | ( UserBlockedEvent );
+  IssueTimelineItems: ( AddedToProjectEvent ) | ( Omit<AssignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( Omit<ClosedEvent, 'closer'> & { closer?: Maybe<ResolversParentTypes['Closer']> } ) | ( CommentDeletedEvent ) | ( Omit<ConnectedEvent, 'source' | 'subject'> & { source: ResolversParentTypes['ReferencedSubject'], subject: ResolversParentTypes['ReferencedSubject'] } ) | ( ConvertedNoteToIssueEvent ) | ( ConvertedToDiscussionEvent ) | ( Omit<CrossReferencedEvent, 'source' | 'target'> & { source: ResolversParentTypes['ReferencedSubject'], target: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<DemilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( Omit<DisconnectedEvent, 'source' | 'subject'> & { source: ResolversParentTypes['ReferencedSubject'], subject: ResolversParentTypes['ReferencedSubject'] } ) | ( IssueComment ) | ( LabeledEvent ) | ( LockedEvent ) | ( Omit<MarkedAsDuplicateEvent, 'canonical' | 'duplicate'> & { canonical?: Maybe<ResolversParentTypes['IssueOrPullRequest']>, duplicate?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( MentionedEvent ) | ( Omit<MilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( MovedColumnsInProjectEvent ) | ( PinnedEvent ) | ( Omit<ReferencedEvent, 'subject'> & { subject: ResolversParentTypes['ReferencedSubject'] } ) | ( RemovedFromProjectEvent ) | ( Omit<RenamedTitleEvent, 'subject'> & { subject: ResolversParentTypes['RenamedTitleSubject'] } ) | ( ReopenedEvent ) | ( SubscribedEvent ) | ( TransferredEvent ) | ( Omit<UnassignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( UnlabeledEvent ) | ( UnlockedEvent ) | ( Omit<UnmarkedAsDuplicateEvent, 'canonical' | 'duplicate'> & { canonical?: Maybe<ResolversParentTypes['IssueOrPullRequest']>, duplicate?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( UnpinnedEvent ) | ( UnsubscribedEvent ) | ( UserBlockedEvent );
+  MilestoneItem: ( Issue ) | ( PullRequest );
+  OrgRestoreMemberAuditEntryMembership: ( OrgRestoreMemberMembershipOrganizationAuditEntryData ) | ( OrgRestoreMemberMembershipRepositoryAuditEntryData ) | ( OrgRestoreMemberMembershipTeamAuditEntryData );
+  OrganizationAuditEntry: ( Omit<MembersCanDeleteReposClearAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<MembersCanDeleteReposDisableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<MembersCanDeleteReposEnableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OauthApplicationCreateAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgAddBillingManagerAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgAddMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgBlockUserAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgConfigDisableCollaboratorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgConfigEnableCollaboratorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgCreateAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgDisableOauthAppRestrictionsAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgDisableSamlAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgDisableTwoFactorRequirementAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgEnableOauthAppRestrictionsAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgEnableSamlAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgEnableTwoFactorRequirementAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgInviteMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgInviteToBusinessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgOauthAppAccessApprovedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgOauthAppAccessDeniedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgOauthAppAccessRequestedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgRemoveBillingManagerAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgRemoveMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgRemoveOutsideCollaboratorAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgRestoreMemberAuditEntry, 'actor' | 'restoredMemberships'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']>, restoredMemberships?: Maybe<Array<ResolversParentTypes['OrgRestoreMemberAuditEntryMembership']>> } ) | ( Omit<OrgUnblockUserAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgUpdateDefaultRepositoryPermissionAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgUpdateMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgUpdateMemberRepositoryCreationPermissionAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<OrgUpdateMemberRepositoryInvitationPermissionAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<PrivateRepositoryForkingDisableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<PrivateRepositoryForkingEnableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoAccessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoAddMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoAddTopicAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoArchivedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoChangeMergeSettingAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigDisableAnonymousGitAccessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigDisableCollaboratorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigDisableContributorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigDisableSockpuppetDisallowedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigEnableAnonymousGitAccessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigEnableCollaboratorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigEnableContributorsOnlyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigEnableSockpuppetDisallowedAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigLockAnonymousGitAccessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoConfigUnlockAnonymousGitAccessAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoCreateAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoDestroyAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoRemoveMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepoRemoveTopicAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepositoryVisibilityChangeDisableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<RepositoryVisibilityChangeEnableAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<TeamAddMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<TeamAddRepositoryAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<TeamChangeParentTeamAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<TeamRemoveMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } ) | ( Omit<TeamRemoveRepositoryAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> } );
+  OrganizationOrUser: ( Organization ) | ( User );
+  PermissionGranter: ( Organization ) | ( Omit<Repository, 'issueOrPullRequest'> & { issueOrPullRequest?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( Team );
+  PinnableItem: ( Gist ) | ( Omit<Repository, 'issueOrPullRequest'> & { issueOrPullRequest?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } );
+  ProjectCardItem: ( Issue ) | ( PullRequest );
+  ProjectV2FieldConfiguration: ( ProjectV2Field ) | ( ProjectV2IterationField ) | ( ProjectV2SingleSelectField );
+  ProjectV2ItemContent: ( DraftIssue ) | ( Issue ) | ( PullRequest );
+  ProjectV2ItemFieldValue: ( Omit<ProjectV2ItemFieldDateValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldIterationValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldLabelValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldMilestoneValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldNumberValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldPullRequestValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldRepositoryValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldReviewerValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldSingleSelectValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldTextValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } ) | ( Omit<ProjectV2ItemFieldUserValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] } );
+  PullRequestTimelineItem: ( Omit<AssignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( BaseRefDeletedEvent ) | ( BaseRefForcePushedEvent ) | ( Omit<ClosedEvent, 'closer'> & { closer?: Maybe<ResolversParentTypes['Closer']> } ) | ( Commit ) | ( CommitCommentThread ) | ( Omit<CrossReferencedEvent, 'source' | 'target'> & { source: ResolversParentTypes['ReferencedSubject'], target: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<DemilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( DeployedEvent ) | ( DeploymentEnvironmentChangedEvent ) | ( HeadRefDeletedEvent ) | ( HeadRefForcePushedEvent ) | ( HeadRefRestoredEvent ) | ( IssueComment ) | ( LabeledEvent ) | ( LockedEvent ) | ( MergedEvent ) | ( Omit<MilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( PullRequestReview ) | ( PullRequestReviewComment ) | ( PullRequestReviewThread ) | ( Omit<ReferencedEvent, 'subject'> & { subject: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<RenamedTitleEvent, 'subject'> & { subject: ResolversParentTypes['RenamedTitleSubject'] } ) | ( ReopenedEvent ) | ( ReviewDismissedEvent ) | ( Omit<ReviewRequestRemovedEvent, 'requestedReviewer'> & { requestedReviewer?: Maybe<ResolversParentTypes['RequestedReviewer']> } ) | ( Omit<ReviewRequestedEvent, 'requestedReviewer'> & { requestedReviewer?: Maybe<ResolversParentTypes['RequestedReviewer']> } ) | ( SubscribedEvent ) | ( Omit<UnassignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( UnlabeledEvent ) | ( UnlockedEvent ) | ( UnsubscribedEvent ) | ( UserBlockedEvent );
+  PullRequestTimelineItems: ( AddedToProjectEvent ) | ( Omit<AssignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( AutoMergeDisabledEvent ) | ( AutoMergeEnabledEvent ) | ( AutoRebaseEnabledEvent ) | ( AutoSquashEnabledEvent ) | ( AutomaticBaseChangeFailedEvent ) | ( AutomaticBaseChangeSucceededEvent ) | ( BaseRefChangedEvent ) | ( BaseRefDeletedEvent ) | ( BaseRefForcePushedEvent ) | ( Omit<ClosedEvent, 'closer'> & { closer?: Maybe<ResolversParentTypes['Closer']> } ) | ( CommentDeletedEvent ) | ( Omit<ConnectedEvent, 'source' | 'subject'> & { source: ResolversParentTypes['ReferencedSubject'], subject: ResolversParentTypes['ReferencedSubject'] } ) | ( ConvertToDraftEvent ) | ( ConvertedNoteToIssueEvent ) | ( ConvertedToDiscussionEvent ) | ( Omit<CrossReferencedEvent, 'source' | 'target'> & { source: ResolversParentTypes['ReferencedSubject'], target: ResolversParentTypes['ReferencedSubject'] } ) | ( Omit<DemilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( DeployedEvent ) | ( DeploymentEnvironmentChangedEvent ) | ( Omit<DisconnectedEvent, 'source' | 'subject'> & { source: ResolversParentTypes['ReferencedSubject'], subject: ResolversParentTypes['ReferencedSubject'] } ) | ( HeadRefDeletedEvent ) | ( HeadRefForcePushedEvent ) | ( HeadRefRestoredEvent ) | ( IssueComment ) | ( LabeledEvent ) | ( LockedEvent ) | ( Omit<MarkedAsDuplicateEvent, 'canonical' | 'duplicate'> & { canonical?: Maybe<ResolversParentTypes['IssueOrPullRequest']>, duplicate?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( MentionedEvent ) | ( MergedEvent ) | ( Omit<MilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] } ) | ( MovedColumnsInProjectEvent ) | ( PinnedEvent ) | ( PullRequestCommit ) | ( PullRequestCommitCommentThread ) | ( PullRequestReview ) | ( PullRequestReviewThread ) | ( PullRequestRevisionMarker ) | ( ReadyForReviewEvent ) | ( Omit<ReferencedEvent, 'subject'> & { subject: ResolversParentTypes['ReferencedSubject'] } ) | ( RemovedFromProjectEvent ) | ( Omit<RenamedTitleEvent, 'subject'> & { subject: ResolversParentTypes['RenamedTitleSubject'] } ) | ( ReopenedEvent ) | ( ReviewDismissedEvent ) | ( Omit<ReviewRequestRemovedEvent, 'requestedReviewer'> & { requestedReviewer?: Maybe<ResolversParentTypes['RequestedReviewer']> } ) | ( Omit<ReviewRequestedEvent, 'requestedReviewer'> & { requestedReviewer?: Maybe<ResolversParentTypes['RequestedReviewer']> } ) | ( SubscribedEvent ) | ( TransferredEvent ) | ( Omit<UnassignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> } ) | ( UnlabeledEvent ) | ( UnlockedEvent ) | ( Omit<UnmarkedAsDuplicateEvent, 'canonical' | 'duplicate'> & { canonical?: Maybe<ResolversParentTypes['IssueOrPullRequest']>, duplicate?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( UnpinnedEvent ) | ( UnsubscribedEvent ) | ( UserBlockedEvent );
+  PushAllowanceActor: ( App ) | ( Team ) | ( User );
+  Reactor: ( Bot ) | ( Mannequin ) | ( Organization ) | ( User );
+  ReferencedSubject: ( Issue ) | ( PullRequest );
+  RenamedTitleSubject: ( Issue ) | ( PullRequest );
+  RequestedReviewer: ( Mannequin ) | ( Team ) | ( User );
+  ReviewDismissalAllowanceActor: ( App ) | ( Team ) | ( User );
+  SearchResultItem: ( App ) | ( Discussion ) | ( Issue ) | ( MarketplaceListing ) | ( Organization ) | ( PullRequest ) | ( Omit<Repository, 'issueOrPullRequest'> & { issueOrPullRequest?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( User );
+  Sponsor: ( Organization ) | ( User );
+  SponsorableItem: ( Organization ) | ( User );
+  SponsorsListingFeatureableItem: ( Omit<Repository, 'issueOrPullRequest'> & { issueOrPullRequest?: Maybe<ResolversParentTypes['IssueOrPullRequest']> } ) | ( User );
+  StatusCheckRollupContext: ( CheckRun ) | ( StatusContext );
+  VerifiableDomainOwner: ( Enterprise ) | ( Organization );
+};
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   AbortQueuedMigrationsInput: AbortQueuedMigrationsInput;
@@ -28738,9 +28780,9 @@ export type ResolversParentTypes = {
   ArchiveRepositoryPayload: ArchiveRepositoryPayload;
   Assignable: ResolversParentTypes['Issue'] | ResolversParentTypes['PullRequest'];
   AssignedEvent: Omit<AssignedEvent, 'assignee'> & { assignee?: Maybe<ResolversParentTypes['Assignee']> };
-  Assignee: ResolversUnionTypes['Assignee'];
+  Assignee: ResolversUnionParentTypes['Assignee'];
   AuditEntry: ResolversParentTypes['MembersCanDeleteReposClearAuditEntry'] | ResolversParentTypes['MembersCanDeleteReposDisableAuditEntry'] | ResolversParentTypes['MembersCanDeleteReposEnableAuditEntry'] | ResolversParentTypes['OauthApplicationCreateAuditEntry'] | ResolversParentTypes['OrgAddBillingManagerAuditEntry'] | ResolversParentTypes['OrgAddMemberAuditEntry'] | ResolversParentTypes['OrgBlockUserAuditEntry'] | ResolversParentTypes['OrgConfigDisableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['OrgConfigEnableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['OrgCreateAuditEntry'] | ResolversParentTypes['OrgDisableOauthAppRestrictionsAuditEntry'] | ResolversParentTypes['OrgDisableSamlAuditEntry'] | ResolversParentTypes['OrgDisableTwoFactorRequirementAuditEntry'] | ResolversParentTypes['OrgEnableOauthAppRestrictionsAuditEntry'] | ResolversParentTypes['OrgEnableSamlAuditEntry'] | ResolversParentTypes['OrgEnableTwoFactorRequirementAuditEntry'] | ResolversParentTypes['OrgInviteMemberAuditEntry'] | ResolversParentTypes['OrgInviteToBusinessAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessApprovedAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessDeniedAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessRequestedAuditEntry'] | ResolversParentTypes['OrgRemoveBillingManagerAuditEntry'] | ResolversParentTypes['OrgRemoveMemberAuditEntry'] | ResolversParentTypes['OrgRemoveOutsideCollaboratorAuditEntry'] | ResolversParentTypes['OrgRestoreMemberAuditEntry'] | ResolversParentTypes['OrgUnblockUserAuditEntry'] | ResolversParentTypes['OrgUpdateDefaultRepositoryPermissionAuditEntry'] | ResolversParentTypes['OrgUpdateMemberAuditEntry'] | ResolversParentTypes['OrgUpdateMemberRepositoryCreationPermissionAuditEntry'] | ResolversParentTypes['OrgUpdateMemberRepositoryInvitationPermissionAuditEntry'] | ResolversParentTypes['PrivateRepositoryForkingDisableAuditEntry'] | ResolversParentTypes['PrivateRepositoryForkingEnableAuditEntry'] | ResolversParentTypes['RepoAccessAuditEntry'] | ResolversParentTypes['RepoAddMemberAuditEntry'] | ResolversParentTypes['RepoAddTopicAuditEntry'] | ResolversParentTypes['RepoArchivedAuditEntry'] | ResolversParentTypes['RepoChangeMergeSettingAuditEntry'] | ResolversParentTypes['RepoConfigDisableAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigDisableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigDisableContributorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigDisableSockpuppetDisallowedAuditEntry'] | ResolversParentTypes['RepoConfigEnableAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigEnableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigEnableContributorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigEnableSockpuppetDisallowedAuditEntry'] | ResolversParentTypes['RepoConfigLockAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigUnlockAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoCreateAuditEntry'] | ResolversParentTypes['RepoDestroyAuditEntry'] | ResolversParentTypes['RepoRemoveMemberAuditEntry'] | ResolversParentTypes['RepoRemoveTopicAuditEntry'] | ResolversParentTypes['RepositoryVisibilityChangeDisableAuditEntry'] | ResolversParentTypes['RepositoryVisibilityChangeEnableAuditEntry'] | ResolversParentTypes['TeamAddMemberAuditEntry'] | ResolversParentTypes['TeamAddRepositoryAuditEntry'] | ResolversParentTypes['TeamChangeParentTeamAuditEntry'] | ResolversParentTypes['TeamRemoveMemberAuditEntry'] | ResolversParentTypes['TeamRemoveRepositoryAuditEntry'];
-  AuditEntryActor: ResolversUnionTypes['AuditEntryActor'];
+  AuditEntryActor: ResolversUnionParentTypes['AuditEntryActor'];
   AuditLogOrder: AuditLogOrder;
   AutoMergeDisabledEvent: AutoMergeDisabledEvent;
   AutoMergeEnabledEvent: AutoMergeEnabledEvent;
@@ -28758,7 +28800,7 @@ export type ResolversParentTypes = {
   Blob: Blob;
   Boolean: Scalars['Boolean'];
   Bot: Bot;
-  BranchActorAllowanceActor: ResolversUnionTypes['BranchActorAllowanceActor'];
+  BranchActorAllowanceActor: ResolversUnionParentTypes['BranchActorAllowanceActor'];
   BranchProtectionRule: BranchProtectionRule;
   BranchProtectionRuleConflict: BranchProtectionRuleConflict;
   BranchProtectionRuleConflictConnection: BranchProtectionRuleConflictConnection;
@@ -28804,7 +28846,7 @@ export type ResolversParentTypes = {
   CheckSuiteConnection: CheckSuiteConnection;
   CheckSuiteEdge: CheckSuiteEdge;
   CheckSuiteFilter: CheckSuiteFilter;
-  Claimable: ResolversUnionTypes['Claimable'];
+  Claimable: ResolversUnionParentTypes['Claimable'];
   ClearLabelsFromLabelableInput: ClearLabelsFromLabelableInput;
   ClearLabelsFromLabelablePayload: ClearLabelsFromLabelablePayload;
   ClearProjectV2ItemFieldValueInput: ClearProjectV2ItemFieldValueInput;
@@ -28819,7 +28861,7 @@ export type ResolversParentTypes = {
   ClosePullRequestInput: ClosePullRequestInput;
   ClosePullRequestPayload: ClosePullRequestPayload;
   ClosedEvent: Omit<ClosedEvent, 'closer'> & { closer?: Maybe<ResolversParentTypes['Closer']> };
-  Closer: ResolversUnionTypes['Closer'];
+  Closer: ResolversUnionParentTypes['Closer'];
   CodeOfConduct: CodeOfConduct;
   Comment: ResolversParentTypes['CommitComment'] | ResolversParentTypes['Discussion'] | ResolversParentTypes['DiscussionComment'] | ResolversParentTypes['GistComment'] | ResolversParentTypes['Issue'] | ResolversParentTypes['IssueComment'] | ResolversParentTypes['PullRequest'] | ResolversParentTypes['PullRequestReview'] | ResolversParentTypes['PullRequestReviewComment'] | ResolversParentTypes['TeamDiscussion'] | ResolversParentTypes['TeamDiscussionComment'];
   CommentDeletedEvent: CommentDeletedEvent;
@@ -28907,18 +28949,18 @@ export type ResolversParentTypes = {
   CreatedIssueContribution: CreatedIssueContribution;
   CreatedIssueContributionConnection: CreatedIssueContributionConnection;
   CreatedIssueContributionEdge: CreatedIssueContributionEdge;
-  CreatedIssueOrRestrictedContribution: ResolversUnionTypes['CreatedIssueOrRestrictedContribution'];
+  CreatedIssueOrRestrictedContribution: ResolversUnionParentTypes['CreatedIssueOrRestrictedContribution'];
   CreatedPullRequestContribution: CreatedPullRequestContribution;
   CreatedPullRequestContributionConnection: CreatedPullRequestContributionConnection;
   CreatedPullRequestContributionEdge: CreatedPullRequestContributionEdge;
-  CreatedPullRequestOrRestrictedContribution: ResolversUnionTypes['CreatedPullRequestOrRestrictedContribution'];
+  CreatedPullRequestOrRestrictedContribution: ResolversUnionParentTypes['CreatedPullRequestOrRestrictedContribution'];
   CreatedPullRequestReviewContribution: CreatedPullRequestReviewContribution;
   CreatedPullRequestReviewContributionConnection: CreatedPullRequestReviewContributionConnection;
   CreatedPullRequestReviewContributionEdge: CreatedPullRequestReviewContributionEdge;
   CreatedRepositoryContribution: CreatedRepositoryContribution;
   CreatedRepositoryContributionConnection: CreatedRepositoryContributionConnection;
   CreatedRepositoryContributionEdge: CreatedRepositoryContributionEdge;
-  CreatedRepositoryOrRestrictedContribution: ResolversUnionTypes['CreatedRepositoryOrRestrictedContribution'];
+  CreatedRepositoryOrRestrictedContribution: ResolversUnionParentTypes['CreatedRepositoryOrRestrictedContribution'];
   CrossReferencedEvent: Omit<CrossReferencedEvent, 'source' | 'target'> & { source: ResolversParentTypes['ReferencedSubject'], target: ResolversParentTypes['ReferencedSubject'] };
   Date: Scalars['Date'];
   DateTime: Scalars['DateTime'];
@@ -28988,7 +29030,7 @@ export type ResolversParentTypes = {
   DeploymentReview: DeploymentReview;
   DeploymentReviewConnection: DeploymentReviewConnection;
   DeploymentReviewEdge: DeploymentReviewEdge;
-  DeploymentReviewer: ResolversUnionTypes['DeploymentReviewer'];
+  DeploymentReviewer: ResolversUnionParentTypes['DeploymentReviewer'];
   DeploymentReviewerConnection: Omit<DeploymentReviewerConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['DeploymentReviewer']>>> };
   DeploymentReviewerEdge: Omit<DeploymentReviewerEdge, 'node'> & { node?: Maybe<ResolversParentTypes['DeploymentReviewer']> };
   DeploymentStatus: DeploymentStatus;
@@ -29033,7 +29075,7 @@ export type ResolversParentTypes = {
   EnterpriseFailedInvitationConnection: EnterpriseFailedInvitationConnection;
   EnterpriseFailedInvitationEdge: EnterpriseFailedInvitationEdge;
   EnterpriseIdentityProvider: EnterpriseIdentityProvider;
-  EnterpriseMember: ResolversUnionTypes['EnterpriseMember'];
+  EnterpriseMember: ResolversUnionParentTypes['EnterpriseMember'];
   EnterpriseMemberConnection: Omit<EnterpriseMemberConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['EnterpriseMember']>>> };
   EnterpriseMemberEdge: Omit<EnterpriseMemberEdge, 'node'> & { node?: Maybe<ResolversParentTypes['EnterpriseMember']> };
   EnterpriseMemberOrder: EnterpriseMemberOrder;
@@ -29121,7 +29163,7 @@ export type ResolversParentTypes = {
   IpAllowListEntryConnection: IpAllowListEntryConnection;
   IpAllowListEntryEdge: IpAllowListEntryEdge;
   IpAllowListEntryOrder: IpAllowListEntryOrder;
-  IpAllowListOwner: ResolversUnionTypes['IpAllowListOwner'];
+  IpAllowListOwner: ResolversUnionParentTypes['IpAllowListOwner'];
   Issue: Issue;
   IssueComment: IssueComment;
   IssueCommentConnection: IssueCommentConnection;
@@ -29131,13 +29173,13 @@ export type ResolversParentTypes = {
   IssueContributionsByRepository: IssueContributionsByRepository;
   IssueEdge: IssueEdge;
   IssueFilters: IssueFilters;
-  IssueOrPullRequest: ResolversUnionTypes['IssueOrPullRequest'];
+  IssueOrPullRequest: ResolversUnionParentTypes['IssueOrPullRequest'];
   IssueOrder: IssueOrder;
   IssueTemplate: IssueTemplate;
   IssueTimelineConnection: Omit<IssueTimelineConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['IssueTimelineItem']>>> };
-  IssueTimelineItem: ResolversUnionTypes['IssueTimelineItem'];
+  IssueTimelineItem: ResolversUnionParentTypes['IssueTimelineItem'];
   IssueTimelineItemEdge: Omit<IssueTimelineItemEdge, 'node'> & { node?: Maybe<ResolversParentTypes['IssueTimelineItem']> };
-  IssueTimelineItems: ResolversUnionTypes['IssueTimelineItems'];
+  IssueTimelineItems: ResolversUnionParentTypes['IssueTimelineItems'];
   IssueTimelineItemsConnection: Omit<IssueTimelineItemsConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['IssueTimelineItems']>>> };
   IssueTimelineItemsEdge: Omit<IssueTimelineItemsEdge, 'node'> & { node?: Maybe<ResolversParentTypes['IssueTimelineItems']> };
   JoinedGitHubContribution: JoinedGitHubContribution;
@@ -29196,7 +29238,7 @@ export type ResolversParentTypes = {
   Milestone: Milestone;
   MilestoneConnection: MilestoneConnection;
   MilestoneEdge: MilestoneEdge;
-  MilestoneItem: ResolversUnionTypes['MilestoneItem'];
+  MilestoneItem: ResolversUnionParentTypes['MilestoneItem'];
   MilestoneOrder: MilestoneOrder;
   MilestonedEvent: Omit<MilestonedEvent, 'subject'> & { subject: ResolversParentTypes['MilestoneItem'] };
   Minimizable: ResolversParentTypes['CommitComment'] | ResolversParentTypes['DiscussionComment'] | ResolversParentTypes['GistComment'] | ResolversParentTypes['IssueComment'] | ResolversParentTypes['PullRequestReviewComment'];
@@ -29234,7 +29276,7 @@ export type ResolversParentTypes = {
   OrgRemoveMemberAuditEntry: Omit<OrgRemoveMemberAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> };
   OrgRemoveOutsideCollaboratorAuditEntry: Omit<OrgRemoveOutsideCollaboratorAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> };
   OrgRestoreMemberAuditEntry: Omit<OrgRestoreMemberAuditEntry, 'actor' | 'restoredMemberships'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']>, restoredMemberships?: Maybe<Array<ResolversParentTypes['OrgRestoreMemberAuditEntryMembership']>> };
-  OrgRestoreMemberAuditEntryMembership: ResolversUnionTypes['OrgRestoreMemberAuditEntryMembership'];
+  OrgRestoreMemberAuditEntryMembership: ResolversUnionParentTypes['OrgRestoreMemberAuditEntryMembership'];
   OrgRestoreMemberMembershipOrganizationAuditEntryData: OrgRestoreMemberMembershipOrganizationAuditEntryData;
   OrgRestoreMemberMembershipRepositoryAuditEntryData: OrgRestoreMemberMembershipRepositoryAuditEntryData;
   OrgRestoreMemberMembershipTeamAuditEntryData: OrgRestoreMemberMembershipTeamAuditEntryData;
@@ -29244,7 +29286,7 @@ export type ResolversParentTypes = {
   OrgUpdateMemberRepositoryCreationPermissionAuditEntry: Omit<OrgUpdateMemberRepositoryCreationPermissionAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> };
   OrgUpdateMemberRepositoryInvitationPermissionAuditEntry: Omit<OrgUpdateMemberRepositoryInvitationPermissionAuditEntry, 'actor'> & { actor?: Maybe<ResolversParentTypes['AuditEntryActor']> };
   Organization: Organization;
-  OrganizationAuditEntry: ResolversUnionTypes['OrganizationAuditEntry'];
+  OrganizationAuditEntry: ResolversUnionParentTypes['OrganizationAuditEntry'];
   OrganizationAuditEntryConnection: Omit<OrganizationAuditEntryConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['OrganizationAuditEntry']>>> };
   OrganizationAuditEntryData: ResolversParentTypes['MembersCanDeleteReposClearAuditEntry'] | ResolversParentTypes['MembersCanDeleteReposDisableAuditEntry'] | ResolversParentTypes['MembersCanDeleteReposEnableAuditEntry'] | ResolversParentTypes['OauthApplicationCreateAuditEntry'] | ResolversParentTypes['OrgAddBillingManagerAuditEntry'] | ResolversParentTypes['OrgAddMemberAuditEntry'] | ResolversParentTypes['OrgBlockUserAuditEntry'] | ResolversParentTypes['OrgConfigDisableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['OrgConfigEnableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['OrgCreateAuditEntry'] | ResolversParentTypes['OrgDisableOauthAppRestrictionsAuditEntry'] | ResolversParentTypes['OrgDisableSamlAuditEntry'] | ResolversParentTypes['OrgDisableTwoFactorRequirementAuditEntry'] | ResolversParentTypes['OrgEnableOauthAppRestrictionsAuditEntry'] | ResolversParentTypes['OrgEnableSamlAuditEntry'] | ResolversParentTypes['OrgEnableTwoFactorRequirementAuditEntry'] | ResolversParentTypes['OrgInviteMemberAuditEntry'] | ResolversParentTypes['OrgInviteToBusinessAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessApprovedAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessDeniedAuditEntry'] | ResolversParentTypes['OrgOauthAppAccessRequestedAuditEntry'] | ResolversParentTypes['OrgRemoveBillingManagerAuditEntry'] | ResolversParentTypes['OrgRemoveMemberAuditEntry'] | ResolversParentTypes['OrgRemoveOutsideCollaboratorAuditEntry'] | ResolversParentTypes['OrgRestoreMemberAuditEntry'] | ResolversParentTypes['OrgRestoreMemberMembershipOrganizationAuditEntryData'] | ResolversParentTypes['OrgUnblockUserAuditEntry'] | ResolversParentTypes['OrgUpdateDefaultRepositoryPermissionAuditEntry'] | ResolversParentTypes['OrgUpdateMemberAuditEntry'] | ResolversParentTypes['OrgUpdateMemberRepositoryCreationPermissionAuditEntry'] | ResolversParentTypes['OrgUpdateMemberRepositoryInvitationPermissionAuditEntry'] | ResolversParentTypes['PrivateRepositoryForkingDisableAuditEntry'] | ResolversParentTypes['PrivateRepositoryForkingEnableAuditEntry'] | ResolversParentTypes['RepoAccessAuditEntry'] | ResolversParentTypes['RepoAddMemberAuditEntry'] | ResolversParentTypes['RepoAddTopicAuditEntry'] | ResolversParentTypes['RepoArchivedAuditEntry'] | ResolversParentTypes['RepoChangeMergeSettingAuditEntry'] | ResolversParentTypes['RepoConfigDisableAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigDisableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigDisableContributorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigDisableSockpuppetDisallowedAuditEntry'] | ResolversParentTypes['RepoConfigEnableAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigEnableCollaboratorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigEnableContributorsOnlyAuditEntry'] | ResolversParentTypes['RepoConfigEnableSockpuppetDisallowedAuditEntry'] | ResolversParentTypes['RepoConfigLockAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoConfigUnlockAnonymousGitAccessAuditEntry'] | ResolversParentTypes['RepoCreateAuditEntry'] | ResolversParentTypes['RepoDestroyAuditEntry'] | ResolversParentTypes['RepoRemoveMemberAuditEntry'] | ResolversParentTypes['RepoRemoveTopicAuditEntry'] | ResolversParentTypes['RepositoryVisibilityChangeDisableAuditEntry'] | ResolversParentTypes['RepositoryVisibilityChangeEnableAuditEntry'] | ResolversParentTypes['TeamAddMemberAuditEntry'] | ResolversParentTypes['TeamAddRepositoryAuditEntry'] | ResolversParentTypes['TeamChangeParentTeamAuditEntry'] | ResolversParentTypes['TeamRemoveMemberAuditEntry'] | ResolversParentTypes['TeamRemoveRepositoryAuditEntry'];
   OrganizationAuditEntryEdge: Omit<OrganizationAuditEntryEdge, 'node'> & { node?: Maybe<ResolversParentTypes['OrganizationAuditEntry']> };
@@ -29259,7 +29301,7 @@ export type ResolversParentTypes = {
   OrganizationMemberConnection: OrganizationMemberConnection;
   OrganizationMemberEdge: OrganizationMemberEdge;
   OrganizationMigration: OrganizationMigration;
-  OrganizationOrUser: ResolversUnionTypes['OrganizationOrUser'];
+  OrganizationOrUser: ResolversUnionParentTypes['OrganizationOrUser'];
   OrganizationOrder: OrganizationOrder;
   OrganizationTeamsHovercardContext: OrganizationTeamsHovercardContext;
   OrganizationsHovercardContext: OrganizationsHovercardContext;
@@ -29280,11 +29322,11 @@ export type ResolversParentTypes = {
   PackageVersionOrder: PackageVersionOrder;
   PackageVersionStatistics: PackageVersionStatistics;
   PageInfo: PageInfo;
-  PermissionGranter: ResolversUnionTypes['PermissionGranter'];
+  PermissionGranter: ResolversUnionParentTypes['PermissionGranter'];
   PermissionSource: Omit<PermissionSource, 'source'> & { source: ResolversParentTypes['PermissionGranter'] };
   PinIssueInput: PinIssueInput;
   PinIssuePayload: PinIssuePayload;
-  PinnableItem: ResolversUnionTypes['PinnableItem'];
+  PinnableItem: ResolversUnionParentTypes['PinnableItem'];
   PinnableItemConnection: Omit<PinnableItemConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['PinnableItem']>>> };
   PinnableItemEdge: Omit<PinnableItemEdge, 'node'> & { node?: Maybe<ResolversParentTypes['PinnableItem']> };
   PinnedDiscussion: PinnedDiscussion;
@@ -29303,7 +29345,7 @@ export type ResolversParentTypes = {
   ProjectCard: Omit<ProjectCard, 'content'> & { content?: Maybe<ResolversParentTypes['ProjectCardItem']> };
   ProjectCardConnection: ProjectCardConnection;
   ProjectCardEdge: ProjectCardEdge;
-  ProjectCardItem: ResolversUnionTypes['ProjectCardItem'];
+  ProjectCardItem: ResolversUnionParentTypes['ProjectCardItem'];
   ProjectColumn: ProjectColumn;
   ProjectColumnConnection: ProjectColumnConnection;
   ProjectColumnEdge: ProjectColumnEdge;
@@ -29317,7 +29359,7 @@ export type ResolversParentTypes = {
   ProjectV2Edge: ProjectV2Edge;
   ProjectV2Field: ProjectV2Field;
   ProjectV2FieldCommon: ResolversParentTypes['ProjectV2Field'] | ResolversParentTypes['ProjectV2IterationField'] | ResolversParentTypes['ProjectV2SingleSelectField'];
-  ProjectV2FieldConfiguration: ResolversUnionTypes['ProjectV2FieldConfiguration'];
+  ProjectV2FieldConfiguration: ResolversUnionParentTypes['ProjectV2FieldConfiguration'];
   ProjectV2FieldConfigurationConnection: Omit<ProjectV2FieldConfigurationConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['ProjectV2FieldConfiguration']>>> };
   ProjectV2FieldConfigurationEdge: Omit<ProjectV2FieldConfigurationEdge, 'node'> & { node?: Maybe<ResolversParentTypes['ProjectV2FieldConfiguration']> };
   ProjectV2FieldConnection: ProjectV2FieldConnection;
@@ -29327,7 +29369,7 @@ export type ResolversParentTypes = {
   ProjectV2Filters: ProjectV2Filters;
   ProjectV2Item: Omit<ProjectV2Item, 'content' | 'fieldValueByName'> & { content?: Maybe<ResolversParentTypes['ProjectV2ItemContent']>, fieldValueByName?: Maybe<ResolversParentTypes['ProjectV2ItemFieldValue']> };
   ProjectV2ItemConnection: ProjectV2ItemConnection;
-  ProjectV2ItemContent: ResolversUnionTypes['ProjectV2ItemContent'];
+  ProjectV2ItemContent: ResolversUnionParentTypes['ProjectV2ItemContent'];
   ProjectV2ItemEdge: ProjectV2ItemEdge;
   ProjectV2ItemFieldDateValue: Omit<ProjectV2ItemFieldDateValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] };
   ProjectV2ItemFieldIterationValue: Omit<ProjectV2ItemFieldIterationValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] };
@@ -29340,7 +29382,7 @@ export type ResolversParentTypes = {
   ProjectV2ItemFieldSingleSelectValue: Omit<ProjectV2ItemFieldSingleSelectValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] };
   ProjectV2ItemFieldTextValue: Omit<ProjectV2ItemFieldTextValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] };
   ProjectV2ItemFieldUserValue: Omit<ProjectV2ItemFieldUserValue, 'field'> & { field: ResolversParentTypes['ProjectV2FieldConfiguration'] };
-  ProjectV2ItemFieldValue: ResolversUnionTypes['ProjectV2ItemFieldValue'];
+  ProjectV2ItemFieldValue: ResolversUnionParentTypes['ProjectV2ItemFieldValue'];
   ProjectV2ItemFieldValueCommon: ResolversParentTypes['ProjectV2ItemFieldDateValue'] | ResolversParentTypes['ProjectV2ItemFieldIterationValue'] | ResolversParentTypes['ProjectV2ItemFieldNumberValue'] | ResolversParentTypes['ProjectV2ItemFieldSingleSelectValue'] | ResolversParentTypes['ProjectV2ItemFieldTextValue'];
   ProjectV2ItemFieldValueConnection: Omit<ProjectV2ItemFieldValueConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['ProjectV2ItemFieldValue']>>> };
   ProjectV2ItemFieldValueEdge: Omit<ProjectV2ItemFieldValueEdge, 'node'> & { node?: Maybe<ResolversParentTypes['ProjectV2ItemFieldValue']> };
@@ -29400,14 +29442,14 @@ export type ResolversParentTypes = {
   PullRequestTemplate: PullRequestTemplate;
   PullRequestThread: PullRequestThread;
   PullRequestTimelineConnection: Omit<PullRequestTimelineConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['PullRequestTimelineItem']>>> };
-  PullRequestTimelineItem: ResolversUnionTypes['PullRequestTimelineItem'];
+  PullRequestTimelineItem: ResolversUnionParentTypes['PullRequestTimelineItem'];
   PullRequestTimelineItemEdge: Omit<PullRequestTimelineItemEdge, 'node'> & { node?: Maybe<ResolversParentTypes['PullRequestTimelineItem']> };
-  PullRequestTimelineItems: ResolversUnionTypes['PullRequestTimelineItems'];
+  PullRequestTimelineItems: ResolversUnionParentTypes['PullRequestTimelineItems'];
   PullRequestTimelineItemsConnection: Omit<PullRequestTimelineItemsConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['PullRequestTimelineItems']>>> };
   PullRequestTimelineItemsEdge: Omit<PullRequestTimelineItemsEdge, 'node'> & { node?: Maybe<ResolversParentTypes['PullRequestTimelineItems']> };
   Push: Push;
   PushAllowance: Omit<PushAllowance, 'actor'> & { actor?: Maybe<ResolversParentTypes['PushAllowanceActor']> };
-  PushAllowanceActor: ResolversUnionTypes['PushAllowanceActor'];
+  PushAllowanceActor: ResolversUnionParentTypes['PushAllowanceActor'];
   PushAllowanceConnection: PushAllowanceConnection;
   PushAllowanceEdge: PushAllowanceEdge;
   Query: {};
@@ -29420,7 +29462,7 @@ export type ResolversParentTypes = {
   ReactionEdge: ReactionEdge;
   ReactionGroup: ReactionGroup;
   ReactionOrder: ReactionOrder;
-  Reactor: ResolversUnionTypes['Reactor'];
+  Reactor: ResolversUnionParentTypes['Reactor'];
   ReactorConnection: Omit<ReactorConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['Reactor']>>> };
   ReactorEdge: Omit<ReactorEdge, 'node'> & { node: ResolversParentTypes['Reactor'] };
   ReadyForReviewEvent: ReadyForReviewEvent;
@@ -29430,7 +29472,7 @@ export type ResolversParentTypes = {
   RefOrder: RefOrder;
   RefUpdateRule: RefUpdateRule;
   ReferencedEvent: Omit<ReferencedEvent, 'subject'> & { subject: ResolversParentTypes['ReferencedSubject'] };
-  ReferencedSubject: ResolversUnionTypes['ReferencedSubject'];
+  ReferencedSubject: ResolversUnionParentTypes['ReferencedSubject'];
   RegenerateEnterpriseIdentityProviderRecoveryCodesInput: RegenerateEnterpriseIdentityProviderRecoveryCodesInput;
   RegenerateEnterpriseIdentityProviderRecoveryCodesPayload: RegenerateEnterpriseIdentityProviderRecoveryCodesPayload;
   RegenerateVerifiableDomainTokenInput: RegenerateVerifiableDomainTokenInput;
@@ -29468,7 +29510,7 @@ export type ResolversParentTypes = {
   RemoveUpvotePayload: RemoveUpvotePayload;
   RemovedFromProjectEvent: RemovedFromProjectEvent;
   RenamedTitleEvent: Omit<RenamedTitleEvent, 'subject'> & { subject: ResolversParentTypes['RenamedTitleSubject'] };
-  RenamedTitleSubject: ResolversUnionTypes['RenamedTitleSubject'];
+  RenamedTitleSubject: ResolversUnionParentTypes['RenamedTitleSubject'];
   ReopenIssueInput: ReopenIssueInput;
   ReopenIssuePayload: ReopenIssuePayload;
   ReopenPullRequestInput: ReopenPullRequestInput;
@@ -29527,7 +29569,7 @@ export type ResolversParentTypes = {
   RepositoryVulnerabilityAlertEdge: RepositoryVulnerabilityAlertEdge;
   RequestReviewsInput: RequestReviewsInput;
   RequestReviewsPayload: RequestReviewsPayload;
-  RequestedReviewer: ResolversUnionTypes['RequestedReviewer'];
+  RequestedReviewer: ResolversUnionParentTypes['RequestedReviewer'];
   RequestedReviewerConnection: Omit<RequestedReviewerConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['RequestedReviewer']>>> };
   RequestedReviewerEdge: Omit<RequestedReviewerEdge, 'node'> & { node?: Maybe<ResolversParentTypes['RequestedReviewer']> };
   RequirableByPullRequest: ResolversParentTypes['CheckRun'] | ResolversParentTypes['StatusContext'];
@@ -29543,7 +29585,7 @@ export type ResolversParentTypes = {
   RevertPullRequestInput: RevertPullRequestInput;
   RevertPullRequestPayload: RevertPullRequestPayload;
   ReviewDismissalAllowance: Omit<ReviewDismissalAllowance, 'actor'> & { actor?: Maybe<ResolversParentTypes['ReviewDismissalAllowanceActor']> };
-  ReviewDismissalAllowanceActor: ResolversUnionTypes['ReviewDismissalAllowanceActor'];
+  ReviewDismissalAllowanceActor: ResolversUnionParentTypes['ReviewDismissalAllowanceActor'];
   ReviewDismissalAllowanceConnection: ReviewDismissalAllowanceConnection;
   ReviewDismissalAllowanceEdge: ReviewDismissalAllowanceEdge;
   ReviewDismissedEvent: ReviewDismissedEvent;
@@ -29561,7 +29603,7 @@ export type ResolversParentTypes = {
   SavedReplyConnection: SavedReplyConnection;
   SavedReplyEdge: SavedReplyEdge;
   SavedReplyOrder: SavedReplyOrder;
-  SearchResultItem: ResolversUnionTypes['SearchResultItem'];
+  SearchResultItem: ResolversUnionParentTypes['SearchResultItem'];
   SearchResultItemConnection: Omit<SearchResultItemConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['SearchResultItem']>>> };
   SearchResultItemEdge: Omit<SearchResultItemEdge, 'node'> & { node?: Maybe<ResolversParentTypes['SearchResultItem']> };
   SecurityAdvisory: SecurityAdvisory;
@@ -29589,12 +29631,12 @@ export type ResolversParentTypes = {
   SocialAccount: SocialAccount;
   SocialAccountConnection: SocialAccountConnection;
   SocialAccountEdge: SocialAccountEdge;
-  Sponsor: ResolversUnionTypes['Sponsor'];
+  Sponsor: ResolversUnionParentTypes['Sponsor'];
   SponsorConnection: Omit<SponsorConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['Sponsor']>>> };
   SponsorEdge: Omit<SponsorEdge, 'node'> & { node?: Maybe<ResolversParentTypes['Sponsor']> };
   SponsorOrder: SponsorOrder;
   Sponsorable: ResolversParentTypes['Organization'] | ResolversParentTypes['User'];
-  SponsorableItem: ResolversUnionTypes['SponsorableItem'];
+  SponsorableItem: ResolversUnionParentTypes['SponsorableItem'];
   SponsorableItemConnection: Omit<SponsorableItemConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['SponsorableItem']>>> };
   SponsorableItemEdge: Omit<SponsorableItemEdge, 'node'> & { node?: Maybe<ResolversParentTypes['SponsorableItem']> };
   SponsorableOrder: SponsorableOrder;
@@ -29604,7 +29646,7 @@ export type ResolversParentTypes = {
   SponsorsActivityOrder: SponsorsActivityOrder;
   SponsorsGoal: SponsorsGoal;
   SponsorsListing: SponsorsListing;
-  SponsorsListingFeatureableItem: ResolversUnionTypes['SponsorsListingFeatureableItem'];
+  SponsorsListingFeatureableItem: ResolversUnionParentTypes['SponsorsListingFeatureableItem'];
   SponsorsListingFeaturedItem: Omit<SponsorsListingFeaturedItem, 'featureable'> & { featureable: ResolversParentTypes['SponsorsListingFeatureableItem'] };
   SponsorsTier: SponsorsTier;
   SponsorsTierAdminInfo: SponsorsTierAdminInfo;
@@ -29632,7 +29674,7 @@ export type ResolversParentTypes = {
   StartRepositoryMigrationPayload: StartRepositoryMigrationPayload;
   Status: Status;
   StatusCheckRollup: StatusCheckRollup;
-  StatusCheckRollupContext: ResolversUnionTypes['StatusCheckRollupContext'];
+  StatusCheckRollupContext: ResolversUnionParentTypes['StatusCheckRollupContext'];
   StatusCheckRollupContextConnection: Omit<StatusCheckRollupContextConnection, 'nodes'> & { nodes?: Maybe<Array<Maybe<ResolversParentTypes['StatusCheckRollupContext']>>> };
   StatusCheckRollupContextEdge: Omit<StatusCheckRollupContextEdge, 'node'> & { node?: Maybe<ResolversParentTypes['StatusCheckRollupContext']> };
   StatusContext: StatusContext;
@@ -29840,7 +29882,7 @@ export type ResolversParentTypes = {
   VerifiableDomainConnection: VerifiableDomainConnection;
   VerifiableDomainEdge: VerifiableDomainEdge;
   VerifiableDomainOrder: VerifiableDomainOrder;
-  VerifiableDomainOwner: ResolversUnionTypes['VerifiableDomainOwner'];
+  VerifiableDomainOwner: ResolversUnionParentTypes['VerifiableDomainOwner'];
   VerifyVerifiableDomainInput: VerifyVerifiableDomainInput;
   VerifyVerifiableDomainPayload: VerifyVerifiableDomainPayload;
   ViewerHovercardContext: ViewerHovercardContext;
