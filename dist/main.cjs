@@ -1074,15 +1074,15 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "NIL": () => (/* reexport */ nil),
-  "parse": () => (/* reexport */ esm_node_parse),
-  "stringify": () => (/* reexport */ esm_node_stringify),
-  "v1": () => (/* reexport */ esm_node_v1),
-  "v3": () => (/* reexport */ esm_node_v3),
-  "v4": () => (/* reexport */ esm_node_v4),
-  "v5": () => (/* reexport */ esm_node_v5),
-  "validate": () => (/* reexport */ esm_node_validate),
-  "version": () => (/* reexport */ esm_node_version)
+  NIL: () => (/* reexport */ nil),
+  parse: () => (/* reexport */ esm_node_parse),
+  stringify: () => (/* reexport */ esm_node_stringify),
+  v1: () => (/* reexport */ esm_node_v1),
+  v3: () => (/* reexport */ esm_node_v3),
+  v4: () => (/* reexport */ esm_node_v4),
+  v5: () => (/* reexport */ esm_node_v5),
+  validate: () => (/* reexport */ esm_node_validate),
+  version: () => (/* reexport */ esm_node_version)
 });
 
 ;// CONCATENATED MODULE: external "crypto"
@@ -2420,7 +2420,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "Octokit": () => (/* binding */ Octokit)
+  Octokit: () => (/* binding */ Octokit)
 });
 
 ;// CONCATENATED MODULE: ./node_modules/universal-user-agent/dist-web/index.js
@@ -5066,10 +5066,10 @@ Octokit.plugins = [];
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "composePaginateRest": () => (/* binding */ composePaginateRest),
-/* harmony export */   "isPaginatingEndpoint": () => (/* binding */ isPaginatingEndpoint),
-/* harmony export */   "paginateRest": () => (/* binding */ paginateRest),
-/* harmony export */   "paginatingEndpoints": () => (/* binding */ paginatingEndpoints)
+/* harmony export */   composePaginateRest: () => (/* binding */ composePaginateRest),
+/* harmony export */   isPaginatingEndpoint: () => (/* binding */ isPaginatingEndpoint),
+/* harmony export */   paginateRest: () => (/* binding */ paginateRest),
+/* harmony export */   paginatingEndpoints: () => (/* binding */ paginatingEndpoints)
 /* harmony export */ });
 const VERSION = "2.21.3";
 /**
@@ -5433,8 +5433,8 @@ paginateRest.VERSION = VERSION;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "legacyRestEndpointMethods": () => (/* binding */ legacyRestEndpointMethods),
-/* harmony export */   "restEndpointMethods": () => (/* binding */ restEndpointMethods)
+/* harmony export */   legacyRestEndpointMethods: () => (/* binding */ legacyRestEndpointMethods),
+/* harmony export */   restEndpointMethods: () => (/* binding */ restEndpointMethods)
 /* harmony export */ });
 const Endpoints = {
     actions: {

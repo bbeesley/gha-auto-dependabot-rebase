@@ -1,6 +1,6 @@
 {
   "name": "gha-auto-dependabot-rebase",
-  "version": "1.3.152",
+  "version": "1.3.153",
   "description": "Github Action to automatically request dependabot rebases",
   "main": "dist/main.js",
   "type": "module",
