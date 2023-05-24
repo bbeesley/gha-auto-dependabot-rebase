@@ -40008,22 +40008,22 @@ export const RequestRecreate = gql`
 }
     `;
 export type GetPullRequestsQueryVariables = Exact<{
-  owner: Scalars['String'];
-  repo: Scalars['String'];
+  owner: Scalars['String']['input'];
+  repo: Scalars['String']['input'];
 }>;
 
 
 export type GetPullRequestsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, pullRequests: { __typename?: 'PullRequestConnection', edges?: Array<{ __typename?: 'PullRequestEdge', node?: { __typename?: 'PullRequest', id: string, title: string, number: number, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null } | null } | null> | null } } | null };
 
 export type RequestRebaseMutationVariables = Exact<{
-  pullRequestId: Scalars['ID'];
+  pullRequestId: Scalars['ID']['input'];
 }>;
 
 
 export type RequestRebaseMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'AddCommentPayload', commentEdge?: { __typename?: 'IssueCommentEdge', node?: { __typename?: 'IssueComment', id: string } | null } | null } | null };
 
 export type RequestRecreateMutationVariables = Exact<{
-  pullRequestId: Scalars['ID'];
+  pullRequestId: Scalars['ID']['input'];
 }>;
 
 
