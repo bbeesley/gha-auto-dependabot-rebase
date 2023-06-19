@@ -49,7 +49,7 @@
     "@commitlint/config-conventional": "^17.6.5",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/introspection": "4.0.0",
-    "@graphql-codegen/typescript": "4.0.0",
+    "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-document-nodes": "4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-resolvers": "4.0.1",
