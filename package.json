@@ -39,7 +39,7 @@
     "@actions/exec": "^1.1.1",
     "@actions/github": "^5.1.1",
     "@babel/cli": "^7.22.15",
-    "@babel/core": "^7.22.17",
+    "@babel/core": "^7.22.19",
     "@babel/node": "^7.22.15",
     "@babel/preset-env": "^7.22.15",
     "@babel/preset-stage-0": "^7.8.3",
