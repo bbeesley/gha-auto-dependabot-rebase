@@ -46,7 +46,7 @@
     "@babel/preset-typescript": "^7.23.2",
     "@beesley/tsconfig": "^3.0.0",
     "@commitlint/cli": "^17.8.0",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/config-conventional": "^17.8.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/introspection": "4.0.0",
     "@graphql-codegen/typescript": "4.0.1",
