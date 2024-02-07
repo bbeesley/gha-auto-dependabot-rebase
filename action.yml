@@ -2,7 +2,7 @@ name: gha-auto-dependabot-rebase
 author: Bill Beesley <bill@beesley.dev>
 description: Github Action to automatically request dependabot rebases
 inputs:
-  task:  # id of input
+  task: # id of input
     description: 'Which task to perform (rebase, recreate)'
     required: false
     default: 'rebase'
@@ -10,5 +10,5 @@ branding:
   icon: box
   color: blue
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/main.cjs'
