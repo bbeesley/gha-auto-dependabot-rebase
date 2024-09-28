@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.4.0...v1.5.0) (2024-09-28)
+
+
+### Features
+
+* update everything ([158931b](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/158931be48cc9fcdfcb729cae3a8efa4a393365d))
+
 # [1.4.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.3.345...v1.4.0) (2024-09-28)
 
 
