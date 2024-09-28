@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.3.345...v1.4.0) (2024-09-28)
+
+
+### Features
+
+* bump to node 20 ([22b9c90](https://github.com/bbeesley/gha-auto-dependabot-rebase/commit/22b9c909a36703fb2de86aeaca2590387228a063))
+
 ## [1.3.345](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.3.344...v1.3.345) (2024-01-11)
 
 ## [1.3.344](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.3.343...v1.3.344) (2024-01-09)
