@@ -1623,9 +1623,9 @@ exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context 
 const Context = __importStar(__webpack_require__(/*! ./context */ "./node_modules/@actions/github/lib/context.js"));
 const Utils = __importStar(__webpack_require__(/*! ./internal/utils */ "./node_modules/@actions/github/lib/internal/utils.js"));
 // octokit + plugins
-const core_1 = __webpack_require__(/*! @octokit/core */ "./node_modules/@octokit/core/dist-web/index.js");
+const core_1 = __webpack_require__(/*! @octokit/core */ "./node_modules/@actions/github/node_modules/@octokit/core/dist-web/index.js");
 const plugin_rest_endpoint_methods_1 = __webpack_require__(/*! @octokit/plugin-rest-endpoint-methods */ "./node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/index.js");
-const plugin_paginate_rest_1 = __webpack_require__(/*! @octokit/plugin-paginate-rest */ "./node_modules/@octokit/plugin-paginate-rest/dist-web/index.js");
+const plugin_paginate_rest_1 = __webpack_require__(/*! @octokit/plugin-paginate-rest */ "./node_modules/@actions/github/node_modules/@octokit/plugin-paginate-rest/dist-web/index.js");
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
 exports.defaults = {
@@ -1652,6 +1652,1490 @@ function getOctokitOptions(token, options) {
     return opts;
 }
 exports.getOctokitOptions = getOctokitOptions;
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/@octokit/core/dist-web/index.js":
+/*!************************************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/@octokit/core/dist-web/index.js + 29 modules ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  Octokit: () => (/* binding */ Octokit)
+});
+
+;// ./node_modules/@actions/github/node_modules/universal-user-agent/dist-web/index.js
+function getUserAgent() {
+    if (typeof navigator === "object" && "userAgent" in navigator) {
+        return navigator.userAgent;
+    }
+    if (typeof process === "object" && process.version !== undefined) {
+        return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
+    }
+    return "<environment undetectable>";
+}
+
+//# sourceMappingURL=index.js.map
+
+// EXTERNAL MODULE: ./node_modules/@actions/github/node_modules/before-after-hook/index.js
+var before_after_hook = __webpack_require__("./node_modules/@actions/github/node_modules/before-after-hook/index.js");
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/lowercase-keys.js
+function lowercaseKeys(object) {
+    if (!object) {
+        return {};
+    }
+    return Object.keys(object).reduce((newObj, key) => {
+        newObj[key.toLowerCase()] = object[key];
+        return newObj;
+    }, {});
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/is-plain-object.js
+function isPlainObject(value) {
+    if (typeof value !== "object" || value === null)
+        return false;
+    if (Object.prototype.toString.call(value) !== "[object Object]")
+        return false;
+    const proto = Object.getPrototypeOf(value);
+    if (proto === null)
+        return true;
+    const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+    return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/merge-deep.js
+
+function mergeDeep(defaults, options) {
+    const result = Object.assign({}, defaults);
+    Object.keys(options).forEach((key) => {
+        if (isPlainObject(options[key])) {
+            if (!(key in defaults))
+                Object.assign(result, { [key]: options[key] });
+            else
+                result[key] = mergeDeep(defaults[key], options[key]);
+        }
+        else {
+            Object.assign(result, { [key]: options[key] });
+        }
+    });
+    return result;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/remove-undefined-properties.js
+function removeUndefinedProperties(obj) {
+    for (const key in obj) {
+        if (obj[key] === void 0) {
+            delete obj[key];
+        }
+    }
+    return obj;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/merge.js
+
+
+
+function merge(defaults, route, options) {
+    if (typeof route === "string") {
+        let [method, url] = route.split(" ");
+        options = Object.assign(url ? { method, url } : { url: method }, options);
+    }
+    else {
+        options = Object.assign({}, route);
+    }
+    options.headers = lowercaseKeys(options.headers);
+    removeUndefinedProperties(options);
+    removeUndefinedProperties(options.headers);
+    const mergedOptions = mergeDeep(defaults || {}, options);
+    if (options.url === "/graphql") {
+        if (defaults && defaults.mediaType.previews?.length) {
+            mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
+        }
+        mergedOptions.mediaType.previews = (mergedOptions.mediaType.previews || []).map((preview) => preview.replace(/-preview/, ""));
+    }
+    return mergedOptions;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/add-query-parameters.js
+function addQueryParameters(url, parameters) {
+    const separator = /\?/.test(url) ? "&" : "?";
+    const names = Object.keys(parameters);
+    if (names.length === 0) {
+        return url;
+    }
+    return url + separator + names.map((name) => {
+        if (name === "q") {
+            return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
+        }
+        return `${name}=${encodeURIComponent(parameters[name])}`;
+    }).join("&");
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/extract-url-variable-names.js
+const urlVariableRegex = /\{[^}]+\}/g;
+function removeNonChars(variableName) {
+    return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+}
+function extractUrlVariableNames(url) {
+    const matches = url.match(urlVariableRegex);
+    if (!matches) {
+        return [];
+    }
+    return matches.map(removeNonChars).reduce((a, b) => a.concat(b), []);
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/omit.js
+function omit(object, keysToOmit) {
+    const result = { __proto__: null };
+    for (const key of Object.keys(object)) {
+        if (keysToOmit.indexOf(key) === -1) {
+            result[key] = object[key];
+        }
+    }
+    return result;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/util/url-template.js
+function encodeReserved(str) {
+    return str.split(/(%[0-9A-Fa-f]{2})/g).map(function (part) {
+        if (!/%[0-9A-Fa-f]/.test(part)) {
+            part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
+        }
+        return part;
+    }).join("");
+}
+function encodeUnreserved(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+        return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+    });
+}
+function encodeValue(operator, value, key) {
+    value = operator === "+" || operator === "#" ? encodeReserved(value) : encodeUnreserved(value);
+    if (key) {
+        return encodeUnreserved(key) + "=" + value;
+    }
+    else {
+        return value;
+    }
+}
+function isDefined(value) {
+    return value !== void 0 && value !== null;
+}
+function isKeyOperator(operator) {
+    return operator === ";" || operator === "&" || operator === "?";
+}
+function getValues(context, operator, key, modifier) {
+    var value = context[key], result = [];
+    if (isDefined(value) && value !== "") {
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+            value = value.toString();
+            if (modifier && modifier !== "*") {
+                value = value.substring(0, parseInt(modifier, 10));
+            }
+            result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
+        }
+        else {
+            if (modifier === "*") {
+                if (Array.isArray(value)) {
+                    value.filter(isDefined).forEach(function (value2) {
+                        result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
+                    });
+                }
+                else {
+                    Object.keys(value).forEach(function (k) {
+                        if (isDefined(value[k])) {
+                            result.push(encodeValue(operator, value[k], k));
+                        }
+                    });
+                }
+            }
+            else {
+                const tmp = [];
+                if (Array.isArray(value)) {
+                    value.filter(isDefined).forEach(function (value2) {
+                        tmp.push(encodeValue(operator, value2));
+                    });
+                }
+                else {
+                    Object.keys(value).forEach(function (k) {
+                        if (isDefined(value[k])) {
+                            tmp.push(encodeUnreserved(k));
+                            tmp.push(encodeValue(operator, value[k].toString()));
+                        }
+                    });
+                }
+                if (isKeyOperator(operator)) {
+                    result.push(encodeUnreserved(key) + "=" + tmp.join(","));
+                }
+                else if (tmp.length !== 0) {
+                    result.push(tmp.join(","));
+                }
+            }
+        }
+    }
+    else {
+        if (operator === ";") {
+            if (isDefined(value)) {
+                result.push(encodeUnreserved(key));
+            }
+        }
+        else if (value === "" && (operator === "&" || operator === "?")) {
+            result.push(encodeUnreserved(key) + "=");
+        }
+        else if (value === "") {
+            result.push("");
+        }
+    }
+    return result;
+}
+function parseUrl(template) {
+    return {
+        expand: expand.bind(null, template)
+    };
+}
+function expand(template, context) {
+    var operators = ["+", "#", ".", "/", ";", "?", "&"];
+    template = template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function (_, expression, literal) {
+        if (expression) {
+            let operator = "";
+            const values = [];
+            if (operators.indexOf(expression.charAt(0)) !== -1) {
+                operator = expression.charAt(0);
+                expression = expression.substr(1);
+            }
+            expression.split(/,/g).forEach(function (variable) {
+                var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+                values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
+            });
+            if (operator && operator !== "+") {
+                var separator = ",";
+                if (operator === "?") {
+                    separator = "&";
+                }
+                else if (operator !== "#") {
+                    separator = operator;
+                }
+                return (values.length !== 0 ? operator : "") + values.join(separator);
+            }
+            else {
+                return values.join(",");
+            }
+        }
+        else {
+            return encodeReserved(literal);
+        }
+    });
+    if (template === "/") {
+        return template;
+    }
+    else {
+        return template.replace(/\/$/, "");
+    }
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/parse.js
+
+
+
+
+function parse(options) {
+    let method = options.method.toUpperCase();
+    let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
+    let headers = Object.assign({}, options.headers);
+    let body;
+    let parameters = omit(options, [
+        "method",
+        "baseUrl",
+        "url",
+        "headers",
+        "request",
+        "mediaType"
+    ]);
+    const urlVariableNames = extractUrlVariableNames(url);
+    url = parseUrl(url).expand(parameters);
+    if (!/^http/.test(url)) {
+        url = options.baseUrl + url;
+    }
+    const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
+    const remainingParameters = omit(parameters, omittedParameters);
+    const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
+    if (!isBinaryRequest) {
+        if (options.mediaType.format) {
+            headers.accept = headers.accept.split(/,/).map((format) => format.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`)).join(",");
+        }
+        if (url.endsWith("/graphql")) {
+            if (options.mediaType.previews?.length) {
+                const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
+                headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
+                    const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
+                    return `application/vnd.github.${preview}-preview${format}`;
+                }).join(",");
+            }
+        }
+    }
+    if (["GET", "HEAD"].includes(method)) {
+        url = addQueryParameters(url, remainingParameters);
+    }
+    else {
+        if ("data" in remainingParameters) {
+            body = remainingParameters.data;
+        }
+        else {
+            if (Object.keys(remainingParameters).length) {
+                body = remainingParameters;
+            }
+        }
+    }
+    if (!headers["content-type"] && typeof body !== "undefined") {
+        headers["content-type"] = "application/json; charset=utf-8";
+    }
+    if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
+        body = "";
+    }
+    return Object.assign({ method, url, headers }, typeof body !== "undefined" ? { body } : null, options.request ? { request: options.request } : null);
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/endpoint-with-defaults.js
+
+
+
+function endpointWithDefaults(defaults, route, options) {
+    return parse(merge(defaults, route, options));
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/with-defaults.js
+
+
+
+function withDefaults(oldDefaults, newDefaults) {
+    const DEFAULTS = merge(oldDefaults, newDefaults);
+    const endpoint = endpointWithDefaults.bind(null, DEFAULTS);
+    return Object.assign(endpoint, {
+        DEFAULTS,
+        defaults: withDefaults.bind(null, DEFAULTS),
+        merge: merge.bind(null, DEFAULTS),
+        parse: parse
+    });
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/version.js
+const VERSION = "9.0.5";
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/defaults.js
+
+
+const userAgent = `octokit-endpoint.js/${VERSION} ${getUserAgent()}`;
+const DEFAULTS = {
+    method: "GET",
+    baseUrl: "https://api.github.com",
+    headers: {
+        accept: "application/vnd.github.v3+json",
+        "user-agent": userAgent
+    },
+    mediaType: {
+        format: ""
+    }
+};
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/endpoint/dist-src/index.js
+
+
+const endpoint = withDefaults(null, DEFAULTS);
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/version.js
+const version_VERSION = "8.4.0";
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/is-plain-object.js
+function is_plain_object_isPlainObject(value) {
+    if (typeof value !== "object" || value === null)
+        return false;
+    if (Object.prototype.toString.call(value) !== "[object Object]")
+        return false;
+    const proto = Object.getPrototypeOf(value);
+    if (proto === null)
+        return true;
+    const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+    return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
+}
+
+
+;// ./node_modules/deprecation/dist-web/index.js
+class Deprecation extends Error {
+    constructor(message) {
+        super(message); // Maintains proper stack trace (only available on V8)
+        /* istanbul ignore next */
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = 'Deprecation';
+    }
+}
+
+
+// EXTERNAL MODULE: ./node_modules/once/once.js
+var once = __webpack_require__("./node_modules/once/once.js");
+var once_default = /*#__PURE__*/__webpack_require__.n(once);
+;// ./node_modules/@actions/github/node_modules/@octokit/request-error/dist-src/index.js
+
+
+const logOnceCode = once_default()((deprecation) => console.warn(deprecation));
+const logOnceHeaders = once_default()((deprecation) => console.warn(deprecation));
+class RequestError extends Error {
+    constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+            headers = options.headers;
+        }
+        if ("response" in options) {
+            this.response = options.response;
+            headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+            requestCopy.headers = Object.assign({}, options.request.headers, {
+                authorization: options.request.headers.authorization.replace(/ .*$/, " [REDACTED]")
+            });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+            get() {
+                logOnceCode(new Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
+                return statusCode;
+            }
+        });
+        Object.defineProperty(this, "headers", {
+            get() {
+                logOnceHeaders(new Deprecation("[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."));
+                return headers || {};
+            }
+        });
+    }
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/get-buffer-response.js
+function getBufferResponse(response) {
+    return response.arrayBuffer();
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/fetch-wrapper.js
+
+
+
+function fetchWrapper(requestOptions) {
+    const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
+    const parseSuccessResponseBody = requestOptions.request?.parseSuccessResponseBody !== false;
+    if (is_plain_object_isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
+        requestOptions.body = JSON.stringify(requestOptions.body);
+    }
+    let headers = {};
+    let status;
+    let url;
+    let { fetch } = globalThis;
+    if (requestOptions.request?.fetch) {
+        fetch = requestOptions.request.fetch;
+    }
+    if (!fetch) {
+        throw new Error("fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing");
+    }
+    return fetch(requestOptions.url, {
+        method: requestOptions.method,
+        body: requestOptions.body,
+        redirect: requestOptions.request?.redirect,
+        headers: requestOptions.headers,
+        signal: requestOptions.request?.signal,
+        // duplex must be set if request.body is ReadableStream or Async Iterables.
+        // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
+        ...requestOptions.body && { duplex: "half" }
+    }).then(async (response) => {
+        url = response.url;
+        status = response.status;
+        for (const keyAndValue of response.headers) {
+            headers[keyAndValue[0]] = keyAndValue[1];
+        }
+        if ("deprecation" in headers) {
+            const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
+            const deprecationLink = matches && matches.pop();
+            log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
+        }
+        if (status === 204 || status === 205) {
+            return;
+        }
+        if (requestOptions.method === "HEAD") {
+            if (status < 400) {
+                return;
+            }
+            throw new RequestError(response.statusText, status, {
+                response: {
+                    url,
+                    status,
+                    headers,
+                    data: void 0
+                },
+                request: requestOptions
+            });
+        }
+        if (status === 304) {
+            throw new RequestError("Not modified", status, {
+                response: {
+                    url,
+                    status,
+                    headers,
+                    data: await getResponseData(response)
+                },
+                request: requestOptions
+            });
+        }
+        if (status >= 400) {
+            const data = await getResponseData(response);
+            const error = new RequestError(toErrorMessage(data), status, {
+                response: {
+                    url,
+                    status,
+                    headers,
+                    data
+                },
+                request: requestOptions
+            });
+            throw error;
+        }
+        return parseSuccessResponseBody ? await getResponseData(response) : response.body;
+    }).then((data) => {
+        return {
+            status,
+            url,
+            headers,
+            data
+        };
+    }).catch((error) => {
+        if (error instanceof RequestError)
+            throw error;
+        else if (error.name === "AbortError")
+            throw error;
+        let message = error.message;
+        if (error.name === "TypeError" && "cause" in error) {
+            if (error.cause instanceof Error) {
+                message = error.cause.message;
+            }
+            else if (typeof error.cause === "string") {
+                message = error.cause;
+            }
+        }
+        throw new RequestError(message, 500, {
+            request: requestOptions
+        });
+    });
+}
+async function getResponseData(response) {
+    const contentType = response.headers.get("content-type");
+    if (/application\/json/.test(contentType)) {
+        return response.json().catch(() => response.text()).catch(() => "");
+    }
+    if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
+        return response.text();
+    }
+    return getBufferResponse(response);
+}
+function toErrorMessage(data) {
+    if (typeof data === "string")
+        return data;
+    let suffix;
+    if ("documentation_url" in data) {
+        suffix = ` - ${data.documentation_url}`;
+    }
+    else {
+        suffix = "";
+    }
+    if ("message" in data) {
+        if (Array.isArray(data.errors)) {
+            return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}${suffix}`;
+        }
+        return `${data.message}${suffix}`;
+    }
+    return `Unknown error: ${JSON.stringify(data)}`;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/with-defaults.js
+
+function with_defaults_withDefaults(oldEndpoint, newDefaults) {
+    const endpoint = oldEndpoint.defaults(newDefaults);
+    const newApi = function (route, parameters) {
+        const endpointOptions = endpoint.merge(route, parameters);
+        if (!endpointOptions.request || !endpointOptions.request.hook) {
+            return fetchWrapper(endpoint.parse(endpointOptions));
+        }
+        const request = (route2, parameters2) => {
+            return fetchWrapper(endpoint.parse(endpoint.merge(route2, parameters2)));
+        };
+        Object.assign(request, {
+            endpoint,
+            defaults: with_defaults_withDefaults.bind(null, endpoint)
+        });
+        return endpointOptions.request.hook(request, endpointOptions);
+    };
+    return Object.assign(newApi, {
+        endpoint,
+        defaults: with_defaults_withDefaults.bind(null, endpoint)
+    });
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/request/dist-src/index.js
+
+
+
+
+const request = with_defaults_withDefaults(endpoint, {
+    headers: {
+        "user-agent": `octokit-request.js/${version_VERSION} ${getUserAgent()}`
+    }
+});
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/graphql/dist-web/index.js
+// pkg/dist-src/index.js
+
+
+// pkg/dist-src/version.js
+var dist_web_VERSION = "7.1.0";
+// pkg/dist-src/with-defaults.js
+
+// pkg/dist-src/graphql.js
+
+// pkg/dist-src/error.js
+function _buildMessageForResponseErrors(data) {
+    return `Request failed due to following response errors:
+` + data.errors.map((e) => ` - ${e.message}`).join("\n");
+}
+var GraphqlResponseError = class extends Error {
+    constructor(request2, headers, response) {
+        super(_buildMessageForResponseErrors(response));
+        this.request = request2;
+        this.headers = headers;
+        this.response = response;
+        this.name = "GraphqlResponseError";
+        this.errors = response.errors;
+        this.data = response.data;
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+};
+// pkg/dist-src/graphql.js
+var NON_VARIABLE_OPTIONS = [
+    "method",
+    "baseUrl",
+    "url",
+    "headers",
+    "request",
+    "query",
+    "mediaType"
+];
+var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
+var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
+function graphql(request2, query, options) {
+    if (options) {
+        if (typeof query === "string" && "query" in options) {
+            return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
+        }
+        for (const key in options) {
+            if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
+                continue;
+            return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
+        }
+    }
+    const parsedOptions = typeof query === "string" ? Object.assign({ query }, options) : query;
+    const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
+        if (NON_VARIABLE_OPTIONS.includes(key)) {
+            result[key] = parsedOptions[key];
+            return result;
+        }
+        if (!result.variables) {
+            result.variables = {};
+        }
+        result.variables[key] = parsedOptions[key];
+        return result;
+    }, {});
+    const baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
+    if (GHES_V3_SUFFIX_REGEX.test(baseUrl)) {
+        requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql");
+    }
+    return request2(requestOptions).then((response) => {
+        if (response.data.errors) {
+            const headers = {};
+            for (const key of Object.keys(response.headers)) {
+                headers[key] = response.headers[key];
+            }
+            throw new GraphqlResponseError(requestOptions, headers, response.data);
+        }
+        return response.data.data;
+    });
+}
+// pkg/dist-src/with-defaults.js
+function dist_web_withDefaults(request2, newDefaults) {
+    const newRequest = request2.defaults(newDefaults);
+    const newApi = (query, options) => {
+        return graphql(newRequest, query, options);
+    };
+    return Object.assign(newApi, {
+        defaults: dist_web_withDefaults.bind(null, newRequest),
+        endpoint: newRequest.endpoint
+    });
+}
+// pkg/dist-src/index.js
+var graphql2 = dist_web_withDefaults(request, {
+    headers: {
+        "user-agent": `octokit-graphql.js/${dist_web_VERSION} ${getUserAgent()}`
+    },
+    method: "POST",
+    url: "/graphql"
+});
+function withCustomRequest(customRequest) {
+    return dist_web_withDefaults(customRequest, {
+        method: "POST",
+        url: "/graphql"
+    });
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/auth-token/dist-src/auth.js
+const REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
+const REGEX_IS_INSTALLATION = /^ghs_/;
+const REGEX_IS_USER_TO_SERVER = /^ghu_/;
+async function auth(token) {
+    const isApp = token.split(/\./).length === 3;
+    const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
+    const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
+    const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
+    return {
+        type: "token",
+        token,
+        tokenType
+    };
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/auth-token/dist-src/with-authorization-prefix.js
+function withAuthorizationPrefix(token) {
+    if (token.split(/\./).length === 3) {
+        return `bearer ${token}`;
+    }
+    return `token ${token}`;
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/auth-token/dist-src/hook.js
+
+async function hook(token, request, route, parameters) {
+    const endpoint = request.endpoint.merge(route, parameters);
+    endpoint.headers.authorization = withAuthorizationPrefix(token);
+    return request(endpoint);
+}
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/auth-token/dist-src/index.js
+
+
+const createTokenAuth = function createTokenAuth2(token) {
+    if (!token) {
+        throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
+    }
+    if (typeof token !== "string") {
+        throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
+    }
+    token = token.replace(/^(token|bearer) +/i, "");
+    return Object.assign(auth.bind(null, token), {
+        hook: hook.bind(null, token)
+    });
+};
+
+
+;// ./node_modules/@actions/github/node_modules/@octokit/core/dist-web/index.js
+// pkg/dist-src/index.js
+
+
+
+
+
+// pkg/dist-src/version.js
+var core_dist_web_VERSION = "5.2.0";
+// pkg/dist-src/index.js
+var noop = () => {
+};
+var consoleWarn = console.warn.bind(console);
+var consoleError = console.error.bind(console);
+var userAgentTrail = `octokit-core.js/${core_dist_web_VERSION} ${getUserAgent()}`;
+var Octokit = class {
+    static {
+        this.VERSION = core_dist_web_VERSION;
+    }
+    static defaults(defaults) {
+        const OctokitWithDefaults = class extends this {
+            constructor(...args) {
+                const options = args[0] || {};
+                if (typeof defaults === "function") {
+                    super(defaults(options));
+                    return;
+                }
+                super(Object.assign({}, defaults, options, options.userAgent && defaults.userAgent ? {
+                    userAgent: `${options.userAgent} ${defaults.userAgent}`
+                } : null));
+            }
+        };
+        return OctokitWithDefaults;
+    }
+    static {
+        this.plugins = [];
+    }
+    /**
+     * Attach a plugin (or many) to your Octokit instance.
+     *
+     * @example
+     * const API = Octokit.plugin(plugin1, plugin2, plugin3, ...)
+     */
+    static plugin(...newPlugins) {
+        const currentPlugins = this.plugins;
+        const NewOctokit = class extends this {
+            static {
+                this.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin)));
+            }
+        };
+        return NewOctokit;
+    }
+    constructor(options = {}) {
+        const hook = new before_after_hook.Collection();
+        const requestDefaults = {
+            baseUrl: request.endpoint.DEFAULTS.baseUrl,
+            headers: {},
+            request: Object.assign({}, options.request, {
+                // @ts-ignore internal usage only, no need to type
+                hook: hook.bind(null, "request")
+            }),
+            mediaType: {
+                previews: [],
+                format: ""
+            }
+        };
+        requestDefaults.headers["user-agent"] = options.userAgent ? `${options.userAgent} ${userAgentTrail}` : userAgentTrail;
+        if (options.baseUrl) {
+            requestDefaults.baseUrl = options.baseUrl;
+        }
+        if (options.previews) {
+            requestDefaults.mediaType.previews = options.previews;
+        }
+        if (options.timeZone) {
+            requestDefaults.headers["time-zone"] = options.timeZone;
+        }
+        this.request = request.defaults(requestDefaults);
+        this.graphql = withCustomRequest(this.request).defaults(requestDefaults);
+        this.log = Object.assign({
+            debug: noop,
+            info: noop,
+            warn: consoleWarn,
+            error: consoleError
+        }, options.log);
+        this.hook = hook;
+        if (!options.authStrategy) {
+            if (!options.auth) {
+                this.auth = async () => ({
+                    type: "unauthenticated"
+                });
+            }
+            else {
+                const auth = createTokenAuth(options.auth);
+                hook.wrap("request", auth.hook);
+                this.auth = auth;
+            }
+        }
+        else {
+            const { authStrategy, ...otherOptions } = options;
+            const auth = authStrategy(Object.assign({
+                request: this.request,
+                log: this.log,
+                // we pass the current octokit instance as well as its constructor options
+                // to allow for authentication strategies that return a new octokit instance
+                // that shares the same internal state as the current one. The original
+                // requirement for this was the "event-octokit" authentication strategy
+                // of https://github.com/probot/octokit-auth-probot.
+                octokit: this,
+                octokitOptions: otherOptions
+            }, options.auth));
+            hook.wrap("request", auth.hook);
+            this.auth = auth;
+        }
+        const classConstructor = this.constructor;
+        for (let i = 0; i < classConstructor.plugins.length; ++i) {
+            Object.assign(this, classConstructor.plugins[i](this, options));
+        }
+    }
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/@octokit/plugin-paginate-rest/dist-web/index.js":
+/*!***************************************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/@octokit/plugin-paginate-rest/dist-web/index.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   composePaginateRest: () => (/* binding */ composePaginateRest),
+/* harmony export */   isPaginatingEndpoint: () => (/* binding */ isPaginatingEndpoint),
+/* harmony export */   paginateRest: () => (/* binding */ paginateRest),
+/* harmony export */   paginatingEndpoints: () => (/* binding */ paginatingEndpoints)
+/* harmony export */ });
+// pkg/dist-src/version.js
+var VERSION = "9.2.1";
+// pkg/dist-src/normalize-paginated-list-response.js
+function normalizePaginatedListResponse(response) {
+    if (!response.data) {
+        return {
+            ...response,
+            data: []
+        };
+    }
+    const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
+    if (!responseNeedsNormalization)
+        return response;
+    const incompleteResults = response.data.incomplete_results;
+    const repositorySelection = response.data.repository_selection;
+    const totalCount = response.data.total_count;
+    delete response.data.incomplete_results;
+    delete response.data.repository_selection;
+    delete response.data.total_count;
+    const namespaceKey = Object.keys(response.data)[0];
+    const data = response.data[namespaceKey];
+    response.data = data;
+    if (typeof incompleteResults !== "undefined") {
+        response.data.incomplete_results = incompleteResults;
+    }
+    if (typeof repositorySelection !== "undefined") {
+        response.data.repository_selection = repositorySelection;
+    }
+    response.data.total_count = totalCount;
+    return response;
+}
+// pkg/dist-src/iterator.js
+function iterator(octokit, route, parameters) {
+    const options = typeof route === "function" ? route.endpoint(parameters) : octokit.request.endpoint(route, parameters);
+    const requestMethod = typeof route === "function" ? route : octokit.request;
+    const method = options.method;
+    const headers = options.headers;
+    let url = options.url;
+    return {
+        [Symbol.asyncIterator]: () => ({
+            async next() {
+                if (!url)
+                    return { done: true };
+                try {
+                    const response = await requestMethod({ method, url, headers });
+                    const normalizedResponse = normalizePaginatedListResponse(response);
+                    url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1];
+                    return { value: normalizedResponse };
+                }
+                catch (error) {
+                    if (error.status !== 409)
+                        throw error;
+                    url = "";
+                    return {
+                        value: {
+                            status: 200,
+                            headers: {},
+                            data: []
+                        }
+                    };
+                }
+            }
+        })
+    };
+}
+// pkg/dist-src/paginate.js
+function paginate(octokit, route, parameters, mapFn) {
+    if (typeof parameters === "function") {
+        mapFn = parameters;
+        parameters = void 0;
+    }
+    return gather(octokit, [], iterator(octokit, route, parameters)[Symbol.asyncIterator](), mapFn);
+}
+function gather(octokit, results, iterator2, mapFn) {
+    return iterator2.next().then((result) => {
+        if (result.done) {
+            return results;
+        }
+        let earlyExit = false;
+        function done() {
+            earlyExit = true;
+        }
+        results = results.concat(mapFn ? mapFn(result.value, done) : result.value.data);
+        if (earlyExit) {
+            return results;
+        }
+        return gather(octokit, results, iterator2, mapFn);
+    });
+}
+// pkg/dist-src/compose-paginate.js
+var composePaginateRest = Object.assign(paginate, {
+    iterator
+});
+// pkg/dist-src/generated/paginating-endpoints.js
+var paginatingEndpoints = [
+    "GET /advisories",
+    "GET /app/hook/deliveries",
+    "GET /app/installation-requests",
+    "GET /app/installations",
+    "GET /assignments/{assignment_id}/accepted_assignments",
+    "GET /classrooms",
+    "GET /classrooms/{classroom_id}/assignments",
+    "GET /enterprises/{enterprise}/dependabot/alerts",
+    "GET /enterprises/{enterprise}/secret-scanning/alerts",
+    "GET /events",
+    "GET /gists",
+    "GET /gists/public",
+    "GET /gists/starred",
+    "GET /gists/{gist_id}/comments",
+    "GET /gists/{gist_id}/commits",
+    "GET /gists/{gist_id}/forks",
+    "GET /installation/repositories",
+    "GET /issues",
+    "GET /licenses",
+    "GET /marketplace_listing/plans",
+    "GET /marketplace_listing/plans/{plan_id}/accounts",
+    "GET /marketplace_listing/stubbed/plans",
+    "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts",
+    "GET /networks/{owner}/{repo}/events",
+    "GET /notifications",
+    "GET /organizations",
+    "GET /orgs/{org}/actions/cache/usage-by-repository",
+    "GET /orgs/{org}/actions/permissions/repositories",
+    "GET /orgs/{org}/actions/runners",
+    "GET /orgs/{org}/actions/secrets",
+    "GET /orgs/{org}/actions/secrets/{secret_name}/repositories",
+    "GET /orgs/{org}/actions/variables",
+    "GET /orgs/{org}/actions/variables/{name}/repositories",
+    "GET /orgs/{org}/blocks",
+    "GET /orgs/{org}/code-scanning/alerts",
+    "GET /orgs/{org}/codespaces",
+    "GET /orgs/{org}/codespaces/secrets",
+    "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories",
+    "GET /orgs/{org}/copilot/billing/seats",
+    "GET /orgs/{org}/dependabot/alerts",
+    "GET /orgs/{org}/dependabot/secrets",
+    "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories",
+    "GET /orgs/{org}/events",
+    "GET /orgs/{org}/failed_invitations",
+    "GET /orgs/{org}/hooks",
+    "GET /orgs/{org}/hooks/{hook_id}/deliveries",
+    "GET /orgs/{org}/installations",
+    "GET /orgs/{org}/invitations",
+    "GET /orgs/{org}/invitations/{invitation_id}/teams",
+    "GET /orgs/{org}/issues",
+    "GET /orgs/{org}/members",
+    "GET /orgs/{org}/members/{username}/codespaces",
+    "GET /orgs/{org}/migrations",
+    "GET /orgs/{org}/migrations/{migration_id}/repositories",
+    "GET /orgs/{org}/organization-roles/{role_id}/teams",
+    "GET /orgs/{org}/organization-roles/{role_id}/users",
+    "GET /orgs/{org}/outside_collaborators",
+    "GET /orgs/{org}/packages",
+    "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
+    "GET /orgs/{org}/personal-access-token-requests",
+    "GET /orgs/{org}/personal-access-token-requests/{pat_request_id}/repositories",
+    "GET /orgs/{org}/personal-access-tokens",
+    "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories",
+    "GET /orgs/{org}/projects",
+    "GET /orgs/{org}/properties/values",
+    "GET /orgs/{org}/public_members",
+    "GET /orgs/{org}/repos",
+    "GET /orgs/{org}/rulesets",
+    "GET /orgs/{org}/rulesets/rule-suites",
+    "GET /orgs/{org}/secret-scanning/alerts",
+    "GET /orgs/{org}/security-advisories",
+    "GET /orgs/{org}/teams",
+    "GET /orgs/{org}/teams/{team_slug}/discussions",
+    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments",
+    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions",
+    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions",
+    "GET /orgs/{org}/teams/{team_slug}/invitations",
+    "GET /orgs/{org}/teams/{team_slug}/members",
+    "GET /orgs/{org}/teams/{team_slug}/projects",
+    "GET /orgs/{org}/teams/{team_slug}/repos",
+    "GET /orgs/{org}/teams/{team_slug}/teams",
+    "GET /projects/columns/{column_id}/cards",
+    "GET /projects/{project_id}/collaborators",
+    "GET /projects/{project_id}/columns",
+    "GET /repos/{owner}/{repo}/actions/artifacts",
+    "GET /repos/{owner}/{repo}/actions/caches",
+    "GET /repos/{owner}/{repo}/actions/organization-secrets",
+    "GET /repos/{owner}/{repo}/actions/organization-variables",
+    "GET /repos/{owner}/{repo}/actions/runners",
+    "GET /repos/{owner}/{repo}/actions/runs",
+    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts",
+    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs",
+    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs",
+    "GET /repos/{owner}/{repo}/actions/secrets",
+    "GET /repos/{owner}/{repo}/actions/variables",
+    "GET /repos/{owner}/{repo}/actions/workflows",
+    "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs",
+    "GET /repos/{owner}/{repo}/activity",
+    "GET /repos/{owner}/{repo}/assignees",
+    "GET /repos/{owner}/{repo}/branches",
+    "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations",
+    "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs",
+    "GET /repos/{owner}/{repo}/code-scanning/alerts",
+    "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances",
+    "GET /repos/{owner}/{repo}/code-scanning/analyses",
+    "GET /repos/{owner}/{repo}/codespaces",
+    "GET /repos/{owner}/{repo}/codespaces/devcontainers",
+    "GET /repos/{owner}/{repo}/codespaces/secrets",
+    "GET /repos/{owner}/{repo}/collaborators",
+    "GET /repos/{owner}/{repo}/comments",
+    "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions",
+    "GET /repos/{owner}/{repo}/commits",
+    "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments",
+    "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls",
+    "GET /repos/{owner}/{repo}/commits/{ref}/check-runs",
+    "GET /repos/{owner}/{repo}/commits/{ref}/check-suites",
+    "GET /repos/{owner}/{repo}/commits/{ref}/status",
+    "GET /repos/{owner}/{repo}/commits/{ref}/statuses",
+    "GET /repos/{owner}/{repo}/contributors",
+    "GET /repos/{owner}/{repo}/dependabot/alerts",
+    "GET /repos/{owner}/{repo}/dependabot/secrets",
+    "GET /repos/{owner}/{repo}/deployments",
+    "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses",
+    "GET /repos/{owner}/{repo}/environments",
+    "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies",
+    "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps",
+    "GET /repos/{owner}/{repo}/events",
+    "GET /repos/{owner}/{repo}/forks",
+    "GET /repos/{owner}/{repo}/hooks",
+    "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries",
+    "GET /repos/{owner}/{repo}/invitations",
+    "GET /repos/{owner}/{repo}/issues",
+    "GET /repos/{owner}/{repo}/issues/comments",
+    "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
+    "GET /repos/{owner}/{repo}/issues/events",
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/events",
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/labels",
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions",
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline",
+    "GET /repos/{owner}/{repo}/keys",
+    "GET /repos/{owner}/{repo}/labels",
+    "GET /repos/{owner}/{repo}/milestones",
+    "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels",
+    "GET /repos/{owner}/{repo}/notifications",
+    "GET /repos/{owner}/{repo}/pages/builds",
+    "GET /repos/{owner}/{repo}/projects",
+    "GET /repos/{owner}/{repo}/pulls",
+    "GET /repos/{owner}/{repo}/pulls/comments",
+    "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions",
+    "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments",
+    "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
+    "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
+    "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+    "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments",
+    "GET /repos/{owner}/{repo}/releases",
+    "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
+    "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
+    "GET /repos/{owner}/{repo}/rules/branches/{branch}",
+    "GET /repos/{owner}/{repo}/rulesets",
+    "GET /repos/{owner}/{repo}/rulesets/rule-suites",
+    "GET /repos/{owner}/{repo}/secret-scanning/alerts",
+    "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
+    "GET /repos/{owner}/{repo}/security-advisories",
+    "GET /repos/{owner}/{repo}/stargazers",
+    "GET /repos/{owner}/{repo}/subscribers",
+    "GET /repos/{owner}/{repo}/tags",
+    "GET /repos/{owner}/{repo}/teams",
+    "GET /repos/{owner}/{repo}/topics",
+    "GET /repositories",
+    "GET /repositories/{repository_id}/environments/{environment_name}/secrets",
+    "GET /repositories/{repository_id}/environments/{environment_name}/variables",
+    "GET /search/code",
+    "GET /search/commits",
+    "GET /search/issues",
+    "GET /search/labels",
+    "GET /search/repositories",
+    "GET /search/topics",
+    "GET /search/users",
+    "GET /teams/{team_id}/discussions",
+    "GET /teams/{team_id}/discussions/{discussion_number}/comments",
+    "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions",
+    "GET /teams/{team_id}/discussions/{discussion_number}/reactions",
+    "GET /teams/{team_id}/invitations",
+    "GET /teams/{team_id}/members",
+    "GET /teams/{team_id}/projects",
+    "GET /teams/{team_id}/repos",
+    "GET /teams/{team_id}/teams",
+    "GET /user/blocks",
+    "GET /user/codespaces",
+    "GET /user/codespaces/secrets",
+    "GET /user/emails",
+    "GET /user/followers",
+    "GET /user/following",
+    "GET /user/gpg_keys",
+    "GET /user/installations",
+    "GET /user/installations/{installation_id}/repositories",
+    "GET /user/issues",
+    "GET /user/keys",
+    "GET /user/marketplace_purchases",
+    "GET /user/marketplace_purchases/stubbed",
+    "GET /user/memberships/orgs",
+    "GET /user/migrations",
+    "GET /user/migrations/{migration_id}/repositories",
+    "GET /user/orgs",
+    "GET /user/packages",
+    "GET /user/packages/{package_type}/{package_name}/versions",
+    "GET /user/public_emails",
+    "GET /user/repos",
+    "GET /user/repository_invitations",
+    "GET /user/social_accounts",
+    "GET /user/ssh_signing_keys",
+    "GET /user/starred",
+    "GET /user/subscriptions",
+    "GET /user/teams",
+    "GET /users",
+    "GET /users/{username}/events",
+    "GET /users/{username}/events/orgs/{org}",
+    "GET /users/{username}/events/public",
+    "GET /users/{username}/followers",
+    "GET /users/{username}/following",
+    "GET /users/{username}/gists",
+    "GET /users/{username}/gpg_keys",
+    "GET /users/{username}/keys",
+    "GET /users/{username}/orgs",
+    "GET /users/{username}/packages",
+    "GET /users/{username}/projects",
+    "GET /users/{username}/received_events",
+    "GET /users/{username}/received_events/public",
+    "GET /users/{username}/repos",
+    "GET /users/{username}/social_accounts",
+    "GET /users/{username}/ssh_signing_keys",
+    "GET /users/{username}/starred",
+    "GET /users/{username}/subscriptions"
+];
+// pkg/dist-src/paginating-endpoints.js
+function isPaginatingEndpoint(arg) {
+    if (typeof arg === "string") {
+        return paginatingEndpoints.includes(arg);
+    }
+    else {
+        return false;
+    }
+}
+// pkg/dist-src/index.js
+function paginateRest(octokit) {
+    return {
+        paginate: Object.assign(paginate.bind(null, octokit), {
+            iterator: iterator.bind(null, octokit)
+        })
+    };
+}
+paginateRest.VERSION = VERSION;
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/before-after-hook/index.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/before-after-hook/index.js ***!
+  \******************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var register = __webpack_require__(/*! ./lib/register */ "./node_modules/@actions/github/node_modules/before-after-hook/lib/register.js");
+var addHook = __webpack_require__(/*! ./lib/add */ "./node_modules/@actions/github/node_modules/before-after-hook/lib/add.js");
+var removeHook = __webpack_require__(/*! ./lib/remove */ "./node_modules/@actions/github/node_modules/before-after-hook/lib/remove.js");
+// bind with array of arguments: https://stackoverflow.com/a/21792913
+var bind = Function.bind;
+var bindable = bind.bind(bind);
+function bindApi(hook, state, name) {
+    var removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
+    hook.api = { remove: removeHookRef };
+    hook.remove = removeHookRef;
+    ["before", "error", "after", "wrap"].forEach(function (kind) {
+        var args = name ? [state, kind, name] : [state, kind];
+        hook[kind] = hook.api[kind] = bindable(addHook, null).apply(null, args);
+    });
+}
+function HookSingular() {
+    var singularHookName = "h";
+    var singularHookState = {
+        registry: {},
+    };
+    var singularHook = register.bind(null, singularHookState, singularHookName);
+    bindApi(singularHook, singularHookState, singularHookName);
+    return singularHook;
+}
+function HookCollection() {
+    var state = {
+        registry: {},
+    };
+    var hook = register.bind(null, state);
+    bindApi(hook, state);
+    return hook;
+}
+var collectionHookDeprecationMessageDisplayed = false;
+function Hook() {
+    if (!collectionHookDeprecationMessageDisplayed) {
+        console.warn('[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4');
+        collectionHookDeprecationMessageDisplayed = true;
+    }
+    return HookCollection();
+}
+Hook.Singular = HookSingular.bind();
+Hook.Collection = HookCollection.bind();
+module.exports = Hook;
+// expose constructors as a named property for TypeScript
+module.exports.Hook = Hook;
+module.exports.Singular = Hook.Singular;
+module.exports.Collection = Hook.Collection;
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/before-after-hook/lib/add.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/before-after-hook/lib/add.js ***!
+  \********************************************************************************/
+/***/ ((module) => {
+
+
+module.exports = addHook;
+function addHook(state, kind, name, hook) {
+    var orig = hook;
+    if (!state.registry[name]) {
+        state.registry[name] = [];
+    }
+    if (kind === "before") {
+        hook = function (method, options) {
+            return Promise.resolve()
+                .then(orig.bind(null, options))
+                .then(method.bind(null, options));
+        };
+    }
+    if (kind === "after") {
+        hook = function (method, options) {
+            var result;
+            return Promise.resolve()
+                .then(method.bind(null, options))
+                .then(function (result_) {
+                result = result_;
+                return orig(result, options);
+            })
+                .then(function () {
+                return result;
+            });
+        };
+    }
+    if (kind === "error") {
+        hook = function (method, options) {
+            return Promise.resolve()
+                .then(method.bind(null, options))
+                .catch(function (error) {
+                return orig(error, options);
+            });
+        };
+    }
+    state.registry[name].push({
+        hook: hook,
+        orig: orig,
+    });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/before-after-hook/lib/register.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/before-after-hook/lib/register.js ***!
+  \*************************************************************************************/
+/***/ ((module) => {
+
+
+module.exports = register;
+function register(state, name, method, options) {
+    if (typeof method !== "function") {
+        throw new Error("method for before hook must be a function");
+    }
+    if (!options) {
+        options = {};
+    }
+    if (Array.isArray(name)) {
+        return name.reverse().reduce(function (callback, name) {
+            return register.bind(null, state, name, callback, options);
+        }, method)();
+    }
+    return Promise.resolve().then(function () {
+        if (!state.registry[name]) {
+            return method(options);
+        }
+        return state.registry[name].reduce(function (method, registered) {
+            return registered.hook.bind(null, method, options);
+        }, method)();
+    });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@actions/github/node_modules/before-after-hook/lib/remove.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/@actions/github/node_modules/before-after-hook/lib/remove.js ***!
+  \***********************************************************************************/
+/***/ ((module) => {
+
+
+module.exports = removeHook;
+function removeHook(state, name, method) {
+    if (!state.registry[name]) {
+        return;
+    }
+    var index = state.registry[name]
+        .map(function (registered) {
+        return registered.orig;
+    })
+        .indexOf(method);
+    if (index === -1) {
+        return;
+    }
+    state.registry[name].splice(index, 1);
+}
 
 
 /***/ }),
@@ -4001,1307 +5485,6 @@ module.exports = parseParams;
 
 /***/ }),
 
-/***/ "./node_modules/@octokit/core/dist-web/index.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@octokit/core/dist-web/index.js + 28 modules ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  Octokit: () => (/* binding */ Octokit)
-});
-
-;// ./node_modules/universal-user-agent/dist-web/index.js
-function getUserAgent() {
-    if (typeof navigator === "object" && "userAgent" in navigator) {
-        return navigator.userAgent;
-    }
-    if (typeof process === "object" && "version" in process) {
-        return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
-    }
-    return "<environment undetectable>";
-}
-
-//# sourceMappingURL=index.js.map
-
-// EXTERNAL MODULE: ./node_modules/before-after-hook/index.js
-var before_after_hook = __webpack_require__("./node_modules/before-after-hook/index.js");
-;// ./node_modules/@octokit/endpoint/dist-src/util/lowercase-keys.js
-function lowercaseKeys(object) {
-    if (!object) {
-        return {};
-    }
-    return Object.keys(object).reduce((newObj, key) => {
-        newObj[key.toLowerCase()] = object[key];
-        return newObj;
-    }, {});
-}
-
-
-;// ./node_modules/is-plain-object/dist/is-plain-object.mjs
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-function isObject(o) {
-  return Object.prototype.toString.call(o) === '[object Object]';
-}
-
-function isPlainObject(o) {
-  var ctor,prot;
-
-  if (isObject(o) === false) return false;
-
-  // If has modified constructor
-  ctor = o.constructor;
-  if (ctor === undefined) return true;
-
-  // If has modified prototype
-  prot = ctor.prototype;
-  if (isObject(prot) === false) return false;
-
-  // If constructor does not have an Object-specific method
-  if (prot.hasOwnProperty('isPrototypeOf') === false) {
-    return false;
-  }
-
-  // Most likely a plain Object
-  return true;
-}
-
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/merge-deep.js
-
-function mergeDeep(defaults, options) {
-    const result = Object.assign({}, defaults);
-    Object.keys(options).forEach((key) => {
-        if (isPlainObject(options[key])) {
-            if (!(key in defaults))
-                Object.assign(result, { [key]: options[key] });
-            else
-                result[key] = mergeDeep(defaults[key], options[key]);
-        }
-        else {
-            Object.assign(result, { [key]: options[key] });
-        }
-    });
-    return result;
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/remove-undefined-properties.js
-function removeUndefinedProperties(obj) {
-    for (const key in obj) {
-        if (obj[key] === void 0) {
-            delete obj[key];
-        }
-    }
-    return obj;
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/merge.js
-
-
-
-function merge(defaults, route, options) {
-    if (typeof route === "string") {
-        let [method, url] = route.split(" ");
-        options = Object.assign(url ? { method, url } : { url: method }, options);
-    }
-    else {
-        options = Object.assign({}, route);
-    }
-    options.headers = lowercaseKeys(options.headers);
-    removeUndefinedProperties(options);
-    removeUndefinedProperties(options.headers);
-    const mergedOptions = mergeDeep(defaults || {}, options);
-    if (options.url === "/graphql") {
-        if (defaults && defaults.mediaType.previews?.length) {
-            mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
-        }
-        mergedOptions.mediaType.previews = (mergedOptions.mediaType.previews || []).map((preview) => preview.replace(/-preview/, ""));
-    }
-    return mergedOptions;
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/add-query-parameters.js
-function addQueryParameters(url, parameters) {
-    const separator = /\?/.test(url) ? "&" : "?";
-    const names = Object.keys(parameters);
-    if (names.length === 0) {
-        return url;
-    }
-    return url + separator + names.map((name) => {
-        if (name === "q") {
-            return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
-        }
-        return `${name}=${encodeURIComponent(parameters[name])}`;
-    }).join("&");
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/extract-url-variable-names.js
-const urlVariableRegex = /\{[^}]+\}/g;
-function removeNonChars(variableName) {
-    return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
-}
-function extractUrlVariableNames(url) {
-    const matches = url.match(urlVariableRegex);
-    if (!matches) {
-        return [];
-    }
-    return matches.map(removeNonChars).reduce((a, b) => a.concat(b), []);
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/omit.js
-function omit(object, keysToOmit) {
-    return Object.keys(object).filter((option) => !keysToOmit.includes(option)).reduce((obj, key) => {
-        obj[key] = object[key];
-        return obj;
-    }, {});
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/util/url-template.js
-function encodeReserved(str) {
-    return str.split(/(%[0-9A-Fa-f]{2})/g).map(function (part) {
-        if (!/%[0-9A-Fa-f]/.test(part)) {
-            part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
-        }
-        return part;
-    }).join("");
-}
-function encodeUnreserved(str) {
-    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-        return "%" + c.charCodeAt(0).toString(16).toUpperCase();
-    });
-}
-function encodeValue(operator, value, key) {
-    value = operator === "+" || operator === "#" ? encodeReserved(value) : encodeUnreserved(value);
-    if (key) {
-        return encodeUnreserved(key) + "=" + value;
-    }
-    else {
-        return value;
-    }
-}
-function isDefined(value) {
-    return value !== void 0 && value !== null;
-}
-function isKeyOperator(operator) {
-    return operator === ";" || operator === "&" || operator === "?";
-}
-function getValues(context, operator, key, modifier) {
-    var value = context[key], result = [];
-    if (isDefined(value) && value !== "") {
-        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-            value = value.toString();
-            if (modifier && modifier !== "*") {
-                value = value.substring(0, parseInt(modifier, 10));
-            }
-            result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
-        }
-        else {
-            if (modifier === "*") {
-                if (Array.isArray(value)) {
-                    value.filter(isDefined).forEach(function (value2) {
-                        result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
-                    });
-                }
-                else {
-                    Object.keys(value).forEach(function (k) {
-                        if (isDefined(value[k])) {
-                            result.push(encodeValue(operator, value[k], k));
-                        }
-                    });
-                }
-            }
-            else {
-                const tmp = [];
-                if (Array.isArray(value)) {
-                    value.filter(isDefined).forEach(function (value2) {
-                        tmp.push(encodeValue(operator, value2));
-                    });
-                }
-                else {
-                    Object.keys(value).forEach(function (k) {
-                        if (isDefined(value[k])) {
-                            tmp.push(encodeUnreserved(k));
-                            tmp.push(encodeValue(operator, value[k].toString()));
-                        }
-                    });
-                }
-                if (isKeyOperator(operator)) {
-                    result.push(encodeUnreserved(key) + "=" + tmp.join(","));
-                }
-                else if (tmp.length !== 0) {
-                    result.push(tmp.join(","));
-                }
-            }
-        }
-    }
-    else {
-        if (operator === ";") {
-            if (isDefined(value)) {
-                result.push(encodeUnreserved(key));
-            }
-        }
-        else if (value === "" && (operator === "&" || operator === "?")) {
-            result.push(encodeUnreserved(key) + "=");
-        }
-        else if (value === "") {
-            result.push("");
-        }
-    }
-    return result;
-}
-function parseUrl(template) {
-    return {
-        expand: expand.bind(null, template)
-    };
-}
-function expand(template, context) {
-    var operators = ["+", "#", ".", "/", ";", "?", "&"];
-    return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function (_, expression, literal) {
-        if (expression) {
-            let operator = "";
-            const values = [];
-            if (operators.indexOf(expression.charAt(0)) !== -1) {
-                operator = expression.charAt(0);
-                expression = expression.substr(1);
-            }
-            expression.split(/,/g).forEach(function (variable) {
-                var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-                values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
-            });
-            if (operator && operator !== "+") {
-                var separator = ",";
-                if (operator === "?") {
-                    separator = "&";
-                }
-                else if (operator !== "#") {
-                    separator = operator;
-                }
-                return (values.length !== 0 ? operator : "") + values.join(separator);
-            }
-            else {
-                return values.join(",");
-            }
-        }
-        else {
-            return encodeReserved(literal);
-        }
-    });
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/parse.js
-
-
-
-
-function parse(options) {
-    let method = options.method.toUpperCase();
-    let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
-    let headers = Object.assign({}, options.headers);
-    let body;
-    let parameters = omit(options, [
-        "method",
-        "baseUrl",
-        "url",
-        "headers",
-        "request",
-        "mediaType"
-    ]);
-    const urlVariableNames = extractUrlVariableNames(url);
-    url = parseUrl(url).expand(parameters);
-    if (!/^http/.test(url)) {
-        url = options.baseUrl + url;
-    }
-    const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
-    const remainingParameters = omit(parameters, omittedParameters);
-    const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
-    if (!isBinaryRequest) {
-        if (options.mediaType.format) {
-            headers.accept = headers.accept.split(/,/).map((format) => format.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`)).join(",");
-        }
-        if (url.endsWith("/graphql")) {
-            if (options.mediaType.previews?.length) {
-                const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
-                headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
-                    const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
-                    return `application/vnd.github.${preview}-preview${format}`;
-                }).join(",");
-            }
-        }
-    }
-    if (["GET", "HEAD"].includes(method)) {
-        url = addQueryParameters(url, remainingParameters);
-    }
-    else {
-        if ("data" in remainingParameters) {
-            body = remainingParameters.data;
-        }
-        else {
-            if (Object.keys(remainingParameters).length) {
-                body = remainingParameters;
-            }
-        }
-    }
-    if (!headers["content-type"] && typeof body !== "undefined") {
-        headers["content-type"] = "application/json; charset=utf-8";
-    }
-    if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
-        body = "";
-    }
-    return Object.assign({ method, url, headers }, typeof body !== "undefined" ? { body } : null, options.request ? { request: options.request } : null);
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/endpoint-with-defaults.js
-
-
-
-function endpointWithDefaults(defaults, route, options) {
-    return parse(merge(defaults, route, options));
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/with-defaults.js
-
-
-
-function withDefaults(oldDefaults, newDefaults) {
-    const DEFAULTS = merge(oldDefaults, newDefaults);
-    const endpoint = endpointWithDefaults.bind(null, DEFAULTS);
-    return Object.assign(endpoint, {
-        DEFAULTS,
-        defaults: withDefaults.bind(null, DEFAULTS),
-        merge: merge.bind(null, DEFAULTS),
-        parse: parse
-    });
-}
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/version.js
-const VERSION = "9.0.1";
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/defaults.js
-
-
-const userAgent = `octokit-endpoint.js/${VERSION} ${getUserAgent()}`;
-const DEFAULTS = {
-    method: "GET",
-    baseUrl: "https://api.github.com",
-    headers: {
-        accept: "application/vnd.github.v3+json",
-        "user-agent": userAgent
-    },
-    mediaType: {
-        format: ""
-    }
-};
-
-
-;// ./node_modules/@octokit/endpoint/dist-src/index.js
-
-
-const endpoint = withDefaults(null, DEFAULTS);
-
-
-;// ./node_modules/@octokit/request/dist-src/version.js
-const version_VERSION = "8.1.4";
-
-
-;// ./node_modules/deprecation/dist-web/index.js
-class Deprecation extends Error {
-    constructor(message) {
-        super(message); // Maintains proper stack trace (only available on V8)
-        /* istanbul ignore next */
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, this.constructor);
-        }
-        this.name = 'Deprecation';
-    }
-}
-
-
-// EXTERNAL MODULE: ./node_modules/once/once.js
-var once = __webpack_require__("./node_modules/once/once.js");
-var once_default = /*#__PURE__*/__webpack_require__.n(once);
-;// ./node_modules/@octokit/request-error/dist-src/index.js
-
-
-const logOnceCode = once_default()((deprecation) => console.warn(deprecation));
-const logOnceHeaders = once_default()((deprecation) => console.warn(deprecation));
-class RequestError extends Error {
-    constructor(message, statusCode, options) {
-        super(message);
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, this.constructor);
-        }
-        this.name = "HttpError";
-        this.status = statusCode;
-        let headers;
-        if ("headers" in options && typeof options.headers !== "undefined") {
-            headers = options.headers;
-        }
-        if ("response" in options) {
-            this.response = options.response;
-            headers = options.response.headers;
-        }
-        const requestCopy = Object.assign({}, options.request);
-        if (options.request.headers.authorization) {
-            requestCopy.headers = Object.assign({}, options.request.headers, {
-                authorization: options.request.headers.authorization.replace(/ .*$/, " [REDACTED]")
-            });
-        }
-        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
-        this.request = requestCopy;
-        Object.defineProperty(this, "code", {
-            get() {
-                logOnceCode(new Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
-                return statusCode;
-            }
-        });
-        Object.defineProperty(this, "headers", {
-            get() {
-                logOnceHeaders(new Deprecation("[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."));
-                return headers || {};
-            }
-        });
-    }
-}
-
-
-;// ./node_modules/@octokit/request/dist-src/get-buffer-response.js
-function getBufferResponse(response) {
-    return response.arrayBuffer();
-}
-
-
-;// ./node_modules/@octokit/request/dist-src/fetch-wrapper.js
-
-
-
-function fetchWrapper(requestOptions) {
-    const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-    const parseSuccessResponseBody = requestOptions.request?.parseSuccessResponseBody !== false;
-    if (isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
-        requestOptions.body = JSON.stringify(requestOptions.body);
-    }
-    let headers = {};
-    let status;
-    let url;
-    let { fetch } = globalThis;
-    if (requestOptions.request?.fetch) {
-        fetch = requestOptions.request.fetch;
-    }
-    if (!fetch) {
-        throw new Error("fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing");
-    }
-    return fetch(requestOptions.url, {
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        signal: requestOptions.request?.signal,
-        // duplex must be set if request.body is ReadableStream or Async Iterables.
-        // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
-        ...requestOptions.body && { duplex: "half" }
-    }).then(async (response) => {
-        url = response.url;
-        status = response.status;
-        for (const keyAndValue of response.headers) {
-            headers[keyAndValue[0]] = keyAndValue[1];
-        }
-        if ("deprecation" in headers) {
-            const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
-            const deprecationLink = matches && matches.pop();
-            log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
-        }
-        if (status === 204 || status === 205) {
-            return;
-        }
-        if (requestOptions.method === "HEAD") {
-            if (status < 400) {
-                return;
-            }
-            throw new RequestError(response.statusText, status, {
-                response: {
-                    url,
-                    status,
-                    headers,
-                    data: void 0
-                },
-                request: requestOptions
-            });
-        }
-        if (status === 304) {
-            throw new RequestError("Not modified", status, {
-                response: {
-                    url,
-                    status,
-                    headers,
-                    data: await getResponseData(response)
-                },
-                request: requestOptions
-            });
-        }
-        if (status >= 400) {
-            const data = await getResponseData(response);
-            const error = new RequestError(toErrorMessage(data), status, {
-                response: {
-                    url,
-                    status,
-                    headers,
-                    data
-                },
-                request: requestOptions
-            });
-            throw error;
-        }
-        return parseSuccessResponseBody ? await getResponseData(response) : response.body;
-    }).then((data) => {
-        return {
-            status,
-            url,
-            headers,
-            data
-        };
-    }).catch((error) => {
-        if (error instanceof RequestError)
-            throw error;
-        else if (error.name === "AbortError")
-            throw error;
-        let message = error.message;
-        if (error.name === "TypeError" && "cause" in error) {
-            if (error.cause instanceof Error) {
-                message = error.cause.message;
-            }
-            else if (typeof error.cause === "string") {
-                message = error.cause;
-            }
-        }
-        throw new RequestError(message, 500, {
-            request: requestOptions
-        });
-    });
-}
-async function getResponseData(response) {
-    const contentType = response.headers.get("content-type");
-    if (/application\/json/.test(contentType)) {
-        return response.json();
-    }
-    if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-        return response.text();
-    }
-    return getBufferResponse(response);
-}
-function toErrorMessage(data) {
-    if (typeof data === "string")
-        return data;
-    if ("message" in data) {
-        if (Array.isArray(data.errors)) {
-            return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
-        }
-        return data.message;
-    }
-    return `Unknown error: ${JSON.stringify(data)}`;
-}
-
-
-;// ./node_modules/@octokit/request/dist-src/with-defaults.js
-
-function with_defaults_withDefaults(oldEndpoint, newDefaults) {
-    const endpoint = oldEndpoint.defaults(newDefaults);
-    const newApi = function (route, parameters) {
-        const endpointOptions = endpoint.merge(route, parameters);
-        if (!endpointOptions.request || !endpointOptions.request.hook) {
-            return fetchWrapper(endpoint.parse(endpointOptions));
-        }
-        const request = (route2, parameters2) => {
-            return fetchWrapper(endpoint.parse(endpoint.merge(route2, parameters2)));
-        };
-        Object.assign(request, {
-            endpoint,
-            defaults: with_defaults_withDefaults.bind(null, endpoint)
-        });
-        return endpointOptions.request.hook(request, endpointOptions);
-    };
-    return Object.assign(newApi, {
-        endpoint,
-        defaults: with_defaults_withDefaults.bind(null, endpoint)
-    });
-}
-
-
-;// ./node_modules/@octokit/request/dist-src/index.js
-
-
-
-
-const request = with_defaults_withDefaults(endpoint, {
-    headers: {
-        "user-agent": `octokit-request.js/${version_VERSION} ${getUserAgent()}`
-    }
-});
-
-
-;// ./node_modules/@octokit/graphql/dist-web/index.js
-// pkg/dist-src/index.js
-
-
-// pkg/dist-src/version.js
-var dist_web_VERSION = "7.0.2";
-// pkg/dist-src/with-defaults.js
-
-// pkg/dist-src/graphql.js
-
-// pkg/dist-src/error.js
-function _buildMessageForResponseErrors(data) {
-    return `Request failed due to following response errors:
-` + data.errors.map((e) => ` - ${e.message}`).join("\n");
-}
-var GraphqlResponseError = class extends Error {
-    constructor(request2, headers, response) {
-        super(_buildMessageForResponseErrors(response));
-        this.request = request2;
-        this.headers = headers;
-        this.response = response;
-        this.name = "GraphqlResponseError";
-        this.errors = response.errors;
-        this.data = response.data;
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, this.constructor);
-        }
-    }
-};
-// pkg/dist-src/graphql.js
-var NON_VARIABLE_OPTIONS = [
-    "method",
-    "baseUrl",
-    "url",
-    "headers",
-    "request",
-    "query",
-    "mediaType"
-];
-var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
-var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-function graphql(request2, query, options) {
-    if (options) {
-        if (typeof query === "string" && "query" in options) {
-            return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
-        }
-        for (const key in options) {
-            if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-                continue;
-            return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
-        }
-    }
-    const parsedOptions = typeof query === "string" ? Object.assign({ query }, options) : query;
-    const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
-        if (NON_VARIABLE_OPTIONS.includes(key)) {
-            result[key] = parsedOptions[key];
-            return result;
-        }
-        if (!result.variables) {
-            result.variables = {};
-        }
-        result.variables[key] = parsedOptions[key];
-        return result;
-    }, {});
-    const baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
-    if (GHES_V3_SUFFIX_REGEX.test(baseUrl)) {
-        requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql");
-    }
-    return request2(requestOptions).then((response) => {
-        if (response.data.errors) {
-            const headers = {};
-            for (const key of Object.keys(response.headers)) {
-                headers[key] = response.headers[key];
-            }
-            throw new GraphqlResponseError(requestOptions, headers, response.data);
-        }
-        return response.data.data;
-    });
-}
-// pkg/dist-src/with-defaults.js
-function dist_web_withDefaults(request2, newDefaults) {
-    const newRequest = request2.defaults(newDefaults);
-    const newApi = (query, options) => {
-        return graphql(newRequest, query, options);
-    };
-    return Object.assign(newApi, {
-        defaults: dist_web_withDefaults.bind(null, newRequest),
-        endpoint: newRequest.endpoint
-    });
-}
-// pkg/dist-src/index.js
-var graphql2 = dist_web_withDefaults(request, {
-    headers: {
-        "user-agent": `octokit-graphql.js/${dist_web_VERSION} ${getUserAgent()}`
-    },
-    method: "POST",
-    url: "/graphql"
-});
-function withCustomRequest(customRequest) {
-    return dist_web_withDefaults(customRequest, {
-        method: "POST",
-        url: "/graphql"
-    });
-}
-
-
-;// ./node_modules/@octokit/auth-token/dist-src/auth.js
-const REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
-const REGEX_IS_INSTALLATION = /^ghs_/;
-const REGEX_IS_USER_TO_SERVER = /^ghu_/;
-async function auth(token) {
-    const isApp = token.split(/\./).length === 3;
-    const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
-    const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
-    const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
-    return {
-        type: "token",
-        token,
-        tokenType
-    };
-}
-
-
-;// ./node_modules/@octokit/auth-token/dist-src/with-authorization-prefix.js
-function withAuthorizationPrefix(token) {
-    if (token.split(/\./).length === 3) {
-        return `bearer ${token}`;
-    }
-    return `token ${token}`;
-}
-
-
-;// ./node_modules/@octokit/auth-token/dist-src/hook.js
-
-async function hook(token, request, route, parameters) {
-    const endpoint = request.endpoint.merge(route, parameters);
-    endpoint.headers.authorization = withAuthorizationPrefix(token);
-    return request(endpoint);
-}
-
-
-;// ./node_modules/@octokit/auth-token/dist-src/index.js
-
-
-const createTokenAuth = function createTokenAuth2(token) {
-    if (!token) {
-        throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
-    }
-    if (typeof token !== "string") {
-        throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
-    }
-    token = token.replace(/^(token|bearer) +/i, "");
-    return Object.assign(auth.bind(null, token), {
-        hook: hook.bind(null, token)
-    });
-};
-
-
-;// ./node_modules/@octokit/core/dist-web/index.js
-// pkg/dist-src/index.js
-
-
-
-
-
-// pkg/dist-src/version.js
-var core_dist_web_VERSION = "5.0.1";
-// pkg/dist-src/index.js
-var Octokit = class {
-    static {
-        this.VERSION = core_dist_web_VERSION;
-    }
-    static defaults(defaults) {
-        const OctokitWithDefaults = class extends this {
-            constructor(...args) {
-                const options = args[0] || {};
-                if (typeof defaults === "function") {
-                    super(defaults(options));
-                    return;
-                }
-                super(Object.assign({}, defaults, options, options.userAgent && defaults.userAgent ? {
-                    userAgent: `${options.userAgent} ${defaults.userAgent}`
-                } : null));
-            }
-        };
-        return OctokitWithDefaults;
-    }
-    static {
-        this.plugins = [];
-    }
-    /**
-     * Attach a plugin (or many) to your Octokit instance.
-     *
-     * @example
-     * const API = Octokit.plugin(plugin1, plugin2, plugin3, ...)
-     */
-    static plugin(...newPlugins) {
-        const currentPlugins = this.plugins;
-        const NewOctokit = class extends this {
-            static {
-                this.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin)));
-            }
-        };
-        return NewOctokit;
-    }
-    constructor(options = {}) {
-        const hook = new before_after_hook.Collection();
-        const requestDefaults = {
-            baseUrl: request.endpoint.DEFAULTS.baseUrl,
-            headers: {},
-            request: Object.assign({}, options.request, {
-                // @ts-ignore internal usage only, no need to type
-                hook: hook.bind(null, "request")
-            }),
-            mediaType: {
-                previews: [],
-                format: ""
-            }
-        };
-        requestDefaults.headers["user-agent"] = [
-            options.userAgent,
-            `octokit-core.js/${core_dist_web_VERSION} ${getUserAgent()}`
-        ].filter(Boolean).join(" ");
-        if (options.baseUrl) {
-            requestDefaults.baseUrl = options.baseUrl;
-        }
-        if (options.previews) {
-            requestDefaults.mediaType.previews = options.previews;
-        }
-        if (options.timeZone) {
-            requestDefaults.headers["time-zone"] = options.timeZone;
-        }
-        this.request = request.defaults(requestDefaults);
-        this.graphql = withCustomRequest(this.request).defaults(requestDefaults);
-        this.log = Object.assign({
-            debug: () => {
-            },
-            info: () => {
-            },
-            warn: console.warn.bind(console),
-            error: console.error.bind(console)
-        }, options.log);
-        this.hook = hook;
-        if (!options.authStrategy) {
-            if (!options.auth) {
-                this.auth = async () => ({
-                    type: "unauthenticated"
-                });
-            }
-            else {
-                const auth = createTokenAuth(options.auth);
-                hook.wrap("request", auth.hook);
-                this.auth = auth;
-            }
-        }
-        else {
-            const { authStrategy, ...otherOptions } = options;
-            const auth = authStrategy(Object.assign({
-                request: this.request,
-                log: this.log,
-                // we pass the current octokit instance as well as its constructor options
-                // to allow for authentication strategies that return a new octokit instance
-                // that shares the same internal state as the current one. The original
-                // requirement for this was the "event-octokit" authentication strategy
-                // of https://github.com/probot/octokit-auth-probot.
-                octokit: this,
-                octokitOptions: otherOptions
-            }, options.auth));
-            hook.wrap("request", auth.hook);
-            this.auth = auth;
-        }
-        const classConstructor = this.constructor;
-        classConstructor.plugins.forEach((plugin) => {
-            Object.assign(this, plugin(this, options));
-        });
-    }
-};
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@octokit/plugin-paginate-rest/dist-web/index.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@octokit/plugin-paginate-rest/dist-web/index.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   composePaginateRest: () => (/* binding */ composePaginateRest),
-/* harmony export */   isPaginatingEndpoint: () => (/* binding */ isPaginatingEndpoint),
-/* harmony export */   paginateRest: () => (/* binding */ paginateRest),
-/* harmony export */   paginatingEndpoints: () => (/* binding */ paginatingEndpoints)
-/* harmony export */ });
-// pkg/dist-src/version.js
-var VERSION = "9.0.0";
-// pkg/dist-src/normalize-paginated-list-response.js
-function normalizePaginatedListResponse(response) {
-    if (!response.data) {
-        return {
-            ...response,
-            data: []
-        };
-    }
-    const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
-    if (!responseNeedsNormalization)
-        return response;
-    const incompleteResults = response.data.incomplete_results;
-    const repositorySelection = response.data.repository_selection;
-    const totalCount = response.data.total_count;
-    delete response.data.incomplete_results;
-    delete response.data.repository_selection;
-    delete response.data.total_count;
-    const namespaceKey = Object.keys(response.data)[0];
-    const data = response.data[namespaceKey];
-    response.data = data;
-    if (typeof incompleteResults !== "undefined") {
-        response.data.incomplete_results = incompleteResults;
-    }
-    if (typeof repositorySelection !== "undefined") {
-        response.data.repository_selection = repositorySelection;
-    }
-    response.data.total_count = totalCount;
-    return response;
-}
-// pkg/dist-src/iterator.js
-function iterator(octokit, route, parameters) {
-    const options = typeof route === "function" ? route.endpoint(parameters) : octokit.request.endpoint(route, parameters);
-    const requestMethod = typeof route === "function" ? route : octokit.request;
-    const method = options.method;
-    const headers = options.headers;
-    let url = options.url;
-    return {
-        [Symbol.asyncIterator]: () => ({
-            async next() {
-                if (!url)
-                    return { done: true };
-                try {
-                    const response = await requestMethod({ method, url, headers });
-                    const normalizedResponse = normalizePaginatedListResponse(response);
-                    url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1];
-                    return { value: normalizedResponse };
-                }
-                catch (error) {
-                    if (error.status !== 409)
-                        throw error;
-                    url = "";
-                    return {
-                        value: {
-                            status: 200,
-                            headers: {},
-                            data: []
-                        }
-                    };
-                }
-            }
-        })
-    };
-}
-// pkg/dist-src/paginate.js
-function paginate(octokit, route, parameters, mapFn) {
-    if (typeof parameters === "function") {
-        mapFn = parameters;
-        parameters = void 0;
-    }
-    return gather(octokit, [], iterator(octokit, route, parameters)[Symbol.asyncIterator](), mapFn);
-}
-function gather(octokit, results, iterator2, mapFn) {
-    return iterator2.next().then((result) => {
-        if (result.done) {
-            return results;
-        }
-        let earlyExit = false;
-        function done() {
-            earlyExit = true;
-        }
-        results = results.concat(mapFn ? mapFn(result.value, done) : result.value.data);
-        if (earlyExit) {
-            return results;
-        }
-        return gather(octokit, results, iterator2, mapFn);
-    });
-}
-// pkg/dist-src/compose-paginate.js
-var composePaginateRest = Object.assign(paginate, {
-    iterator
-});
-// pkg/dist-src/generated/paginating-endpoints.js
-var paginatingEndpoints = [
-    "GET /advisories",
-    "GET /app/hook/deliveries",
-    "GET /app/installation-requests",
-    "GET /app/installations",
-    "GET /assignments/{assignment_id}/accepted_assignments",
-    "GET /classrooms",
-    "GET /classrooms/{classroom_id}/assignments",
-    "GET /enterprises/{enterprise}/dependabot/alerts",
-    "GET /enterprises/{enterprise}/secret-scanning/alerts",
-    "GET /events",
-    "GET /gists",
-    "GET /gists/public",
-    "GET /gists/starred",
-    "GET /gists/{gist_id}/comments",
-    "GET /gists/{gist_id}/commits",
-    "GET /gists/{gist_id}/forks",
-    "GET /installation/repositories",
-    "GET /issues",
-    "GET /licenses",
-    "GET /marketplace_listing/plans",
-    "GET /marketplace_listing/plans/{plan_id}/accounts",
-    "GET /marketplace_listing/stubbed/plans",
-    "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts",
-    "GET /networks/{owner}/{repo}/events",
-    "GET /notifications",
-    "GET /organizations",
-    "GET /orgs/{org}/actions/cache/usage-by-repository",
-    "GET /orgs/{org}/actions/permissions/repositories",
-    "GET /orgs/{org}/actions/runners",
-    "GET /orgs/{org}/actions/secrets",
-    "GET /orgs/{org}/actions/secrets/{secret_name}/repositories",
-    "GET /orgs/{org}/actions/variables",
-    "GET /orgs/{org}/actions/variables/{name}/repositories",
-    "GET /orgs/{org}/blocks",
-    "GET /orgs/{org}/code-scanning/alerts",
-    "GET /orgs/{org}/codespaces",
-    "GET /orgs/{org}/codespaces/secrets",
-    "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories",
-    "GET /orgs/{org}/copilot/billing/seats",
-    "GET /orgs/{org}/dependabot/alerts",
-    "GET /orgs/{org}/dependabot/secrets",
-    "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories",
-    "GET /orgs/{org}/events",
-    "GET /orgs/{org}/failed_invitations",
-    "GET /orgs/{org}/hooks",
-    "GET /orgs/{org}/hooks/{hook_id}/deliveries",
-    "GET /orgs/{org}/installations",
-    "GET /orgs/{org}/invitations",
-    "GET /orgs/{org}/invitations/{invitation_id}/teams",
-    "GET /orgs/{org}/issues",
-    "GET /orgs/{org}/members",
-    "GET /orgs/{org}/members/{username}/codespaces",
-    "GET /orgs/{org}/migrations",
-    "GET /orgs/{org}/migrations/{migration_id}/repositories",
-    "GET /orgs/{org}/outside_collaborators",
-    "GET /orgs/{org}/packages",
-    "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
-    "GET /orgs/{org}/personal-access-token-requests",
-    "GET /orgs/{org}/personal-access-token-requests/{pat_request_id}/repositories",
-    "GET /orgs/{org}/personal-access-tokens",
-    "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories",
-    "GET /orgs/{org}/projects",
-    "GET /orgs/{org}/public_members",
-    "GET /orgs/{org}/repos",
-    "GET /orgs/{org}/rulesets",
-    "GET /orgs/{org}/secret-scanning/alerts",
-    "GET /orgs/{org}/security-advisories",
-    "GET /orgs/{org}/teams",
-    "GET /orgs/{org}/teams/{team_slug}/discussions",
-    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments",
-    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions",
-    "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions",
-    "GET /orgs/{org}/teams/{team_slug}/invitations",
-    "GET /orgs/{org}/teams/{team_slug}/members",
-    "GET /orgs/{org}/teams/{team_slug}/projects",
-    "GET /orgs/{org}/teams/{team_slug}/repos",
-    "GET /orgs/{org}/teams/{team_slug}/teams",
-    "GET /projects/columns/{column_id}/cards",
-    "GET /projects/{project_id}/collaborators",
-    "GET /projects/{project_id}/columns",
-    "GET /repos/{owner}/{repo}/actions/artifacts",
-    "GET /repos/{owner}/{repo}/actions/caches",
-    "GET /repos/{owner}/{repo}/actions/organization-secrets",
-    "GET /repos/{owner}/{repo}/actions/organization-variables",
-    "GET /repos/{owner}/{repo}/actions/runners",
-    "GET /repos/{owner}/{repo}/actions/runs",
-    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts",
-    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs",
-    "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs",
-    "GET /repos/{owner}/{repo}/actions/secrets",
-    "GET /repos/{owner}/{repo}/actions/variables",
-    "GET /repos/{owner}/{repo}/actions/workflows",
-    "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs",
-    "GET /repos/{owner}/{repo}/activity",
-    "GET /repos/{owner}/{repo}/assignees",
-    "GET /repos/{owner}/{repo}/branches",
-    "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations",
-    "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs",
-    "GET /repos/{owner}/{repo}/code-scanning/alerts",
-    "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances",
-    "GET /repos/{owner}/{repo}/code-scanning/analyses",
-    "GET /repos/{owner}/{repo}/codespaces",
-    "GET /repos/{owner}/{repo}/codespaces/devcontainers",
-    "GET /repos/{owner}/{repo}/codespaces/secrets",
-    "GET /repos/{owner}/{repo}/collaborators",
-    "GET /repos/{owner}/{repo}/comments",
-    "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions",
-    "GET /repos/{owner}/{repo}/commits",
-    "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments",
-    "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls",
-    "GET /repos/{owner}/{repo}/commits/{ref}/check-runs",
-    "GET /repos/{owner}/{repo}/commits/{ref}/check-suites",
-    "GET /repos/{owner}/{repo}/commits/{ref}/status",
-    "GET /repos/{owner}/{repo}/commits/{ref}/statuses",
-    "GET /repos/{owner}/{repo}/contributors",
-    "GET /repos/{owner}/{repo}/dependabot/alerts",
-    "GET /repos/{owner}/{repo}/dependabot/secrets",
-    "GET /repos/{owner}/{repo}/deployments",
-    "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses",
-    "GET /repos/{owner}/{repo}/environments",
-    "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies",
-    "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps",
-    "GET /repos/{owner}/{repo}/events",
-    "GET /repos/{owner}/{repo}/forks",
-    "GET /repos/{owner}/{repo}/hooks",
-    "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries",
-    "GET /repos/{owner}/{repo}/invitations",
-    "GET /repos/{owner}/{repo}/issues",
-    "GET /repos/{owner}/{repo}/issues/comments",
-    "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
-    "GET /repos/{owner}/{repo}/issues/events",
-    "GET /repos/{owner}/{repo}/issues/{issue_number}/comments",
-    "GET /repos/{owner}/{repo}/issues/{issue_number}/events",
-    "GET /repos/{owner}/{repo}/issues/{issue_number}/labels",
-    "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions",
-    "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline",
-    "GET /repos/{owner}/{repo}/keys",
-    "GET /repos/{owner}/{repo}/labels",
-    "GET /repos/{owner}/{repo}/milestones",
-    "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels",
-    "GET /repos/{owner}/{repo}/notifications",
-    "GET /repos/{owner}/{repo}/pages/builds",
-    "GET /repos/{owner}/{repo}/projects",
-    "GET /repos/{owner}/{repo}/pulls",
-    "GET /repos/{owner}/{repo}/pulls/comments",
-    "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions",
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments",
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments",
-    "GET /repos/{owner}/{repo}/releases",
-    "GET /repos/{owner}/{repo}/releases/{release_id}/assets",
-    "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
-    "GET /repos/{owner}/{repo}/rules/branches/{branch}",
-    "GET /repos/{owner}/{repo}/rulesets",
-    "GET /repos/{owner}/{repo}/secret-scanning/alerts",
-    "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
-    "GET /repos/{owner}/{repo}/security-advisories",
-    "GET /repos/{owner}/{repo}/stargazers",
-    "GET /repos/{owner}/{repo}/subscribers",
-    "GET /repos/{owner}/{repo}/tags",
-    "GET /repos/{owner}/{repo}/teams",
-    "GET /repos/{owner}/{repo}/topics",
-    "GET /repositories",
-    "GET /repositories/{repository_id}/environments/{environment_name}/secrets",
-    "GET /repositories/{repository_id}/environments/{environment_name}/variables",
-    "GET /search/code",
-    "GET /search/commits",
-    "GET /search/issues",
-    "GET /search/labels",
-    "GET /search/repositories",
-    "GET /search/topics",
-    "GET /search/users",
-    "GET /teams/{team_id}/discussions",
-    "GET /teams/{team_id}/discussions/{discussion_number}/comments",
-    "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions",
-    "GET /teams/{team_id}/discussions/{discussion_number}/reactions",
-    "GET /teams/{team_id}/invitations",
-    "GET /teams/{team_id}/members",
-    "GET /teams/{team_id}/projects",
-    "GET /teams/{team_id}/repos",
-    "GET /teams/{team_id}/teams",
-    "GET /user/blocks",
-    "GET /user/codespaces",
-    "GET /user/codespaces/secrets",
-    "GET /user/emails",
-    "GET /user/followers",
-    "GET /user/following",
-    "GET /user/gpg_keys",
-    "GET /user/installations",
-    "GET /user/installations/{installation_id}/repositories",
-    "GET /user/issues",
-    "GET /user/keys",
-    "GET /user/marketplace_purchases",
-    "GET /user/marketplace_purchases/stubbed",
-    "GET /user/memberships/orgs",
-    "GET /user/migrations",
-    "GET /user/migrations/{migration_id}/repositories",
-    "GET /user/orgs",
-    "GET /user/packages",
-    "GET /user/packages/{package_type}/{package_name}/versions",
-    "GET /user/public_emails",
-    "GET /user/repos",
-    "GET /user/repository_invitations",
-    "GET /user/social_accounts",
-    "GET /user/ssh_signing_keys",
-    "GET /user/starred",
-    "GET /user/subscriptions",
-    "GET /user/teams",
-    "GET /users",
-    "GET /users/{username}/events",
-    "GET /users/{username}/events/orgs/{org}",
-    "GET /users/{username}/events/public",
-    "GET /users/{username}/followers",
-    "GET /users/{username}/following",
-    "GET /users/{username}/gists",
-    "GET /users/{username}/gpg_keys",
-    "GET /users/{username}/keys",
-    "GET /users/{username}/orgs",
-    "GET /users/{username}/packages",
-    "GET /users/{username}/projects",
-    "GET /users/{username}/received_events",
-    "GET /users/{username}/received_events/public",
-    "GET /users/{username}/repos",
-    "GET /users/{username}/social_accounts",
-    "GET /users/{username}/ssh_signing_keys",
-    "GET /users/{username}/starred",
-    "GET /users/{username}/subscriptions"
-];
-// pkg/dist-src/paginating-endpoints.js
-function isPaginatingEndpoint(arg) {
-    if (typeof arg === "string") {
-        return paginatingEndpoints.includes(arg);
-    }
-    else {
-        return false;
-    }
-}
-// pkg/dist-src/index.js
-function paginateRest(octokit) {
-    return {
-        paginate: Object.assign(paginate.bind(null, octokit), {
-            iterator: iterator.bind(null, octokit)
-        })
-    };
-}
-paginateRest.VERSION = VERSION;
-
-
-
-/***/ }),
-
 /***/ "./node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/index.js":
 /*!******************************************************************************************!*\
   !*** ./node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/index.js + 3 modules ***!
@@ -7278,175 +7461,6 @@ function legacyRestEndpointMethods(octokit) {
 }
 legacyRestEndpointMethods.VERSION = VERSION;
 
-
-
-/***/ }),
-
-/***/ "./node_modules/before-after-hook/index.js":
-/*!*************************************************!*\
-  !*** ./node_modules/before-after-hook/index.js ***!
-  \*************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-
-var register = __webpack_require__(/*! ./lib/register */ "./node_modules/before-after-hook/lib/register.js");
-var addHook = __webpack_require__(/*! ./lib/add */ "./node_modules/before-after-hook/lib/add.js");
-var removeHook = __webpack_require__(/*! ./lib/remove */ "./node_modules/before-after-hook/lib/remove.js");
-// bind with array of arguments: https://stackoverflow.com/a/21792913
-var bind = Function.bind;
-var bindable = bind.bind(bind);
-function bindApi(hook, state, name) {
-    var removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
-    hook.api = { remove: removeHookRef };
-    hook.remove = removeHookRef;
-    ["before", "error", "after", "wrap"].forEach(function (kind) {
-        var args = name ? [state, kind, name] : [state, kind];
-        hook[kind] = hook.api[kind] = bindable(addHook, null).apply(null, args);
-    });
-}
-function HookSingular() {
-    var singularHookName = "h";
-    var singularHookState = {
-        registry: {},
-    };
-    var singularHook = register.bind(null, singularHookState, singularHookName);
-    bindApi(singularHook, singularHookState, singularHookName);
-    return singularHook;
-}
-function HookCollection() {
-    var state = {
-        registry: {},
-    };
-    var hook = register.bind(null, state);
-    bindApi(hook, state);
-    return hook;
-}
-var collectionHookDeprecationMessageDisplayed = false;
-function Hook() {
-    if (!collectionHookDeprecationMessageDisplayed) {
-        console.warn('[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4');
-        collectionHookDeprecationMessageDisplayed = true;
-    }
-    return HookCollection();
-}
-Hook.Singular = HookSingular.bind();
-Hook.Collection = HookCollection.bind();
-module.exports = Hook;
-// expose constructors as a named property for TypeScript
-module.exports.Hook = Hook;
-module.exports.Singular = Hook.Singular;
-module.exports.Collection = Hook.Collection;
-
-
-/***/ }),
-
-/***/ "./node_modules/before-after-hook/lib/add.js":
-/*!***************************************************!*\
-  !*** ./node_modules/before-after-hook/lib/add.js ***!
-  \***************************************************/
-/***/ ((module) => {
-
-
-module.exports = addHook;
-function addHook(state, kind, name, hook) {
-    var orig = hook;
-    if (!state.registry[name]) {
-        state.registry[name] = [];
-    }
-    if (kind === "before") {
-        hook = function (method, options) {
-            return Promise.resolve()
-                .then(orig.bind(null, options))
-                .then(method.bind(null, options));
-        };
-    }
-    if (kind === "after") {
-        hook = function (method, options) {
-            var result;
-            return Promise.resolve()
-                .then(method.bind(null, options))
-                .then(function (result_) {
-                result = result_;
-                return orig(result, options);
-            })
-                .then(function () {
-                return result;
-            });
-        };
-    }
-    if (kind === "error") {
-        hook = function (method, options) {
-            return Promise.resolve()
-                .then(method.bind(null, options))
-                .catch(function (error) {
-                return orig(error, options);
-            });
-        };
-    }
-    state.registry[name].push({
-        hook: hook,
-        orig: orig,
-    });
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/before-after-hook/lib/register.js":
-/*!********************************************************!*\
-  !*** ./node_modules/before-after-hook/lib/register.js ***!
-  \********************************************************/
-/***/ ((module) => {
-
-
-module.exports = register;
-function register(state, name, method, options) {
-    if (typeof method !== "function") {
-        throw new Error("method for before hook must be a function");
-    }
-    if (!options) {
-        options = {};
-    }
-    if (Array.isArray(name)) {
-        return name.reverse().reduce(function (callback, name) {
-            return register.bind(null, state, name, callback, options);
-        }, method)();
-    }
-    return Promise.resolve().then(function () {
-        if (!state.registry[name]) {
-            return method(options);
-        }
-        return state.registry[name].reduce(function (method, registered) {
-            return registered.hook.bind(null, method, options);
-        }, method)();
-    });
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/before-after-hook/lib/remove.js":
-/*!******************************************************!*\
-  !*** ./node_modules/before-after-hook/lib/remove.js ***!
-  \******************************************************/
-/***/ ((module) => {
-
-
-module.exports = removeHook;
-function removeHook(state, name, method) {
-    if (!state.registry[name]) {
-        return;
-    }
-    var index = state.registry[name]
-        .map(function (registered) {
-        return registered.orig;
-    })
-        .indexOf(method);
-    if (index === -1) {
-        return;
-    }
-    state.registry[name].splice(index, 1);
-}
 
 
 /***/ }),
@@ -25997,8 +26011,8 @@ var __webpack_exports__ = {};
 var core = __webpack_require__("./node_modules/@actions/core/lib/core.js");
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __webpack_require__("./node_modules/@actions/github/lib/github.js");
-;// ./node_modules/graphql-tag/node_modules/tslib/tslib.es6.js
-/*! *****************************************************************************
+;// ./node_modules/graphql-tag/node_modules/tslib/tslib.es6.mjs
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -26012,309 +26026,370 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise */
-var extendStatics = function (d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b)
-            if (Object.prototype.hasOwnProperty.call(b, p))
-                d[p] = b[p]; };
-    return extendStatics(d, b);
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
+
+var extendStatics = function(d, b) {
+  extendStatics = Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+      function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+  return extendStatics(d, b);
 };
+
 function __extends(d, b) {
-    if (typeof b !== "function" && b !== null)
-        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  if (typeof b !== "function" && b !== null)
+      throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+  extendStatics(d, b);
+  function __() { this.constructor = d; }
+  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
-var __assign = function () {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s)
-                if (Object.prototype.hasOwnProperty.call(s, p))
-                    t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
+
+var __assign = function() {
+  __assign = Object.assign || function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+      return t;
+  }
+  return __assign.apply(this, arguments);
+}
+
 function __rest(s, e) {
-    var t = {};
-    for (var p in s)
-        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-            t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+      t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function")
+      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+              t[p[i]] = s[p[i]];
+      }
+  return t;
 }
+
 function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-        r = Reflect.decorate(decorators, target, key, desc);
-    else
-        for (var i = decorators.length - 1; i >= 0; i--)
-            if (d = decorators[i])
-                r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
+  var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+  if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+  else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+  return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
+
 function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); };
+  return function (target, key) { decorator(target, key, paramIndex); }
 }
+
+function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+  function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
+  var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+  var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+  var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+  var _, done = false;
+  for (var i = decorators.length - 1; i >= 0; i--) {
+      var context = {};
+      for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
+      for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+      context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
+      var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
+      if (kind === "accessor") {
+          if (result === void 0) continue;
+          if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+          if (_ = accept(result.get)) descriptor.get = _;
+          if (_ = accept(result.set)) descriptor.set = _;
+          if (_ = accept(result.init)) initializers.unshift(_);
+      }
+      else if (_ = accept(result)) {
+          if (kind === "field") initializers.unshift(_);
+          else descriptor[key] = _;
+      }
+  }
+  if (target) Object.defineProperty(target, contextIn.name, descriptor);
+  done = true;
+};
+
+function __runInitializers(thisArg, initializers, value) {
+  var useValue = arguments.length > 2;
+  for (var i = 0; i < initializers.length; i++) {
+      value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+  }
+  return useValue ? value : void 0;
+};
+
+function __propKey(x) {
+  return typeof x === "symbol" ? x : "".concat(x);
+};
+
+function __setFunctionName(f, name, prefix) {
+  if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
+  return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
+};
+
 function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-        return Reflect.metadata(metadataKey, metadataValue);
+  if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
+
 function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try {
-            step(generator.next(value));
-        }
-        catch (e) {
-            reject(e);
-        } }
-        function rejected(value) { try {
-            step(generator["throw"](value));
-        }
-        catch (e) {
-            reject(e);
-        } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+  function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+  return new (P || (P = Promise))(function (resolve, reject) {
+      function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+      function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+      function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
 }
+
 function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function () { if (t[0] & 1)
-            throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f)
-            throw new TypeError("Generator is already executing.");
-        while (_)
-            try {
-                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done)
-                    return t;
-                if (y = 0, t)
-                    op = [op[0] & 2, t.value];
-                switch (op[0]) {
-                    case 0:
-                    case 1:
-                        t = op;
-                        break;
-                    case 4:
-                        _.label++;
-                        return { value: op[1], done: false };
-                    case 5:
-                        _.label++;
-                        y = op[1];
-                        op = [0];
-                        continue;
-                    case 7:
-                        op = _.ops.pop();
-                        _.trys.pop();
-                        continue;
-                    default:
-                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-                            _ = 0;
-                            continue;
-                        }
-                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
-                            _.label = op[1];
-                            break;
-                        }
-                        if (op[0] === 6 && _.label < t[1]) {
-                            _.label = t[1];
-                            t = op;
-                            break;
-                        }
-                        if (t && _.label < t[2]) {
-                            _.label = t[2];
-                            _.ops.push(op);
-                            break;
-                        }
-                        if (t[2])
-                            _.ops.pop();
-                        _.trys.pop();
-                        continue;
-                }
-                op = body.call(thisArg, _);
-            }
-            catch (e) {
-                op = [6, e];
-                y = 0;
-            }
-            finally {
-                f = t = 0;
-            }
-        if (op[0] & 5)
-            throw op[1];
-        return { value: op[0] ? op[1] : void 0, done: true };
-    }
+  var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+  function verb(n) { return function (v) { return step([n, v]); }; }
+  function step(op) {
+      if (f) throw new TypeError("Generator is already executing.");
+      while (g && (g = 0, op[0] && (_ = 0)), _) try {
+          if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+          if (y = 0, t) op = [op[0] & 2, t.value];
+          switch (op[0]) {
+              case 0: case 1: t = op; break;
+              case 4: _.label++; return { value: op[1], done: false };
+              case 5: _.label++; y = op[1]; op = [0]; continue;
+              case 7: op = _.ops.pop(); _.trys.pop(); continue;
+              default:
+                  if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                  if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                  if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                  if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                  if (t[2]) _.ops.pop();
+                  _.trys.pop(); continue;
+          }
+          op = body.call(thisArg, _);
+      } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+      if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+  }
 }
-var __createBinding = Object.create ? (function (o, m, k, k2) {
-    if (k2 === undefined)
-        k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function () { return m[k]; } });
-}) : (function (o, m, k, k2) {
-    if (k2 === undefined)
-        k2 = k;
-    o[k2] = m[k];
+
+var __createBinding = Object.create ? (function(o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+  }
+  Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
 });
+
 function __exportStar(m, o) {
-    for (var p in m)
-        if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p))
-            __createBinding(o, m, p);
+  for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
 }
+
 function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m)
-        return m.call(o);
-    if (o && typeof o.length === "number")
-        return {
-            next: function () {
-                if (o && i >= o.length)
-                    o = void 0;
-                return { value: o && o[i++], done: !o };
-            }
-        };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+  if (m) return m.call(o);
+  if (o && typeof o.length === "number") return {
+      next: function () {
+          if (o && i >= o.length) o = void 0;
+          return { value: o && o[i++], done: !o };
+      }
+  };
+  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
+
 function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m)
-        return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done)
-            ar.push(r.value);
-    }
-    catch (error) {
-        e = { error: error };
-    }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"]))
-                m.call(i);
-        }
-        finally {
-            if (e)
-                throw e.error;
-        }
-    }
-    return ar;
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o), r, ar = [], e;
+  try {
+      while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+  }
+  catch (error) { e = { error: error }; }
+  finally {
+      try {
+          if (r && !r.done && (m = i["return"])) m.call(i);
+      }
+      finally { if (e) throw e.error; }
+  }
+  return ar;
 }
+
 /** @deprecated */
 function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
+  for (var ar = [], i = 0; i < arguments.length; i++)
+      ar = ar.concat(__read(arguments[i]));
+  return ar;
 }
+
 /** @deprecated */
 function __spreadArrays() {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++)
-        s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+  for (var r = Array(s), k = 0, i = 0; i < il; i++)
+      for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+          r[k] = a[j];
+  return r;
 }
+
 function __spreadArray(to, from, pack) {
-    if (pack || arguments.length === 2)
-        for (var i = 0, l = from.length, ar; i < l; i++) {
-            if (ar || !(i in from)) {
-                if (!ar)
-                    ar = Array.prototype.slice.call(from, 0, i);
-                ar[i] = from[i];
-            }
-        }
-    return to.concat(ar || from);
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+      if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+      }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
 }
+
 function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
+  return this instanceof __await ? (this.v = v, this) : new __await(v);
 }
+
 function __asyncGenerator(thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator)
-        throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n])
-        i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try {
-        step(g[n](v));
-    }
-    catch (e) {
-        settle(q[0][3], e);
-    } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length)
-        resume(q[0][0], q[0][1]); }
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+  var g = generator.apply(thisArg, _arguments || []), i, q = [];
+  return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function () { return this; }, i;
+  function awaitReturn(f) { return function (v) { return Promise.resolve(v).then(f, reject); }; }
+  function verb(n, f) { if (g[n]) { i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; if (f) i[n] = f(i[n]); } }
+  function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+  function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+  function fulfill(value) { resume("next", value); }
+  function reject(value) { resume("throw", value); }
+  function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 }
+
 function __asyncDelegator(o) {
-    var i, p;
-    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+  var i, p;
+  return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+  function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: false } : f ? f(v) : v; } : f; }
 }
+
 function __asyncValues(o) {
-    if (!Symbol.asyncIterator)
-        throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function (v) { resolve({ value: v, done: d }); }, reject); }
+  if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+  var m = o[Symbol.asyncIterator], i;
+  return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+  function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+  function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 }
+
 function __makeTemplateObject(cooked, raw) {
-    if (Object.defineProperty) {
-        Object.defineProperty(cooked, "raw", { value: raw });
-    }
-    else {
-        cooked.raw = raw;
-    }
-    return cooked;
-}
-;
-var __setModuleDefault = Object.create ? (function (o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function (o, v) {
-    o["default"] = v;
+  if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+  return cooked;
 };
+
+var __setModuleDefault = Object.create ? (function(o, v) {
+  Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+  o["default"] = v;
+};
+
 function __importStar(mod) {
-    if (mod && mod.__esModule)
-        return mod;
-    var result = {};
-    if (mod != null)
-        for (var k in mod)
-            if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
-                __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  __setModuleDefault(result, mod);
+  return result;
 }
+
 function __importDefault(mod) {
-    return (mod && mod.__esModule) ? mod : { default: mod };
+  return (mod && mod.__esModule) ? mod : { default: mod };
 }
+
 function __classPrivateFieldGet(receiver, state, kind, f) {
-    if (kind === "a" && !f)
-        throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
-        throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+  if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+  return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
+
 function __classPrivateFieldSet(receiver, state, value, kind, f) {
-    if (kind === "m")
-        throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f)
-        throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
-        throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+  if (kind === "m") throw new TypeError("Private method is not writable");
+  if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+  return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 }
+
+function __classPrivateFieldIn(state, receiver) {
+  if (receiver === null || (typeof receiver !== "object" && typeof receiver !== "function")) throw new TypeError("Cannot use 'in' operator on non-object");
+  return typeof state === "function" ? receiver === state : state.has(receiver);
+}
+
+function __addDisposableResource(env, value, async) {
+  if (value !== null && value !== void 0) {
+    if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
+    var dispose, inner;
+    if (async) {
+      if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
+      dispose = value[Symbol.asyncDispose];
+    }
+    if (dispose === void 0) {
+      if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
+      dispose = value[Symbol.dispose];
+      if (async) inner = dispose;
+    }
+    if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
+    if (inner) dispose = function() { try { inner.call(this); } catch (e) { return Promise.reject(e); } };
+    env.stack.push({ value: value, dispose: dispose, async: async });
+  }
+  else if (async) {
+    env.stack.push({ async: true });
+  }
+  return value;
+}
+
+var _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+  var e = new Error(message);
+  return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+function __disposeResources(env) {
+  function fail(e) {
+    env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
+    env.hasError = true;
+  }
+  var r, s = 0;
+  function next() {
+    while (r = env.stack.pop()) {
+      try {
+        if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+        if (r.dispose) {
+          var result = r.dispose.call(r.value);
+          if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) { fail(e); return next(); });
+        }
+        else s |= 1;
+      }
+      catch (e) {
+        fail(e);
+      }
+    }
+    if (s === 1) return env.hasError ? Promise.reject(env.error) : Promise.resolve();
+    if (env.hasError) throw env.error;
+  }
+  return next();
+}
+
+/* harmony default export */ const tslib_es6 = ({
+  __extends,
+  __assign,
+  __rest,
+  __decorate,
+  __param,
+  __metadata,
+  __awaiter,
+  __generator,
+  __createBinding,
+  __exportStar,
+  __values,
+  __read,
+  __spread,
+  __spreadArrays,
+  __spreadArray,
+  __await,
+  __asyncGenerator,
+  __asyncDelegator,
+  __asyncValues,
+  __makeTemplateObject,
+  __importStar,
+  __importDefault,
+  __classPrivateFieldGet,
+  __classPrivateFieldSet,
+  __classPrivateFieldIn,
+  __addDisposableResource,
+  __disposeResources,
+});
 
 ;// ./node_modules/graphql/jsutils/isObjectLike.mjs
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -26434,6 +26509,12 @@ function leftPad(len, str) {
 ;// ./node_modules/graphql/error/GraphQLError.mjs
 function GraphQLError_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { GraphQLError_typeof = function _typeof(obj) { return typeof obj; }; } else { GraphQLError_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return GraphQLError_typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -26460,8 +26541,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-// FIXME:
-// flowlint uninitialized-instance-property:off
 
 
 
@@ -26477,14 +26556,6 @@ var GraphQLError = /*#__PURE__*/function (_Error) {
   _inherits(GraphQLError, _Error);
 
   var _super = _createSuper(GraphQLError);
-
-  /**
-   * A message describing the Error for debugging purposes.
-   *
-   * Enumerable, and appears in the result of JSON.stringify().
-   *
-   * Note: should be treated as readonly, despite invariant usage.
-   */
 
   /**
    * An array of { line, column } locations within the source GraphQL document
@@ -26528,117 +26599,79 @@ var GraphQLError = /*#__PURE__*/function (_Error) {
    * Extension fields to add to the formatted error.
    */
   function GraphQLError(message, nodes, source, positions, path, originalError, extensions) {
-    var _locations2, _source2, _positions2, _extensions2;
+    var _nodeLocations, _nodeLocations2, _nodeLocations3;
 
     var _this;
 
     _classCallCheck(this, GraphQLError);
 
-    _this = _super.call(this, message); // Compute list of blame nodes.
+    _this = _super.call(this, message);
+    _this.name = 'GraphQLError';
+    _this.originalError = originalError !== null && originalError !== void 0 ? originalError : undefined; // Compute list of blame nodes.
 
-    var _nodes = Array.isArray(nodes) ? nodes.length !== 0 ? nodes : undefined : nodes ? [nodes] : undefined; // Compute locations in the source for the given nodes/positions.
+    _this.nodes = undefinedIfEmpty(Array.isArray(nodes) ? nodes : nodes ? [nodes] : undefined);
+    var nodeLocations = [];
 
+    for (var _i2 = 0, _ref3 = (_this$nodes = _this.nodes) !== null && _this$nodes !== void 0 ? _this$nodes : []; _i2 < _ref3.length; _i2++) {
+      var _this$nodes;
 
-    var _source = source;
+      var _ref4 = _ref3[_i2];
+      var loc = _ref4.loc;
 
-    if (!_source && _nodes) {
-      var _nodes$0$loc;
-
-      _source = (_nodes$0$loc = _nodes[0].loc) === null || _nodes$0$loc === void 0 ? void 0 : _nodes$0$loc.source;
-    }
-
-    var _positions = positions;
-
-    if (!_positions && _nodes) {
-      _positions = _nodes.reduce(function (list, node) {
-        if (node.loc) {
-          list.push(node.loc.start);
-        }
-
-        return list;
-      }, []);
-    }
-
-    if (_positions && _positions.length === 0) {
-      _positions = undefined;
-    }
-
-    var _locations;
-
-    if (positions && source) {
-      _locations = positions.map(function (pos) {
-        return getLocation(source, pos);
-      });
-    } else if (_nodes) {
-      _locations = _nodes.reduce(function (list, node) {
-        if (node.loc) {
-          list.push(getLocation(node.loc.source, node.loc.start));
-        }
-
-        return list;
-      }, []);
-    }
-
-    var _extensions = extensions;
-
-    if (_extensions == null && originalError != null) {
-      var originalExtensions = originalError.extensions;
-
-      if (isObjectLike(originalExtensions)) {
-        _extensions = originalExtensions;
+      if (loc != null) {
+        nodeLocations.push(loc);
       }
     }
 
+    nodeLocations = undefinedIfEmpty(nodeLocations); // Compute locations in the source for the given nodes/positions.
+
+    _this.source = source !== null && source !== void 0 ? source : (_nodeLocations = nodeLocations) === null || _nodeLocations === void 0 ? void 0 : _nodeLocations[0].source;
+    _this.positions = positions !== null && positions !== void 0 ? positions : (_nodeLocations2 = nodeLocations) === null || _nodeLocations2 === void 0 ? void 0 : _nodeLocations2.map(function (loc) {
+      return loc.start;
+    });
+    _this.locations = positions && source ? positions.map(function (pos) {
+      return getLocation(source, pos);
+    }) : (_nodeLocations3 = nodeLocations) === null || _nodeLocations3 === void 0 ? void 0 : _nodeLocations3.map(function (loc) {
+      return getLocation(loc.source, loc.start);
+    });
+    _this.path = path !== null && path !== void 0 ? path : undefined;
+    var originalExtensions = originalError === null || originalError === void 0 ? void 0 : originalError.extensions;
+
+    if (extensions == null && isObjectLike(originalExtensions)) {
+      _this.extensions = _objectSpread({}, originalExtensions);
+    } else {
+      _this.extensions = extensions !== null && extensions !== void 0 ? extensions : {};
+    } // By being enumerable, JSON.stringify will include bellow properties in the resulting output.
+    // This ensures that the simplest possible GraphQL service adheres to the spec.
+
+
     Object.defineProperties(_assertThisInitialized(_this), {
-      name: {
-        value: 'GraphQLError'
-      },
       message: {
-        value: message,
-        // By being enumerable, JSON.stringify will include `message` in the
-        // resulting output. This ensures that the simplest possible GraphQL
-        // service adheres to the spec.
-        enumerable: true,
-        writable: true
+        enumerable: true
       },
       locations: {
-        // Coercing falsy values to undefined ensures they will not be included
-        // in JSON.stringify() when not provided.
-        value: (_locations2 = _locations) !== null && _locations2 !== void 0 ? _locations2 : undefined,
-        // By being enumerable, JSON.stringify will include `locations` in the
-        // resulting output. This ensures that the simplest possible GraphQL
-        // service adheres to the spec.
-        enumerable: _locations != null
+        enumerable: _this.locations != null
       },
       path: {
-        // Coercing falsy values to undefined ensures they will not be included
-        // in JSON.stringify() when not provided.
-        value: path !== null && path !== void 0 ? path : undefined,
-        // By being enumerable, JSON.stringify will include `path` in the
-        // resulting output. This ensures that the simplest possible GraphQL
-        // service adheres to the spec.
-        enumerable: path != null
-      },
-      nodes: {
-        value: _nodes !== null && _nodes !== void 0 ? _nodes : undefined
-      },
-      source: {
-        value: (_source2 = _source) !== null && _source2 !== void 0 ? _source2 : undefined
-      },
-      positions: {
-        value: (_positions2 = _positions) !== null && _positions2 !== void 0 ? _positions2 : undefined
-      },
-      originalError: {
-        value: originalError
+        enumerable: _this.path != null
       },
       extensions: {
-        // Coercing falsy values to undefined ensures they will not be included
-        // in JSON.stringify() when not provided.
-        value: (_extensions2 = _extensions) !== null && _extensions2 !== void 0 ? _extensions2 : undefined,
-        // By being enumerable, JSON.stringify will include `path` in the
-        // resulting output. This ensures that the simplest possible GraphQL
-        // service adheres to the spec.
-        enumerable: _extensions != null
+        enumerable: _this.extensions != null && Object.keys(_this.extensions).length > 0
+      },
+      name: {
+        enumerable: false
+      },
+      nodes: {
+        enumerable: false
+      },
+      source: {
+        enumerable: false
+      },
+      positions: {
+        enumerable: false
+      },
+      originalError: {
+        enumerable: false
       }
     }); // Include (non-enumerable) stack trace.
 
@@ -26681,25 +26714,30 @@ var GraphQLError = /*#__PURE__*/function (_Error) {
 
   return GraphQLError;
 }( /*#__PURE__*/_wrapNativeSuper(Error));
+
+function undefinedIfEmpty(array) {
+  return array === undefined || array.length === 0 ? undefined : array;
+}
 /**
  * Prints a GraphQLError to a string, representing useful location information
  * about the error's position in the source.
  */
 
+
 function printError(error) {
   var output = error.message;
 
   if (error.nodes) {
-    for (var _i2 = 0, _error$nodes2 = error.nodes; _i2 < _error$nodes2.length; _i2++) {
-      var node = _error$nodes2[_i2];
+    for (var _i4 = 0, _error$nodes2 = error.nodes; _i4 < _error$nodes2.length; _i4++) {
+      var node = _error$nodes2[_i4];
 
       if (node.loc) {
         output += '\n\n' + printLocation(node.loc);
       }
     }
   } else if (error.source && error.locations) {
-    for (var _i4 = 0, _error$locations2 = error.locations; _i4 < _error$locations2.length; _i4++) {
-      var location = _error$locations2[_i4];
+    for (var _i6 = 0, _error$locations2 = error.locations; _i6 < _error$locations2.length; _i6++) {
+      var location = _error$locations2[_i6];
       output += '\n\n' + printSourceLocation(error.source, location);
     }
   }
@@ -29899,6 +29937,8 @@ var DependencyGraphEcosystem;
     DependencyGraphEcosystem["Rubygems"] = "RUBYGEMS";
     /** Rust crates */
     DependencyGraphEcosystem["Rust"] = "RUST";
+    /** Swift packages */
+    DependencyGraphEcosystem["Swift"] = "SWIFT";
 })(DependencyGraphEcosystem || (DependencyGraphEcosystem = {}));
 /** Properties by which deployment connections can be ordered. */
 var DeploymentOrderField;
@@ -29909,6 +29949,8 @@ var DeploymentOrderField;
 /** The possible protection rule types. */
 var DeploymentProtectionRuleType;
 (function (DeploymentProtectionRuleType) {
+    /** Branch policy */
+    DeploymentProtectionRuleType["BranchPolicy"] = "BRANCH_POLICY";
     /** Required reviewers */
     DeploymentProtectionRuleType["RequiredReviewers"] = "REQUIRED_REVIEWERS";
     /** Wait timer */
@@ -29943,6 +29985,8 @@ var DeploymentState;
     DeploymentState["Pending"] = "PENDING";
     /** The deployment has queued */
     DeploymentState["Queued"] = "QUEUED";
+    /** The deployment was successful. */
+    DeploymentState["Success"] = "SUCCESS";
     /** The deployment is waiting. */
     DeploymentState["Waiting"] = "WAITING";
 })(DeploymentState || (DeploymentState = {}));
@@ -29974,6 +30018,16 @@ var DiffSide;
     /** The right side of the diff. */
     DiffSide["Right"] = "RIGHT";
 })(DiffSide || (DiffSide = {}));
+/** The possible reasons for closing a discussion. */
+var DiscussionCloseReason;
+(function (DiscussionCloseReason) {
+    /** The discussion is a duplicate of another */
+    DiscussionCloseReason["Duplicate"] = "DUPLICATE";
+    /** The discussion is no longer relevant */
+    DiscussionCloseReason["Outdated"] = "OUTDATED";
+    /** The discussion has been resolved */
+    DiscussionCloseReason["Resolved"] = "RESOLVED";
+})(DiscussionCloseReason || (DiscussionCloseReason = {}));
 /** Properties by which discussion connections can be ordered. */
 var DiscussionOrderField;
 (function (DiscussionOrderField) {
@@ -29990,6 +30044,26 @@ var DiscussionPollOptionOrderField;
     /** Order poll options by the number of votes it has. */
     DiscussionPollOptionOrderField["VoteCount"] = "VOTE_COUNT";
 })(DiscussionPollOptionOrderField || (DiscussionPollOptionOrderField = {}));
+/** The possible states of a discussion. */
+var DiscussionState;
+(function (DiscussionState) {
+    /** A discussion that has been closed */
+    DiscussionState["Closed"] = "CLOSED";
+    /** A discussion that is open */
+    DiscussionState["Open"] = "OPEN";
+})(DiscussionState || (DiscussionState = {}));
+/** The possible state reasons of a discussion. */
+var DiscussionStateReason;
+(function (DiscussionStateReason) {
+    /** The discussion is a duplicate of another */
+    DiscussionStateReason["Duplicate"] = "DUPLICATE";
+    /** The discussion is no longer relevant */
+    DiscussionStateReason["Outdated"] = "OUTDATED";
+    /** The discussion was reopened */
+    DiscussionStateReason["Reopened"] = "REOPENED";
+    /** The discussion has been resolved */
+    DiscussionStateReason["Resolved"] = "RESOLVED";
+})(DiscussionStateReason || (DiscussionStateReason = {}));
 /** The possible reasons that a Dependabot alert was dismissed. */
 var DismissReason;
 (function (DismissReason) {
@@ -30066,6 +30140,12 @@ var EnterpriseEnabledSettingValue;
     /** There is no policy set for organizations in the enterprise. */
     EnterpriseEnabledSettingValue["NoPolicy"] = "NO_POLICY";
 })(EnterpriseEnabledSettingValue || (EnterpriseEnabledSettingValue = {}));
+/** Properties by which enterprise member invitation connections can be ordered. */
+var EnterpriseMemberInvitationOrderField;
+(function (EnterpriseMemberInvitationOrderField) {
+    /** Order enterprise member invitations by creation time */
+    EnterpriseMemberInvitationOrderField["CreatedAt"] = "CREATED_AT";
+})(EnterpriseMemberInvitationOrderField || (EnterpriseMemberInvitationOrderField = {}));
 /** Properties by which enterprise member connections can be ordered. */
 var EnterpriseMemberOrderField;
 (function (EnterpriseMemberOrderField) {
@@ -30081,7 +30161,7 @@ var EnterpriseMembersCanCreateRepositoriesSettingValue;
     EnterpriseMembersCanCreateRepositoriesSettingValue["All"] = "ALL";
     /** Members will not be able to create public or private repositories. */
     EnterpriseMembersCanCreateRepositoriesSettingValue["Disabled"] = "DISABLED";
-    /** Organization administrators choose whether to allow members to create repositories. */
+    /** Organization owners choose whether to allow members to create repositories. */
     EnterpriseMembersCanCreateRepositoriesSettingValue["NoPolicy"] = "NO_POLICY";
     /** Members will be able to create only private repositories. */
     EnterpriseMembersCanCreateRepositoriesSettingValue["Private"] = "PRIVATE";
@@ -30096,6 +30176,24 @@ var EnterpriseMembersCanMakePurchasesSettingValue;
     /** The setting is enabled for organizations in the enterprise. */
     EnterpriseMembersCanMakePurchasesSettingValue["Enabled"] = "ENABLED";
 })(EnterpriseMembersCanMakePurchasesSettingValue || (EnterpriseMembersCanMakePurchasesSettingValue = {}));
+/** The possible values we have for filtering Platform::Objects::User#enterprises. */
+var EnterpriseMembershipType;
+(function (EnterpriseMembershipType) {
+    /** Returns all enterprises in which the user is an admin. */
+    EnterpriseMembershipType["Admin"] = "ADMIN";
+    /** Returns all enterprises in which the user is a member, admin, or billing manager. */
+    EnterpriseMembershipType["All"] = "ALL";
+    /** Returns all enterprises in which the user is a billing manager. */
+    EnterpriseMembershipType["BillingManager"] = "BILLING_MANAGER";
+    /** Returns all enterprises in which the user is a member of an org that is owned by the enterprise. */
+    EnterpriseMembershipType["OrgMembership"] = "ORG_MEMBERSHIP";
+})(EnterpriseMembershipType || (EnterpriseMembershipType = {}));
+/** Properties by which enterprise connections can be ordered. */
+var EnterpriseOrderField;
+(function (EnterpriseOrderField) {
+    /** Order enterprises by name */
+    EnterpriseOrderField["Name"] = "NAME";
+})(EnterpriseOrderField || (EnterpriseOrderField = {}));
 /** Properties by which Enterprise Server installation connections can be ordered. */
 var EnterpriseServerInstallationOrderField;
 (function (EnterpriseServerInstallationOrderField) {
@@ -30157,6 +30255,22 @@ var EnterpriseUserDeployment;
     /** The user is part of a GitHub Enterprise Server deployment. */
     EnterpriseUserDeployment["Server"] = "SERVER";
 })(EnterpriseUserDeployment || (EnterpriseUserDeployment = {}));
+/** Properties by which environments connections can be ordered */
+var EnvironmentOrderField;
+(function (EnvironmentOrderField) {
+    /** Order environments by name. */
+    EnvironmentOrderField["Name"] = "NAME";
+})(EnvironmentOrderField || (EnvironmentOrderField = {}));
+/** Properties by which environments connections can be ordered */
+var EnvironmentPinnedFilterField;
+(function (EnvironmentPinnedFilterField) {
+    /** All environments will be returned. */
+    EnvironmentPinnedFilterField["All"] = "ALL";
+    /** Environments exclude pinned will be returned */
+    EnvironmentPinnedFilterField["None"] = "NONE";
+    /** Only pinned environment will be returned */
+    EnvironmentPinnedFilterField["Only"] = "ONLY";
+})(EnvironmentPinnedFilterField || (EnvironmentPinnedFilterField = {}));
 /** The possible viewed states of a file . */
 var FileViewedState;
 (function (FileViewedState) {
@@ -30170,6 +30284,8 @@ var FileViewedState;
 /** The possible funding platforms for repository funding links. */
 var FundingPlatform;
 (function (FundingPlatform) {
+    /** Buy Me a Coffee funding platform. */
+    FundingPlatform["BuyMeACoffee"] = "BUY_ME_A_COFFEE";
     /** Community Bridge funding platform. */
     FundingPlatform["CommunityBridge"] = "COMMUNITY_BRIDGE";
     /** Custom funding platform. */
@@ -30186,10 +30302,10 @@ var FundingPlatform;
     FundingPlatform["Liberapay"] = "LIBERAPAY";
     /** Open Collective funding platform. */
     FundingPlatform["OpenCollective"] = "OPEN_COLLECTIVE";
-    /** Otechie funding platform. */
-    FundingPlatform["Otechie"] = "OTECHIE";
     /** Patreon funding platform. */
     FundingPlatform["Patreon"] = "PATREON";
+    /** Polar funding platform. */
+    FundingPlatform["Polar"] = "POLAR";
     /** Tidelift funding platform. */
     FundingPlatform["Tidelift"] = "TIDELIFT";
 })(FundingPlatform || (FundingPlatform = {}));
@@ -30445,6 +30561,51 @@ var MergeCommitTitle;
     /** Default to the pull request's title. */
     MergeCommitTitle["PrTitle"] = "PR_TITLE";
 })(MergeCommitTitle || (MergeCommitTitle = {}));
+/** The possible states for a merge queue entry. */
+var MergeQueueEntryState;
+(function (MergeQueueEntryState) {
+    /** The entry is currently waiting for checks to pass. */
+    MergeQueueEntryState["AwaitingChecks"] = "AWAITING_CHECKS";
+    /** The entry is currently locked. */
+    MergeQueueEntryState["Locked"] = "LOCKED";
+    /** The entry is currently mergeable. */
+    MergeQueueEntryState["Mergeable"] = "MERGEABLE";
+    /** The entry is currently queued. */
+    MergeQueueEntryState["Queued"] = "QUEUED";
+    /** The entry is currently unmergeable. */
+    MergeQueueEntryState["Unmergeable"] = "UNMERGEABLE";
+})(MergeQueueEntryState || (MergeQueueEntryState = {}));
+/** The possible merging strategies for a merge queue. */
+var MergeQueueMergingStrategy;
+(function (MergeQueueMergingStrategy) {
+    /** Entries only allowed to merge if they are passing. */
+    MergeQueueMergingStrategy["Allgreen"] = "ALLGREEN";
+    /** Failing Entires are allowed to merge if they are with a passing entry. */
+    MergeQueueMergingStrategy["Headgreen"] = "HEADGREEN";
+})(MergeQueueMergingStrategy || (MergeQueueMergingStrategy = {}));
+/** Detailed status information about a pull request merge. */
+var MergeStateStatus;
+(function (MergeStateStatus) {
+    /** The head ref is out of date. */
+    MergeStateStatus["Behind"] = "BEHIND";
+    /** The merge is blocked. */
+    MergeStateStatus["Blocked"] = "BLOCKED";
+    /** Mergeable and passing commit status. */
+    MergeStateStatus["Clean"] = "CLEAN";
+    /** The merge commit cannot be cleanly created. */
+    MergeStateStatus["Dirty"] = "DIRTY";
+    /**
+     * The merge is blocked due to the pull request being a draft.
+     * @deprecated DRAFT state will be removed from this enum and `isDraft` should be used instead Use PullRequest.isDraft instead. Removal on 2021-01-01 UTC.
+     */
+    MergeStateStatus["Draft"] = "DRAFT";
+    /** Mergeable with passing commit status and pre-receive hooks. */
+    MergeStateStatus["HasHooks"] = "HAS_HOOKS";
+    /** The state cannot currently be determined. */
+    MergeStateStatus["Unknown"] = "UNKNOWN";
+    /** Mergeable with non-passing commit status. */
+    MergeStateStatus["Unstable"] = "UNSTABLE";
+})(MergeStateStatus || (MergeStateStatus = {}));
 /** Whether or not a PullRequest can be merged. */
 var MergeableState;
 (function (MergeableState) {
@@ -30517,14 +30678,14 @@ var OidcProviderType;
     /** Azure Active Directory */
     OidcProviderType["Aad"] = "AAD";
 })(OidcProviderType || (OidcProviderType = {}));
-/** The state of an OAuth Application when it was created. */
+/** The state of an OAuth application when it was created. */
 var OauthApplicationCreateAuditEntryState;
 (function (OauthApplicationCreateAuditEntryState) {
-    /** The OAuth Application was active and allowed to have OAuth Accesses. */
+    /** The OAuth application was active and allowed to have OAuth Accesses. */
     OauthApplicationCreateAuditEntryState["Active"] = "ACTIVE";
-    /** The OAuth Application was in the process of being deleted. */
+    /** The OAuth application was in the process of being deleted. */
     OauthApplicationCreateAuditEntryState["PendingDeletion"] = "PENDING_DELETION";
-    /** The OAuth Application was suspended from generating OAuth Accesses due to abuse or security concerns. */
+    /** The OAuth application was suspended from generating OAuth Accesses due to abuse or security concerns. */
     OauthApplicationCreateAuditEntryState["Suspended"] = "SUSPENDED";
 })(OauthApplicationCreateAuditEntryState || (OauthApplicationCreateAuditEntryState = {}));
 /** The corresponding operation type for the action */
@@ -30595,9 +30756,9 @@ var OrgRemoveBillingManagerAuditEntryReason;
 var OrgRemoveMemberAuditEntryMembershipType;
 (function (OrgRemoveMemberAuditEntryMembershipType) {
     /**
-     * Organization administrators have full access and can change several settings,
+     * Organization owners have full access and can change several settings,
      * including the names of repositories that belong to the Organization and Owners
-     * team membership. In addition, organization admins can delete the organization
+     * team membership. In addition, organization owners can delete the organization
      * and all of its repositories.
      */
     OrgRemoveMemberAuditEntryMembershipType["Admin"] = "ADMIN";
@@ -30753,10 +30914,14 @@ var OrganizationMigrationState;
 (function (OrganizationMigrationState) {
     /** The Octoshift migration has failed. */
     OrganizationMigrationState["Failed"] = "FAILED";
+    /** The Octoshift migration has invalid credentials. */
+    OrganizationMigrationState["FailedValidation"] = "FAILED_VALIDATION";
     /** The Octoshift migration is in progress. */
     OrganizationMigrationState["InProgress"] = "IN_PROGRESS";
     /** The Octoshift migration has not started. */
     OrganizationMigrationState["NotStarted"] = "NOT_STARTED";
+    /** The Octoshift migration needs to have its credentials validated. */
+    OrganizationMigrationState["PendingValidation"] = "PENDING_VALIDATION";
     /** The Octoshift migration is performing post repository migrations. */
     OrganizationMigrationState["PostRepoMigration"] = "POST_REPO_MIGRATION";
     /** The Octoshift migration is performing pre repository migrations. */
@@ -30893,6 +31058,12 @@ var PinnedDiscussionPattern;
     /** A lightning bolt pattern */
     PinnedDiscussionPattern["Zap"] = "ZAP";
 })(PinnedDiscussionPattern || (PinnedDiscussionPattern = {}));
+/** Properties by which pinned environments connections can be ordered */
+var PinnedEnvironmentOrderField;
+(function (PinnedEnvironmentOrderField) {
+    /** Order pinned environments by position */
+    PinnedEnvironmentOrderField["Position"] = "POSITION";
+})(PinnedEnvironmentOrderField || (PinnedEnvironmentOrderField = {}));
 /** The possible archived states of a project card. */
 var ProjectCardArchivedState;
 (function (ProjectCardArchivedState) {
@@ -31041,6 +31212,28 @@ var ProjectV2OrderField;
     /** The project's date and time of update */
     ProjectV2OrderField["UpdatedAt"] = "UPDATED_AT";
 })(ProjectV2OrderField || (ProjectV2OrderField = {}));
+/** The possible roles of a collaborator on a project. */
+var ProjectV2PermissionLevel;
+(function (ProjectV2PermissionLevel) {
+    /** The collaborator can view, edit, and maange the settings of the project */
+    ProjectV2PermissionLevel["Admin"] = "ADMIN";
+    /** The collaborator can view the project */
+    ProjectV2PermissionLevel["Read"] = "READ";
+    /** The collaborator can view and edit the project */
+    ProjectV2PermissionLevel["Write"] = "WRITE";
+})(ProjectV2PermissionLevel || (ProjectV2PermissionLevel = {}));
+/** The possible roles of a collaborator on a project. */
+var ProjectV2Roles;
+(function (ProjectV2Roles) {
+    /** The collaborator can view, edit, and maange the settings of the project */
+    ProjectV2Roles["Admin"] = "ADMIN";
+    /** The collaborator has no direct access to the project */
+    ProjectV2Roles["None"] = "NONE";
+    /** The collaborator can view the project */
+    ProjectV2Roles["Reader"] = "READER";
+    /** The collaborator can view and edit the project */
+    ProjectV2Roles["Writer"] = "WRITER";
+})(ProjectV2Roles || (ProjectV2Roles = {}));
 /** The display color of a single-select field option. */
 var ProjectV2SingleSelectFieldOptionColor;
 (function (ProjectV2SingleSelectFieldOptionColor) {
@@ -31069,6 +31262,26 @@ var ProjectV2State;
     /** A project v2 that is still open */
     ProjectV2State["Open"] = "OPEN";
 })(ProjectV2State || (ProjectV2State = {}));
+/** Properties by which project v2 status updates can be ordered. */
+var ProjectV2StatusUpdateOrderField;
+(function (ProjectV2StatusUpdateOrderField) {
+    /** Allows chronological ordering of project v2 status updates. */
+    ProjectV2StatusUpdateOrderField["CreatedAt"] = "CREATED_AT";
+})(ProjectV2StatusUpdateOrderField || (ProjectV2StatusUpdateOrderField = {}));
+/** The possible statuses of a project v2. */
+var ProjectV2StatusUpdateStatus;
+(function (ProjectV2StatusUpdateStatus) {
+    /** A project v2 that is at risk and encountering some challenges. */
+    ProjectV2StatusUpdateStatus["AtRisk"] = "AT_RISK";
+    /** A project v2 that is complete. */
+    ProjectV2StatusUpdateStatus["Complete"] = "COMPLETE";
+    /** A project v2 that is inactive. */
+    ProjectV2StatusUpdateStatus["Inactive"] = "INACTIVE";
+    /** A project v2 that is off track and needs attention. */
+    ProjectV2StatusUpdateStatus["OffTrack"] = "OFF_TRACK";
+    /** A project v2 that is on track with no risks. */
+    ProjectV2StatusUpdateStatus["OnTrack"] = "ON_TRACK";
+})(ProjectV2StatusUpdateStatus || (ProjectV2StatusUpdateStatus = {}));
 /** The layout of a project v2 view. */
 var ProjectV2ViewLayout;
 (function (ProjectV2ViewLayout) {
@@ -31092,15 +31305,23 @@ var ProjectV2ViewOrderField;
 /** Properties by which project workflows can be ordered. */
 var ProjectV2WorkflowsOrderField;
 (function (ProjectV2WorkflowsOrderField) {
-    /** The workflows' date and time of creation */
+    /** The date and time of the workflow creation */
     ProjectV2WorkflowsOrderField["CreatedAt"] = "CREATED_AT";
-    /** The workflows' name */
+    /** The name of the workflow */
     ProjectV2WorkflowsOrderField["Name"] = "NAME";
-    /** The workflows' number */
+    /** The number of the workflow */
     ProjectV2WorkflowsOrderField["Number"] = "NUMBER";
-    /** The workflows' date and time of update */
+    /** The date and time of the workflow update */
     ProjectV2WorkflowsOrderField["UpdatedAt"] = "UPDATED_AT";
 })(ProjectV2WorkflowsOrderField || (ProjectV2WorkflowsOrderField = {}));
+/** The possible methods for updating a pull request's head branch with the base branch. */
+var PullRequestBranchUpdateMethod;
+(function (PullRequestBranchUpdateMethod) {
+    /** Update branch via merge */
+    PullRequestBranchUpdateMethod["Merge"] = "MERGE";
+    /** Update branch via rebase */
+    PullRequestBranchUpdateMethod["Rebase"] = "REBASE";
+})(PullRequestBranchUpdateMethod || (PullRequestBranchUpdateMethod = {}));
 /** Represents available types of methods to use when merging a pull request. */
 var PullRequestMergeMethod;
 (function (PullRequestMergeMethod) {
@@ -31163,6 +31384,14 @@ var PullRequestReviewState;
     /** A review that has not yet been submitted. */
     PullRequestReviewState["Pending"] = "PENDING";
 })(PullRequestReviewState || (PullRequestReviewState = {}));
+/** The possible subject types of a pull request review comment. */
+var PullRequestReviewThreadSubjectType;
+(function (PullRequestReviewThreadSubjectType) {
+    /** A comment that has been made against the file of a pull request */
+    PullRequestReviewThreadSubjectType["File"] = "FILE";
+    /** A comment that has been made against the line of a pull request */
+    PullRequestReviewThreadSubjectType["Line"] = "LINE";
+})(PullRequestReviewThreadSubjectType || (PullRequestReviewThreadSubjectType = {}));
 /** The possible states of a pull request. */
 var PullRequestState;
 (function (PullRequestState) {
@@ -31511,6 +31740,8 @@ var RepositoryLockReason;
     RepositoryLockReason["Rename"] = "RENAME";
     /** The repository is locked due to a trade controls related reason. */
     RepositoryLockReason["TradeRestriction"] = "TRADE_RESTRICTION";
+    /** The repository is locked due to an ownership transfer. */
+    RepositoryLockReason["TransferringOwnership"] = "TRANSFERRING_OWNERSHIP";
 })(RepositoryLockReason || (RepositoryLockReason = {}));
 /** Possible directions in which to order a list of repository migrations when provided an `orderBy` argument. */
 var RepositoryMigrationOrderDirection;
@@ -31565,6 +31796,124 @@ var RepositoryPrivacy;
     /** Public */
     RepositoryPrivacy["Public"] = "PUBLIC";
 })(RepositoryPrivacy || (RepositoryPrivacy = {}));
+/** Properties by which repository rule connections can be ordered. */
+var RepositoryRuleOrderField;
+(function (RepositoryRuleOrderField) {
+    /** Order repository rules by created time */
+    RepositoryRuleOrderField["CreatedAt"] = "CREATED_AT";
+    /** Order repository rules by type */
+    RepositoryRuleOrderField["Type"] = "TYPE";
+    /** Order repository rules by updated time */
+    RepositoryRuleOrderField["UpdatedAt"] = "UPDATED_AT";
+})(RepositoryRuleOrderField || (RepositoryRuleOrderField = {}));
+/** The rule types supported in rulesets */
+var RepositoryRuleType;
+(function (RepositoryRuleType) {
+    /** Authorization */
+    RepositoryRuleType["Authorization"] = "AUTHORIZATION";
+    /** Branch name pattern */
+    RepositoryRuleType["BranchNamePattern"] = "BRANCH_NAME_PATTERN";
+    /**
+     * Choose which tools must provide code scanning results before the reference is
+     * updated. When configured, code scanning must be enabled and have results for
+     * both the commit and the reference being updated.
+     */
+    RepositoryRuleType["CodeScanning"] = "CODE_SCANNING";
+    /** Committer email pattern */
+    RepositoryRuleType["CommitterEmailPattern"] = "COMMITTER_EMAIL_PATTERN";
+    /** Commit author email pattern */
+    RepositoryRuleType["CommitAuthorEmailPattern"] = "COMMIT_AUTHOR_EMAIL_PATTERN";
+    /** Commit message pattern */
+    RepositoryRuleType["CommitMessagePattern"] = "COMMIT_MESSAGE_PATTERN";
+    /** Only allow users with bypass permission to create matching refs. */
+    RepositoryRuleType["Creation"] = "CREATION";
+    /** Only allow users with bypass permissions to delete matching refs. */
+    RepositoryRuleType["Deletion"] = "DELETION";
+    /**
+     * Prevent commits that include files with specified file extensions from being
+     * pushed to the commit graph. NOTE: Thie rule is in beta and subject to change
+     */
+    RepositoryRuleType["FileExtensionRestriction"] = "FILE_EXTENSION_RESTRICTION";
+    /**
+     * Prevent commits that include changes in specified file paths from being pushed
+     * to the commit graph. NOTE: Thie rule is in beta and subject to change
+     */
+    RepositoryRuleType["FilePathRestriction"] = "FILE_PATH_RESTRICTION";
+    /** Branch is read-only. Users cannot push to the branch. */
+    RepositoryRuleType["LockBranch"] = "LOCK_BRANCH";
+    /**
+     * Prevent commits that include file paths that exceed a specified character
+     * limit from being pushed to the commit graph. NOTE: Thie rule is in beta and
+     * subject to change
+     */
+    RepositoryRuleType["MaxFilePathLength"] = "MAX_FILE_PATH_LENGTH";
+    /**
+     * Prevent commits that exceed a specified file size limit from being pushed to
+     * the commit. NOTE: Thie rule is in beta and subject to change
+     */
+    RepositoryRuleType["MaxFileSize"] = "MAX_FILE_SIZE";
+    /** Max ref updates */
+    RepositoryRuleType["MaxRefUpdates"] = "MAX_REF_UPDATES";
+    /** Merges must be performed via a merge queue. */
+    RepositoryRuleType["MergeQueue"] = "MERGE_QUEUE";
+    /** Merge queue locked ref */
+    RepositoryRuleType["MergeQueueLockedRef"] = "MERGE_QUEUE_LOCKED_REF";
+    /** Prevent users with push access from force pushing to refs. */
+    RepositoryRuleType["NonFastForward"] = "NON_FAST_FORWARD";
+    /** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
+    RepositoryRuleType["PullRequest"] = "PULL_REQUEST";
+    /** Choose which environments must be successfully deployed to before refs can be pushed into a ref that matches this rule. */
+    RepositoryRuleType["RequiredDeployments"] = "REQUIRED_DEPLOYMENTS";
+    /** Prevent merge commits from being pushed to matching refs. */
+    RepositoryRuleType["RequiredLinearHistory"] = "REQUIRED_LINEAR_HISTORY";
+    /**
+     * When enabled, all conversations on code must be resolved before a pull request
+     * can be merged into a branch that matches this rule.
+     */
+    RepositoryRuleType["RequiredReviewThreadResolution"] = "REQUIRED_REVIEW_THREAD_RESOLUTION";
+    /** Commits pushed to matching refs must have verified signatures. */
+    RepositoryRuleType["RequiredSignatures"] = "REQUIRED_SIGNATURES";
+    /**
+     * Choose which status checks must pass before the ref is updated. When enabled,
+     * commits must first be pushed to another ref where the checks pass.
+     */
+    RepositoryRuleType["RequiredStatusChecks"] = "REQUIRED_STATUS_CHECKS";
+    /**
+     * Require all commits be made to a non-target branch and submitted via a pull
+     * request and required workflow checks to pass before they can be merged.
+     */
+    RepositoryRuleType["RequiredWorkflowStatusChecks"] = "REQUIRED_WORKFLOW_STATUS_CHECKS";
+    /** Secret scanning */
+    RepositoryRuleType["SecretScanning"] = "SECRET_SCANNING";
+    /** Tag */
+    RepositoryRuleType["Tag"] = "TAG";
+    /** Tag name pattern */
+    RepositoryRuleType["TagNamePattern"] = "TAG_NAME_PATTERN";
+    /** Only allow users with bypass permission to update matching refs. */
+    RepositoryRuleType["Update"] = "UPDATE";
+    /** Require all changes made to a targeted branch to pass the specified workflows before they can be merged. */
+    RepositoryRuleType["Workflows"] = "WORKFLOWS";
+    /** Workflow files cannot be modified. */
+    RepositoryRuleType["WorkflowUpdates"] = "WORKFLOW_UPDATES";
+})(RepositoryRuleType || (RepositoryRuleType = {}));
+/** The bypass mode for a specific actor on a ruleset. */
+var RepositoryRulesetBypassActorBypassMode;
+(function (RepositoryRulesetBypassActorBypassMode) {
+    /** The actor can always bypass rules */
+    RepositoryRulesetBypassActorBypassMode["Always"] = "ALWAYS";
+    /** The actor can only bypass rules via a pull request */
+    RepositoryRulesetBypassActorBypassMode["PullRequest"] = "PULL_REQUEST";
+})(RepositoryRulesetBypassActorBypassMode || (RepositoryRulesetBypassActorBypassMode = {}));
+/** The targets supported for rulesets. NOTE: The push target is in beta and subject to change. */
+var RepositoryRulesetTarget;
+(function (RepositoryRulesetTarget) {
+    /** Branch */
+    RepositoryRulesetTarget["Branch"] = "BRANCH";
+    /** Push */
+    RepositoryRulesetTarget["Push"] = "PUSH";
+    /** Tag */
+    RepositoryRulesetTarget["Tag"] = "TAG";
+})(RepositoryRulesetTarget || (RepositoryRulesetTarget = {}));
 /** The repository's visibility level. */
 var RepositoryVisibility;
 (function (RepositoryVisibility) {
@@ -31586,6 +31935,8 @@ var RepositoryVulnerabilityAlertDependencyScope;
 /** The possible states of an alert */
 var RepositoryVulnerabilityAlertState;
 (function (RepositoryVulnerabilityAlertState) {
+    /** An alert that has been automatically closed by Dependabot. */
+    RepositoryVulnerabilityAlertState["AutoDismissed"] = "AUTO_DISMISSED";
     /** An alert that has been manually closed by a user. */
     RepositoryVulnerabilityAlertState["Dismissed"] = "DISMISSED";
     /** An alert that has been resolved by a code change. */
@@ -31617,6 +31968,19 @@ var RoleInOrganization;
     /** A user who is unaffiliated with the organization. */
     RoleInOrganization["Unaffiliated"] = "UNAFFILIATED";
 })(RoleInOrganization || (RoleInOrganization = {}));
+/** The level of enforcement for a rule or ruleset. */
+var RuleEnforcement;
+(function (RuleEnforcement) {
+    /** Rules will be enforced */
+    RuleEnforcement["Active"] = "ACTIVE";
+    /** Do not evaluate or enforce rules */
+    RuleEnforcement["Disabled"] = "DISABLED";
+    /**
+     * Allow admins to test rules before enforcing them. Admins can view insights on
+     * the Rule Insights page (`evaluate` is only available with GitHub Enterprise).
+     */
+    RuleEnforcement["Evaluate"] = "EVALUATE";
+})(RuleEnforcement || (RuleEnforcement = {}));
 /** The possible digest algorithms used to sign SAML requests for an identity provider. */
 var SamlDigestAlgorithm;
 (function (SamlDigestAlgorithm) {
@@ -31692,6 +32056,8 @@ var SecurityAdvisoryEcosystem;
     SecurityAdvisoryEcosystem["Rubygems"] = "RUBYGEMS";
     /** Rust crates */
     SecurityAdvisoryEcosystem["Rust"] = "RUST";
+    /** Swift packages */
+    SecurityAdvisoryEcosystem["Swift"] = "SWIFT";
 })(SecurityAdvisoryEcosystem || (SecurityAdvisoryEcosystem = {}));
 /** Identifier formats available for advisories. */
 var SecurityAdvisoryIdentifierType;
@@ -31742,6 +32108,8 @@ var SocialAccountProvider;
     SocialAccountProvider["Linkedin"] = "LINKEDIN";
     /** Open-source federated microblogging service. */
     SocialAccountProvider["Mastodon"] = "MASTODON";
+    /** JavaScript package registry. */
+    SocialAccountProvider["Npm"] = "NPM";
     /** Social news aggregation and discussion website. */
     SocialAccountProvider["Reddit"] = "REDDIT";
     /** Live-streaming service. */
@@ -31751,6 +32119,16 @@ var SocialAccountProvider;
     /** Online video platform. */
     SocialAccountProvider["Youtube"] = "YOUTUBE";
 })(SocialAccountProvider || (SocialAccountProvider = {}));
+/** Properties by which sponsor and lifetime value connections can be ordered. */
+var SponsorAndLifetimeValueOrderField;
+(function (SponsorAndLifetimeValueOrderField) {
+    /** Order results by how much money the sponsor has paid in total. */
+    SponsorAndLifetimeValueOrderField["LifetimeValue"] = "LIFETIME_VALUE";
+    /** Order results by the sponsor's login (username). */
+    SponsorAndLifetimeValueOrderField["SponsorLogin"] = "SPONSOR_LOGIN";
+    /** Order results by the sponsor's relevance to the viewer. */
+    SponsorAndLifetimeValueOrderField["SponsorRelevance"] = "SPONSOR_RELEVANCE";
+})(SponsorAndLifetimeValueOrderField || (SponsorAndLifetimeValueOrderField = {}));
 /** Properties by which sponsor connections can be ordered. */
 var SponsorOrderField;
 (function (SponsorOrderField) {
@@ -32244,7 +32622,7 @@ var SponsorsCountryOrRegionCode;
     SponsorsCountryOrRegionCode["Tn"] = "TN";
     /** Tonga */
     SponsorsCountryOrRegionCode["To"] = "TO";
-    /** Turkey */
+    /** Türkiye */
     SponsorsCountryOrRegionCode["Tr"] = "TR";
     /** Trinidad and Tobago */
     SponsorsCountryOrRegionCode["Tt"] = "TT";
@@ -32331,6 +32709,14 @@ var SponsorshipOrderField;
     /** Order sponsorship by creation time. */
     SponsorshipOrderField["CreatedAt"] = "CREATED_AT";
 })(SponsorshipOrderField || (SponsorshipOrderField = {}));
+/** How payment was made for funding a GitHub Sponsors sponsorship. */
+var SponsorshipPaymentSource;
+(function (SponsorshipPaymentSource) {
+    /** Payment was made through GitHub. */
+    SponsorshipPaymentSource["Github"] = "GITHUB";
+    /** Payment was made through Patreon. */
+    SponsorshipPaymentSource["Patreon"] = "PATREON";
+})(SponsorshipPaymentSource || (SponsorshipPaymentSource = {}));
 /** The privacy of a sponsorship */
 var SponsorshipPrivacy;
 (function (SponsorshipPrivacy) {
@@ -32425,6 +32811,14 @@ var TeamMembershipType;
     /** Includes only immediate members of the team. */
     TeamMembershipType["Immediate"] = "IMMEDIATE";
 })(TeamMembershipType || (TeamMembershipType = {}));
+/** The possible team notification values. */
+var TeamNotificationSetting;
+(function (TeamNotificationSetting) {
+    /** No one will receive notifications. */
+    TeamNotificationSetting["NotificationsDisabled"] = "NOTIFICATIONS_DISABLED";
+    /** Everyone will receive notifications when the team is @mentioned. */
+    TeamNotificationSetting["NotificationsEnabled"] = "NOTIFICATIONS_ENABLED";
+})(TeamNotificationSetting || (TeamNotificationSetting = {}));
 /** Properties by which team connections can be ordered. */
 var TeamOrderField;
 (function (TeamOrderField) {
@@ -32455,6 +32849,14 @@ var TeamRepositoryOrderField;
     /** Order repositories by update time */
     TeamRepositoryOrderField["UpdatedAt"] = "UPDATED_AT";
 })(TeamRepositoryOrderField || (TeamRepositoryOrderField = {}));
+/** The possible team review assignment algorithms */
+var TeamReviewAssignmentAlgorithm;
+(function (TeamReviewAssignmentAlgorithm) {
+    /** Balance review load across the entire team */
+    TeamReviewAssignmentAlgorithm["LoadBalance"] = "LOAD_BALANCE";
+    /** Alternate reviews between each team member */
+    TeamReviewAssignmentAlgorithm["RoundRobin"] = "ROUND_ROBIN";
+})(TeamReviewAssignmentAlgorithm || (TeamReviewAssignmentAlgorithm = {}));
 /** The role of a user on a team. */
 var TeamRole;
 (function (TeamRole) {
@@ -32463,16 +32865,60 @@ var TeamRole;
     /** User is a member of the team. */
     TeamRole["Member"] = "MEMBER";
 })(TeamRole || (TeamRole = {}));
+/** The possible states of a thread subscription form action */
+var ThreadSubscriptionFormAction;
+(function (ThreadSubscriptionFormAction) {
+    /** The User cannot subscribe or unsubscribe to the thread */
+    ThreadSubscriptionFormAction["None"] = "NONE";
+    /** The User can subscribe to the thread */
+    ThreadSubscriptionFormAction["Subscribe"] = "SUBSCRIBE";
+    /** The User can unsubscribe to the thread */
+    ThreadSubscriptionFormAction["Unsubscribe"] = "UNSUBSCRIBE";
+})(ThreadSubscriptionFormAction || (ThreadSubscriptionFormAction = {}));
+/** The possible states of a subscription. */
+var ThreadSubscriptionState;
+(function (ThreadSubscriptionState) {
+    /** The subscription status is currently disabled. */
+    ThreadSubscriptionState["Disabled"] = "DISABLED";
+    /** The User is never notified because they are ignoring the list */
+    ThreadSubscriptionState["IgnoringList"] = "IGNORING_LIST";
+    /** The User is never notified because they are ignoring the thread */
+    ThreadSubscriptionState["IgnoringThread"] = "IGNORING_THREAD";
+    /** The User is not recieving notifications from this thread */
+    ThreadSubscriptionState["None"] = "NONE";
+    /** The User is notified becuase they are watching the list */
+    ThreadSubscriptionState["SubscribedToList"] = "SUBSCRIBED_TO_LIST";
+    /** The User is notified because they are subscribed to the thread */
+    ThreadSubscriptionState["SubscribedToThread"] = "SUBSCRIBED_TO_THREAD";
+    /** The User is notified because they chose custom settings for this thread. */
+    ThreadSubscriptionState["SubscribedToThreadEvents"] = "SUBSCRIBED_TO_THREAD_EVENTS";
+    /** The User is notified because they chose custom settings for this thread. */
+    ThreadSubscriptionState["SubscribedToThreadType"] = "SUBSCRIBED_TO_THREAD_TYPE";
+    /** The subscription status is currently unavailable. */
+    ThreadSubscriptionState["Unavailable"] = "UNAVAILABLE";
+})(ThreadSubscriptionState || (ThreadSubscriptionState = {}));
 /** Reason that the suggested topic is declined. */
 var TopicSuggestionDeclineReason;
 (function (TopicSuggestionDeclineReason) {
-    /** The suggested topic is not relevant to the repository. */
+    /**
+     * The suggested topic is not relevant to the repository.
+     * @deprecated Suggested topics are no longer supported Removal on 2024-04-01 UTC.
+     */
     TopicSuggestionDeclineReason["NotRelevant"] = "NOT_RELEVANT";
-    /** The viewer does not like the suggested topic. */
+    /**
+     * The viewer does not like the suggested topic.
+     * @deprecated Suggested topics are no longer supported Removal on 2024-04-01 UTC.
+     */
     TopicSuggestionDeclineReason["PersonalPreference"] = "PERSONAL_PREFERENCE";
-    /** The suggested topic is too general for the repository. */
+    /**
+     * The suggested topic is too general for the repository.
+     * @deprecated Suggested topics are no longer supported Removal on 2024-04-01 UTC.
+     */
     TopicSuggestionDeclineReason["TooGeneral"] = "TOO_GENERAL";
-    /** The suggested topic is too specific for the repository (e.g. #ruby-on-rails-version-4-2-1). */
+    /**
+     * The suggested topic is too specific for the repository (e.g. #ruby-on-rails-version-4-2-1).
+     * @deprecated Suggested topics are no longer supported Removal on 2024-04-01 UTC.
+     */
     TopicSuggestionDeclineReason["TooSpecific"] = "TOO_SPECIFIC";
 })(TopicSuggestionDeclineReason || (TopicSuggestionDeclineReason = {}));
 /** The possible states of a tracked issue. */
@@ -32517,6 +32963,20 @@ var WorkflowRunOrderField;
     /** Order workflow runs by most recently created */
     WorkflowRunOrderField["CreatedAt"] = "CREATED_AT";
 })(WorkflowRunOrderField || (WorkflowRunOrderField = {}));
+/** The possible states for a workflow. */
+var WorkflowState;
+(function (WorkflowState) {
+    /** The workflow is active. */
+    WorkflowState["Active"] = "ACTIVE";
+    /** The workflow was deleted from the git repository. */
+    WorkflowState["Deleted"] = "DELETED";
+    /** The workflow was disabled by default on a fork. */
+    WorkflowState["DisabledFork"] = "DISABLED_FORK";
+    /** The workflow was disabled for inactivity in the repository. */
+    WorkflowState["DisabledInactivity"] = "DISABLED_INACTIVITY";
+    /** The workflow was disabled manually. */
+    WorkflowState["DisabledManually"] = "DISABLED_MANUALLY";
+})(WorkflowState || (WorkflowState = {}));
 const GetPullRequests = lib `
     query GetPullRequests($owner: String!, $repo: String!) {
   repository(owner: $owner, name: $repo) {
@@ -32565,7 +33025,7 @@ const RequestRecreate = lib `
 
 async function getPullRequests(ok) {
     const { owner, repo } = github.context.repo;
-    const query = GetPullRequests.loc.source.body;
+    const query = GetPullRequests.loc?.source.body;
     const response = await ok.graphql({
         query,
         owner,
@@ -32580,8 +33040,8 @@ function isDependabotPullRequest(pr) {
 async function addCommentToPullRequest(ok, pr) {
     const task = (0,core.getInput)('task');
     const query = task === 'rebase'
-        ? RequestRebase.loc.source.body
-        : RequestRecreate.loc.source.body;
+        ? RequestRebase.loc?.source.body
+        : RequestRecreate.loc?.source.body;
     if (pr?.node?.id && isDependabotPullRequest(pr)) {
         console.info(`Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`);
         await ok.graphql({

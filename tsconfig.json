@@ -12,10 +12,7 @@
     "enable": false // if you're using vscode, this option tells it to automatically download types for any modules you install that don't have types built in
   },
   "include": [
-    "src/*.ts",
-    "src/.*.ts",
-    "src/**/*.ts",
-    "src/**/.*.ts",
+    "src",
     "*.js",
     "*.mjs",
     "*.cjs",
@@ -23,5 +20,5 @@
     ".*.mjs",
     ".*.cjs",
 ],
-"exclude": ["node_modules/**", "dist/**"]
+"exclude": ["dist/**"]
 }

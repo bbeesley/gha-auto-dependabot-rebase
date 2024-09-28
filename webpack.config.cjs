@@ -10,6 +10,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.json', '.ts'], // list of file extensions you want to allow into the bundle
+    extensionAlias: {
+      '.js': ['.js', '.ts'],
+    },
   },
   output: {
     libraryTarget: 'commonjs2', // only supported module type for node

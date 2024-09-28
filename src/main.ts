@@ -1,19 +1,20 @@
 import { getInput, setFailed } from '@actions/core';
 import * as github from '@actions/github';
-import type { Octokit } from '@octokit/core';
-import type { Maybe, PullRequestEdge } from '@octokit/graphql-schema';
-
-import type { PullRequestEdges } from './@types/index.js';
+import type { GitHub } from '@actions/github/lib/utils.js';
 import {
   RequestRebase,
   RequestRecreate,
   GetPullRequests,
+  type PullRequestEdge,
   type Repository,
-} from './generated/graphql';
+  type Maybe,
+} from './generated/graphql.js';
 
-async function getPullRequests(ok: Octokit): Promise<PullRequestEdges> {
+async function getPullRequests(
+  ok: InstanceType<typeof GitHub>
+): Promise<Array<Maybe<PullRequestEdge>>> {
   const { owner, repo } = github.context.repo;
-  const query = GetPullRequests.loc!.source.body;
+  const query = GetPullRequests.loc?.source.body;
   const response: { repository: Repository } = await ok.graphql({
     query,
     owner,
@@ -34,14 +35,14 @@ function isDependabotPullRequest(pr: Maybe<PullRequestEdge>): boolean {
 }
 
 async function addCommentToPullRequest(
-  ok: Octokit,
+  ok: InstanceType<typeof GitHub>,
   pr: Maybe<PullRequestEdge>
 ): Promise<void> {
   const task = getInput('task');
   const query =
     task === 'rebase'
-      ? RequestRebase.loc!.source.body
-      : RequestRecreate.loc!.source.body;
+      ? RequestRebase.loc?.source.body
+      : RequestRecreate.loc?.source.body;
   if (pr?.node?.id && isDependabotPullRequest(pr)) {
     console.info(
       `Requesting rebase of PR #${pr.node.number} '${pr.node.title}'`
@@ -65,7 +66,7 @@ async function main(): Promise<void> {
     }
   } catch (error) {
     console.error(error);
-    setFailed(error.message);
+    setFailed((error as Error).message);
   }
 }
 
