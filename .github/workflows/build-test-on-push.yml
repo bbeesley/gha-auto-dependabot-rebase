@@ -1,6 +1,8 @@
 name: Build, Test & Publish Main
 on:
   push:
+    branches:
+      - main
 concurrency: ci-${{ github.ref}}-${{ github.event_name }}
 jobs:
   build-and-test:
