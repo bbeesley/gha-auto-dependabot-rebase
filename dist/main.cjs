@@ -523,6 +523,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
+const crypto = __importStar(__webpack_require__(/*! crypto */ "crypto"));
 const fs = __importStar(__webpack_require__(/*! fs */ "fs"));
 const os = __importStar(__webpack_require__(/*! os */ "os"));
 const utils_1 = __webpack_require__(/*! ./utils */ "./node_modules/@actions/core/lib/utils.js");
