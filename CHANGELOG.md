@@ -1,3 +1,5 @@
+## [1.5.50](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.5.49...v1.5.50) (2024-12-05)
+
 ## [1.5.49](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.5.48...v1.5.49) (2024-12-03)
 
 ## [1.5.48](https://github.com/bbeesley/gha-auto-dependabot-rebase/compare/v1.5.47...v1.5.48) (2024-11-26)
