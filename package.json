@@ -47,7 +47,7 @@
     "@beesley/tsconfig": "^3.0.0",
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
-    "@graphql-codegen/cli": "^5.0.4",
+    "@graphql-codegen/cli": "^5.0.5",
     "@graphql-codegen/introspection": "4.0.3",
     "@graphql-codegen/typescript": "4.1.3",
     "@graphql-codegen/typescript-document-nodes": "4.0.13",
