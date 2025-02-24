@@ -52,7 +52,7 @@
     "@graphql-codegen/typescript": "4.1.4",
     "@graphql-codegen/typescript-document-nodes": "4.0.14",
     "@graphql-codegen/typescript-operations": "^4.5.0",
-    "@graphql-codegen/typescript-resolvers": "4.4.3",
+    "@graphql-codegen/typescript-resolvers": "4.4.4",
     "@octokit/graphql-schema": "^15.25.0",
     "@octokit/webhooks-definitions": "^3.67.3",
     "@semantic-release/changelog": "^6.0.3",
