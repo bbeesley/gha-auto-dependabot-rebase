@@ -62,7 +62,7 @@
     "@semantic-release/npm": "^12.0.1",
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@types/jest": "^30.0.0",
-    "babel-jest": "^30.0.0",
+    "babel-jest": "^30.0.2",
     "babel-plugin-replace-import-extension": "^1.1.5",
     "conventional-changelog-angular": "^8.0.0",
     "conventional-commit-types": "^3.0.0",
