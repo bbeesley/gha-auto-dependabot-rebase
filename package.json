@@ -72,7 +72,7 @@
     "jest": "^30.0.3",
     "npm-check-updates": "^18.0.1",
     "prettier": "^3.6.2",
-    "semantic-release": "^24.2.5",
+    "semantic-release": "^24.2.6",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
