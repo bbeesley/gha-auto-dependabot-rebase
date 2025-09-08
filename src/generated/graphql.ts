@@ -47256,7 +47256,13 @@ export type GetPullRequestsQueryVariables = Exact<{
 }>;
 
 
-export type GetPullRequestsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, pullRequests: { __typename?: 'PullRequestConnection', edges?: Array<{ __typename?: 'PullRequestEdge', node?: { __typename?: 'PullRequest', id: string, title: string, number: number, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null } | null } | null> | null } } | null };
+export type GetPullRequestsQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', id: string, pullRequests: { __typename?: 'PullRequestConnection', edges?: Array<{ __typename?: 'PullRequestEdge', node?: { __typename?: 'PullRequest', id: string, title: string, number: number, author?:
+            | { __typename?: 'Bot', login: string }
+            | { __typename?: 'EnterpriseUserAccount', login: string }
+            | { __typename?: 'Mannequin', login: string }
+            | { __typename?: 'Organization', login: string }
+            | { __typename?: 'User', login: string }
+           | null } | null } | null> | null } } | null };
 
 export type RequestRebaseMutationVariables = Exact<{
   pullRequestId: Scalars['ID']['input'];
