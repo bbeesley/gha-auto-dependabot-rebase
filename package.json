@@ -150,6 +150,6 @@
     }
   },
   "dependencies": {
-    "@octokit/core": "^7.0.3"
+    "@octokit/core": "^7.0.4"
   }
 }
