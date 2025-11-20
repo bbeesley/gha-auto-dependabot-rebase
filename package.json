@@ -50,7 +50,7 @@
     "@graphql-codegen/cli": "^6.1.0",
     "@graphql-codegen/introspection": "5.0.0",
     "@graphql-codegen/typescript": "5.0.4",
-    "@graphql-codegen/typescript-document-nodes": "5.0.4",
+    "@graphql-codegen/typescript-document-nodes": "5.0.5",
     "@graphql-codegen/typescript-operations": "^5.0.5",
     "@graphql-codegen/typescript-resolvers": "5.1.2",
     "@octokit/graphql-schema": "^15.26.0",
