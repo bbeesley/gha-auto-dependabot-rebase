@@ -71,7 +71,7 @@
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "npm-check-updates": "^19.3.1",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "semantic-release": "^25.0.2",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
