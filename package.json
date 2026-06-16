@@ -73,7 +73,7 @@
     "npm-check-updates": "^22.2.3",
     "prettier": "^3.8.4",
     "semantic-release": "^25.0.5",
-    "ts-loader": "^9.6.0",
+    "ts-loader": "^9.6.1",
     "typescript": "^5.9.3",
     "webpack": "^5.107.2",
     "webpack-cli": "^7.0.3",
