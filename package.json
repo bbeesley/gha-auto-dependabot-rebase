@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/bbeesley/gha-auto-dependabot-rebase#readme",
   "devDependencies": {
-    "@actions/cache": "^6.0.1",
+    "@actions/cache": "^6.1.0",
     "@actions/core": "^3.0.1",
     "@actions/exec": "^3.0.0",
     "@actions/github": "^6.0.0",
