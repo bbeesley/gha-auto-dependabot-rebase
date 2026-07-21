@@ -77,7 +77,7 @@
     "typescript": "^5.9.3",
     "webpack": "^5.108.4",
     "webpack-cli": "^7.2.1",
-    "xo": "^0.60.0"
+    "xo": "^4.0.0"
   },
   "release": {
     "branches": [
