@@ -37,7 +37,7 @@
     "@actions/cache": "^6.2.0",
     "@actions/core": "^3.0.1",
     "@actions/exec": "^3.0.0",
-    "@actions/github": "^6.0.0",
+    "@actions/github": "^9.1.1",
     "@babel/cli": "^8.0.4",
     "@babel/core": "^8.0.1",
     "@babel/node": "^8.0.1",
